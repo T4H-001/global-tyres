@@ -2,41 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* TLRS Design System - Professional Environmental/Industrial Theme */
 
 @layer base {
   :root {
+    /* Core environmental color palette */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
+    --foreground: 210 15% 15%;
+    
+    /* Cards and surfaces */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
+    --card-foreground: 210 15% 15%;
+    
+    /* Environmental green primary */
+    --primary: 152 55% 25%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 152 55% 35%;
+    
+    /* Professional blue secondary */
+    --secondary: 210 50% 45%;
+    --secondary-foreground: 0 0% 98%;
+    
+    /* Muted earth tones */
+    --muted: 200 20% 96%;
+    --muted-foreground: 210 15% 45%;
+    
+    /* Accent - recycling orange */
+    --accent: 25 85% 50%;
+    --accent-foreground: 0 0% 98%;
+    
+    /* Status colors */
+    --success: 152 65% 35%;
+    --success-foreground: 0 0% 98%;
+    --warning: 45 100% 45%;
+    --warning-foreground: 0 0% 15%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 98%;
+    
+    /* Industrial borders and inputs */
+    --border: 210 20% 85%;
+    --input: 210 20% 95%;
+    --ring: 152 55% 25%;
+    
+    /* Professional gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-earth: linear-gradient(180deg, hsl(var(--muted)), hsl(200 15% 90%));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+    
+    /* Shadows for depth */
+    --shadow-environmental: 0 4px 20px -4px hsl(var(--primary) / 0.15);
+    --shadow-card: 0 2px 10px -2px hsl(210 15% 15% / 0.1);
+    
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
