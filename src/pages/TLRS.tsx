@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
+import Papa from "papaparse";
 
 interface Scheme { id: string; name: string; country: string }
 interface Manufacturer { id: string; name: string }
@@ -121,21 +122,14 @@ const TLRSApp = () => {
       return;
     }
 
-    // Get current user's profile id
+    // Ensure user is authenticated
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       toast({ title: "Not authenticated", description: "Please sign in to register tyres." });
       return;
     }
 
-    // Try to resolve profile id via profiles.user_id if present, fallback to profiles.id = auth uid
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("id,user_id")
-      .or(`user_id.eq.${user.id},id.eq.${user.id}`)
-      .maybeSingle();
-
-    const registeredBy = profile?.id ?? user.id;
+    const registeredBy = user.id;
 
     const { error } = await supabase.from("tyres").insert({
       tyre_id: tyreId,
@@ -183,12 +177,7 @@ const TLRSApp = () => {
       return;
     }
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("id,user_id")
-      .or(`user_id.eq.${user.id},id.eq.${user.id}`)
-      .maybeSingle();
-    const updatedBy = profile?.id ?? user.id;
+    const updatedBy = user.id;
 
     const { error: updErr } = await supabase.from("status_updates").insert({
       tyre_id: tyre.id,
@@ -222,6 +211,7 @@ const TLRSApp = () => {
         <div className="container flex items-center justify-between py-4">
           <h1 className="text-2xl font-bold">TLRS</h1>
           <div className="flex items-center gap-2">
+            <Button variant="ghost" onClick={() => (window.location.href = "/faq")}>FAQ</Button>
             <Button variant="secondary" onClick={() => (window.location.href = "/")}>Home</Button>
             <Button variant="outline" onClick={async () => { await supabase.auth.signOut(); window.location.href = "/"; }}>Logout</Button>
           </div>
@@ -301,8 +291,67 @@ const TLRSApp = () => {
                   <Label>Production Date</Label>
                   <Input type="date" value={productionDate} onChange={(e) => setProductionDate(e.target.value)} />
                 </div>
-                <div className="md:col-span-2">
+                <div className="md:col-span-2 flex gap-2">
                   <Button onClick={handleRegister}>Register Tyre</Button>
+                  <Button variant="outline" onClick={() => {
+                    const sample = [
+                      ["tyre_id","country","status","current_location","scheme","manufacturer","dot_code","production_date"],
+                      ["DOT-EXAMPLE-0001","Australia","new","Brisbane, QLD","TSA","Michelin","4A3Y 1234 2525","2025-01-10"]
+                    ];
+                    const csv = sample.map(r => r.join(",")).join("\n");
+                    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "tlrs-sample-upload.csv";
+                    a.click();
+                    URL.revokeObjectURL(url);
+                  }}>Download sample CSV</Button>
+                  <label className="inline-flex items-center gap-2 cursor-pointer">
+                    <input type="file" accept=".csv" className="hidden" onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const { data: { user } } = await supabase.auth.getUser();
+                      if (!user) { toast({ title: "Sign in required" }); return; }
+
+                      const schemeMap = new Map(schemes.map(s => [s.name.toLowerCase(), s.id]));
+                      const manuMap = new Map(manufacturers.map(m => [m.name.toLowerCase(), m.id]));
+
+                      Papa.parse(file, {
+                        header: true,
+                        skipEmptyLines: true,
+                        complete: async (results) => {
+                          const rows = (results.data as any[]).filter(Boolean);
+                          if (!rows.length) { toast({ title: "No rows found" }); return; }
+
+                          const allowed = new Set(statuses.map(s => s.value));
+                          const inserts = rows.map(r => ({
+                            tyre_id: String(r.tyre_id || r.Tyre_ID || "").trim(),
+                            country: String(r.country || r.Country || "").trim(),
+                            status: allowed.has(String(r.status || r.Status || "new").toLowerCase()) ? String(r.status || r.Status).toLowerCase() : "new",
+                            current_location: (r.current_location || r.Location || "").trim() || null,
+                            scheme_id: (schemeMap.get(String(r.scheme || r.Scheme || "").toLowerCase()) ?? null),
+                            manufacturer_id: (manuMap.get(String(r.manufacturer || r.Manufacturer || "").toLowerCase()) ?? null),
+                            dot_code: (r.dot_code || r.DOT || "").trim() || null,
+                            production_date: (r.production_date || r.ProductionDate || "").trim() || null,
+                            registered_by: user.id,
+                            metadata: null,
+                          })).filter(i => i.tyre_id && i.country);
+
+                          if (!inserts.length) { toast({ title: "No valid rows" }); return; }
+                          const { error } = await supabase.from("tyres").insert(inserts);
+                          if (error) {
+                            toast({ title: "Bulk upload failed", description: error.message });
+                          } else {
+                            toast({ title: "Bulk upload complete", description: `${inserts.length} tyres added` });
+                            fetchRows();
+                          }
+                        },
+                        error: (err) => toast({ title: "Parse error", description: String(err) })
+                      });
+                    }} />
+                    <Button type="button" variant="ghost">Upload CSV</Button>
+                  </label>
                 </div>
               </CardContent>
             </Card>

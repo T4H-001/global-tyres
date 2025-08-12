@@ -16,6 +16,16 @@ const Auth = () => {
     document.title = "TLRS Login | Tyre Lifecycle Registration";
   }, []);
 
+  const ensureProfileExists = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      await supabase.from("profiles").upsert({ id: user.id, email: user.email ?? null });
+    } catch (e) {
+      // ignore if RLS prevents this; signup trigger should handle creation
+    }
+  };
+
   const handleLogin = async () => {
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -23,6 +33,7 @@ const Auth = () => {
     if (error) {
       toast({ title: "Login failed", description: error.message });
     } else {
+      await ensureProfileExists();
       toast({ title: "Welcome back" });
       window.location.href = "/app";
     }

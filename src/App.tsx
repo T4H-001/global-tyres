@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import TLRS from "./pages/TLRS";
 import Auth from "./pages/Auth";
+import FAQ from "./pages/FAQ";
 
 const queryClient = new QueryClient();
 
@@ -17,11 +18,23 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const [isAuthed, setIsAuthed] = useState(false);
 
   useEffect(() => {
+    const ensureProfileExists = async (userId: string, email?: string | null) => {
+      try {
+        await supabase.from("profiles").upsert({ id: userId, email: email ?? null });
+      } catch (e) {
+        // ignore if RLS prevents this; signup trigger should handle creation
+      }
+    };
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsAuthed(!!session);
+      if (session?.user) {
+        setTimeout(() => ensureProfileExists(session.user!.id, session.user!.email), 0);
+      }
     });
     supabase.auth.getSession().then(({ data: { session } }) => {
       setIsAuthed(!!session);
+      if (session?.user) ensureProfileExists(session.user.id, session.user.email);
       setLoading(false);
     });
     return () => subscription.unsubscribe();
@@ -40,6 +53,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/faq" element={<FAQ />} />
           <Route path="/app" element={<ProtectedRoute><TLRS /></ProtectedRoute>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

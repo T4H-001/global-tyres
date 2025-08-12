@@ -29,6 +29,11 @@ const Index = () => {
                 Login / Sign up
               </Button>
             </Link>
+            <Link to="/faq">
+              <Button size="lg" variant="outline">
+                Read FAQs
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
