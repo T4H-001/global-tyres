@@ -1,10 +1,11 @@
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import { useSessionId } from "@/hooks/useSessionId";
 
 type Props = {
   onComplete: (businessId: string) => void;
@@ -12,7 +13,7 @@ type Props = {
 
 export default function StepBusinessForm({ onComplete }: Props) {
   const [loading, setLoading] = useState(false);
-  const [ownerId, setOwnerId] = useState<string | null>(null);
+  const sessionId = useSessionId();
 
   // form fields
   const [businessName, setBusinessName] = useState("");
@@ -22,16 +23,9 @@ export default function StepBusinessForm({ onComplete }: Props) {
   const [state, setState] = useState("QLD");
   const [suburb, setSuburb] = useState("");
 
-  useEffect(() => {
-    (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setOwnerId(user?.id ?? null);
-    })();
-  }, []);
-
   const handleSubmit = async () => {
-    if (!ownerId) {
-      toast({ title: "Not signed in", description: "Please sign in to continue." });
+    if (!sessionId) {
+      toast({ title: "Session not ready", description: "Please wait a moment and try again." });
       return;
     }
     if (!businessName.trim()) {
@@ -43,13 +37,13 @@ export default function StepBusinessForm({ onComplete }: Props) {
     const { data, error } = await (supabase as any)
       .from("lrs_businesses")
       .insert({
-        owner_user_id: ownerId,
         business_name: businessName.trim(),
         role,
         abn: abn || null,
         phone: phone || null,
         state: state || null,
         suburb: suburb || null,
+        session_id: sessionId,
       })
       .select()
       .maybeSingle();
@@ -121,7 +115,7 @@ export default function StepBusinessForm({ onComplete }: Props) {
       </div>
 
       <div className="flex justify-end">
-        <Button onClick={handleSubmit} disabled={loading || !ownerId}>
+        <Button onClick={handleSubmit} disabled={loading || !sessionId}>
           {loading ? "Saving..." : "Save & Continue"}
         </Button>
       </div>

@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
+import { useSessionId } from "@/hooks/useSessionId";
 
 type Plan = {
   slug: string;
@@ -26,13 +27,10 @@ export default function StepPlanSelect({ businessId, onBack, onComplete }: Props
   const [loading, setLoading] = useState(true);
   const [selecting, setSelecting] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
-  const [userId, setUserId] = useState<string | null>(null);
+  const sessionId = useSessionId();
 
   useEffect(() => {
     (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUserId(user?.id ?? null);
-
       const { data, error } = await (supabase as any)
         .from("lrs_pricing_plans")
         .select("*")
@@ -54,8 +52,8 @@ export default function StepPlanSelect({ businessId, onBack, onComplete }: Props
       toast({ title: "Please select a plan" });
       return;
     }
-    if (!userId) {
-      toast({ title: "Not signed in", description: "Please sign in again." });
+    if (!sessionId) {
+      toast({ title: "Session not ready", description: "Please wait a moment and try again." });
       return;
     }
     setSelecting(true);
@@ -64,10 +62,10 @@ export default function StepPlanSelect({ businessId, onBack, onComplete }: Props
     const { data, error } = await (supabase as any)
       .from("lrs_subscriptions")
       .insert({
-        user_id: userId,
         business_id: businessId,
         plan_slug: selectedSlug,
         status: "incomplete",
+        session_id: sessionId,
       })
       .select()
       .maybeSingle();
@@ -127,7 +125,7 @@ export default function StepPlanSelect({ businessId, onBack, onComplete }: Props
 
       <div className="flex justify-between pt-2">
         <Button variant="ghost" onClick={onBack}>Back</Button>
-        <Button onClick={confirmPlan} disabled={selecting || !selectedSlug}>
+        <Button onClick={confirmPlan} disabled={selecting || !selectedSlug || !sessionId}>
           {selecting ? "Saving..." : "Confirm plan"}
         </Button>
       </div>

@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Recycle, Shield, Globe, BarChart3, ArrowRight, CheckCircle, Zap, Building2, CreditCard, Play } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { InteractiveDemo } from "@/components/InteractiveDemo";
 
 interface PricingPlan {
   slug: string;
@@ -89,11 +90,7 @@ const Index = () => {
   };
 
   const handleGetStarted = () => {
-    if (user) {
-      navigate('/onboarding');
-    } else {
-      navigate('/auth');
-    }
+    navigate('/onboarding');
   };
 
   const formatPrice = (cents: number, currency: string) => {
@@ -163,7 +160,7 @@ const Index = () => {
                 className="bg-white text-primary hover:bg-white/90 shadow-2xl hover:shadow-white/20 transition-all duration-300 px-8 py-6 text-lg font-semibold"
               >
                 <Play className="mr-2 h-5 w-5" />
-                {user ? 'Complete Setup' : 'Get Started'}
+                Start Tracking Now
               </Button>
               <Link to="/faq">
                 <Button 
@@ -188,6 +185,11 @@ const Index = () => {
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Revolutionary tracking technology meets environmental responsibility
           </p>
+        </div>
+
+        {/* Interactive Demo Section */}
+        <div className="mb-20">
+          <InteractiveDemo />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">

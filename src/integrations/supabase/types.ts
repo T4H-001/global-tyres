@@ -7767,6 +7767,51 @@ export type Database = {
         }
         Relationships: []
       }
+      decision_nudge_responses: {
+        Row: {
+          comments: string | null
+          created_at: string
+          id: string
+          nudge_variant: string | null
+          recipient_email: string
+          responses: Json
+          status: string
+          subject: string
+          submitted_at: string | null
+          tenant_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          comments?: string | null
+          created_at?: string
+          id?: string
+          nudge_variant?: string | null
+          recipient_email: string
+          responses?: Json
+          status?: string
+          subject: string
+          submitted_at?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          comments?: string | null
+          created_at?: string
+          id?: string
+          nudge_variant?: string | null
+          recipient_email?: string
+          responses?: Json
+          status?: string
+          subject?: string
+          submitted_at?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       defense_capability_matches: {
         Row: {
           agent_code: string | null
@@ -11816,10 +11861,11 @@ export type Database = {
           business_name: string
           created_at: string
           id: string
-          owner_user_id: string
+          owner_user_id: string | null
           phone: string | null
           plan_slug: string | null
           role: string
+          session_id: string | null
           state: string | null
           suburb: string | null
           updated_at: string
@@ -11829,10 +11875,11 @@ export type Database = {
           business_name: string
           created_at?: string
           id?: string
-          owner_user_id: string
+          owner_user_id?: string | null
           phone?: string | null
           plan_slug?: string | null
           role: string
+          session_id?: string | null
           state?: string | null
           suburb?: string | null
           updated_at?: string
@@ -11842,10 +11889,11 @@ export type Database = {
           business_name?: string
           created_at?: string
           id?: string
-          owner_user_id?: string
+          owner_user_id?: string | null
           phone?: string | null
           plan_slug?: string | null
           role?: string
+          session_id?: string | null
           state?: string | null
           suburb?: string | null
           updated_at?: string
@@ -12005,6 +12053,7 @@ export type Database = {
           current_period_end: string | null
           id: string
           plan_slug: string
+          session_id: string | null
           status: string
           stripe_customer_id: string | null
           stripe_subscription_id: string | null
@@ -12017,6 +12066,7 @@ export type Database = {
           current_period_end?: string | null
           id?: string
           plan_slug: string
+          session_id?: string | null
           status?: string
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
@@ -12029,6 +12079,7 @@ export type Database = {
           current_period_end?: string | null
           id?: string
           plan_slug?: string
+          session_id?: string | null
           status?: string
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
@@ -22200,6 +22251,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      tenant_nudge_configs: {
+        Row: {
+          config: Json
+          created_at: string
+          id: string
+          is_active: boolean
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       tenant_pricing_plans: {
         Row: {
