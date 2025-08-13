@@ -112,7 +112,45 @@ class TyreService {
     }
   }
 
-  // Get tyre registrations for a business
+  // Get tyre registrations for a business with pagination
+  async getBusinessTyresPaginated(
+    businessId: string, 
+    page: number = 1, 
+    limit: number = 20
+  ): Promise<{ tyres: TyreRegistration[], total: number }> {
+    try {
+      const offset = (page - 1) * limit;
+      
+      // Get total count first
+      const { count } = await supabase
+        .from('tyre_registrations')
+        .select('*', { count: 'exact', head: true })
+        .eq('business_id', businessId);
+
+      // Get paginated data
+      const { data, error } = await supabase
+        .from('tyre_registrations')
+        .select('*')
+        .eq('business_id', businessId)
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      if (error) {
+        console.error('Error fetching business tyres:', error);
+        return { tyres: [], total: 0 };
+      }
+
+      return { 
+        tyres: (data || []) as TyreRegistration[], 
+        total: count || 0 
+      };
+    } catch (error) {
+      console.error('Failed to fetch business tyres:', error);
+      return { tyres: [], total: 0 };
+    }
+  }
+
+  // Get tyre registrations for a business (keep original method for compatibility)
   async getBusinessTyres(businessId: string): Promise<TyreRegistration[]> {
     try {
       const { data, error } = await supabase

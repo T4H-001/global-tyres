@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,9 @@ import {
   Recycle, 
   AlertTriangle,
   CheckCircle,
-  Clock
+  Clock,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 interface Props {
@@ -25,20 +28,26 @@ export default function TyreDashboard({ businessId }: Props) {
   const [insights, setInsights] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [selectedTyre, setSelectedTyre] = useState<TyreRegistration | null>(null);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalTyres, setTotalTyres] = useState(0);
+  const itemsPerPage = 20;
 
   useEffect(() => {
     loadDashboardData();
-  }, [businessId]);
+  }, [businessId, currentPage]);
 
   const loadDashboardData = async () => {
     setLoading(true);
     try {
       const [tyreData, insightData] = await Promise.all([
-        tyreService.getBusinessTyres(businessId),
+        tyreService.getBusinessTyresPaginated(businessId, currentPage, itemsPerPage),
         tyreService.getWasteInsights(businessId)
       ]);
       
-      setTyres(tyreData);
+      setTyres(tyreData.tyres);
+      setTotalTyres(tyreData.total);
       setInsights(insightData);
     } catch (error) {
       console.error('Failed to load dashboard data:', error);
@@ -104,6 +113,8 @@ export default function TyreDashboard({ businessId }: Props) {
     }
   };
 
+  const totalPages = Math.ceil(totalTyres / itemsPerPage);
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -131,7 +142,7 @@ export default function TyreDashboard({ businessId }: Props) {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Total Tyres</p>
-                  <p className="text-2xl font-bold">{insights.totalTyres}</p>
+                  <p className="text-2xl font-bold">{insights.totalTyres.toLocaleString()}</p>
                 </div>
                 <QrCode className="h-8 w-8 text-primary" />
               </div>
@@ -143,7 +154,7 @@ export default function TyreDashboard({ businessId }: Props) {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Active Tyres</p>
-                  <p className="text-2xl font-bold text-green-600">{insights.activeTyres}</p>
+                  <p className="text-2xl font-bold text-green-600">{insights.activeTyres.toLocaleString()}</p>
                 </div>
                 <CheckCircle className="h-8 w-8 text-green-500" />
               </div>
@@ -155,7 +166,7 @@ export default function TyreDashboard({ businessId }: Props) {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Recycled</p>
-                  <p className="text-2xl font-bold text-blue-600">{insights.recycledTyres}</p>
+                  <p className="text-2xl font-bold text-blue-600">{insights.recycledTyres.toLocaleString()}</p>
                 </div>
                 <Recycle className="h-8 w-8 text-blue-500" />
               </div>
@@ -179,10 +190,15 @@ export default function TyreDashboard({ businessId }: Props) {
       {/* Tyre List */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <QrCode className="h-5 w-5" />
-            Registered Tyres
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <QrCode className="h-5 w-5" />
+              Registered Tyres ({totalTyres.toLocaleString()})
+            </CardTitle>
+            <div className="text-sm text-muted-foreground">
+              Showing {((currentPage - 1) * itemsPerPage) + 1} - {Math.min(currentPage * itemsPerPage, totalTyres)} of {totalTyres.toLocaleString()}
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           {tyres.length === 0 ? (
@@ -192,58 +208,71 @@ export default function TyreDashboard({ businessId }: Props) {
               <p className="text-gray-500">Start by registering your first tyre to track its lifecycle.</p>
             </div>
           ) : (
-            <div className="space-y-4">
-              {tyres.map((tyre) => (
-                <div key={tyre.id} className="border rounded-lg p-4 hover:bg-gray-50">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-medium">{tyre.tyre_serial}</h3>
-                        <Badge className={getStatusColor(tyre.status)}>
-                          {getStatusIcon(tyre.status)}
-                          {tyre.status}
-                        </Badge>
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4" />
-                          {tyre.install_date ? new Date(tyre.install_date).toLocaleDateString() : 'Not installed'}
+            <>
+              <div className="space-y-4">
+                {tyres.map((tyre) => (
+                  <div key={tyre.id} className="border rounded-lg p-4 hover:bg-gray-50">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="font-medium">{tyre.tyre_serial}</h3>
+                          <Badge className={getStatusColor(tyre.status)}>
+                            {getStatusIcon(tyre.status)}
+                            {tyre.status}
+                          </Badge>
                         </div>
                         
-                        {tyre.vehicle_registration && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
                           <div className="flex items-center gap-1">
-                            <Truck className="h-4 w-4" />
-                            {tyre.vehicle_registration}
+                            <Calendar className="h-4 w-4" />
+                            {tyre.install_date ? new Date(tyre.install_date).toLocaleDateString() : 'Not installed'}
                           </div>
-                        )}
+                          
+                          {tyre.vehicle_registration && (
+                            <div className="flex items-center gap-1">
+                              <Truck className="h-4 w-4" />
+                              {tyre.vehicle_registration}
+                            </div>
+                          )}
+                          
+                          {tyre.location_state && (
+                            <div className="flex items-center gap-1">
+                              <MapPin className="h-4 w-4" />
+                              {tyre.location_state} {tyre.location_postcode}
+                            </div>
+                          )}
+                        </div>
                         
-                        {tyre.location_state && (
-                          <div className="flex items-center gap-1">
-                            <MapPin className="h-4 w-4" />
-                            {tyre.location_state} {tyre.location_postcode}
+                        {tyre.brand && (
+                          <div className="mt-2 text-sm">
+                            <span className="font-medium">{tyre.brand}</span>
+                            {tyre.size && <span className="text-gray-500"> • {tyre.size}</span>}
                           </div>
                         )}
                       </div>
                       
-                      {tyre.brand && (
-                        <div className="mt-2 text-sm">
-                          <span className="font-medium">{tyre.brand}</span>
-                          {tyre.size && <span className="text-gray-500"> • {tyre.size}</span>}
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      {tyre.status === 'active' && (
-                        <>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleStatusUpdate(tyre.id!, 'removed')}
-                          >
-                            Remove
-                          </Button>
+                      <div className="flex items-center gap-2">
+                        {tyre.status === 'active' && (
+                          <>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleStatusUpdate(tyre.id!, 'removed')}
+                            >
+                              Remove
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleStatusUpdate(tyre.id!, 'recycled')}
+                              className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                            >
+                              Recycle
+                            </Button>
+                          </>
+                        )}
+                        
+                        {tyre.status === 'removed' && (
                           <Button
                             size="sm"
                             variant="outline"
@@ -252,37 +281,55 @@ export default function TyreDashboard({ businessId }: Props) {
                           >
                             Recycle
                           </Button>
-                        </>
-                      )}
-                      
-                      {tyre.status === 'removed' && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleStatusUpdate(tyre.id!, 'recycled')}
-                          className="text-blue-600 border-blue-600 hover:bg-blue-50"
-                        >
-                          Recycle
-                        </Button>
-                      )}
-                      
-                      {tyre.qr_code_url && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => {
-                            navigator.clipboard.writeText(tyre.qr_code_url!);
-                            toast({ title: "QR code URL copied to clipboard" });
-                          }}
-                        >
-                          Copy QR
-                        </Button>
-                      )}
+                        )}
+                        
+                        {tyre.qr_code_url && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              navigator.clipboard.writeText(tyre.qr_code_url!);
+                              toast({ title: "QR code URL copied to clipboard" });
+                            }}
+                          >
+                            Copy QR
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between mt-6">
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={currentPage === 1}
+                  >
+                    <ChevronLeft className="h-4 w-4 mr-2" />
+                    Previous
+                  </Button>
+                  
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">
+                      Page {currentPage} of {totalPages}
+                    </span>
+                  </div>
+                  
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4 ml-2" />
+                  </Button>
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           )}
         </CardContent>
       </Card>
@@ -300,7 +347,7 @@ export default function TyreDashboard({ businessId }: Props) {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {Object.entries(insights.locationBreakdown).map(([state, count]) => (
                 <div key={state} className="text-center">
-                  <p className="text-2xl font-bold text-primary">{count as number}</p>
+                  <p className="text-2xl font-bold text-primary">{(count as number).toLocaleString()}</p>
                   <p className="text-sm text-gray-600">{state}</p>
                 </div>
               ))}

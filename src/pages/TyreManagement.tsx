@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,11 +13,11 @@ export default function TyreManagement() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('dashboard');
 
-  // Mock business data for development
+  // Use the development business UUID that we just created
   const business = {
-    id: 'dev-business-123',
+    id: '11111111-1111-1111-1111-111111111111',
     business_name: 'Development Business',
-    business_type: 'development',
+    business_type: 'retail',
     contact_email: 'dev@example.com'
   };
 
@@ -27,7 +28,6 @@ export default function TyreManagement() {
       description: "Your tyre has been added to the tracking system"
     });
   };
-
 
   return (
     <div className="min-h-screen bg-gradient-hero">
@@ -45,6 +45,7 @@ export default function TyreManagement() {
             <div>
               <h1 className="text-2xl md:text-3xl font-bold">Tyre Management</h1>
               <p className="text-muted-foreground">{business.business_name}</p>
+              <p className="text-sm text-muted-foreground">Sample dataset: 5,000 tyres</p>
             </div>
           </div>
           
