@@ -9,6 +9,7 @@ import TyreRegistrationForm from '@/components/tyre/TyreRegistrationForm';
 import TyreDashboard from '@/components/tyre/TyreDashboard';
 import { QrCode, BarChart3, Plus, ArrowLeft } from 'lucide-react';
 import BulkUpload from '@/components/tyre/BulkUpload';
+import EmailTestInterface from '@/components/admin/EmailTestInterface';
 
 export default function TyreManagement() {
   const navigate = useNavigate();
@@ -65,7 +66,7 @@ export default function TyreManagement() {
 
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 max-w-xl">
+          <TabsList className="grid w-full grid-cols-4 max-w-2xl">
             <TabsTrigger value="dashboard" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
               Dashboard
@@ -76,6 +77,9 @@ export default function TyreManagement() {
             </TabsTrigger>
             <TabsTrigger value="bulk" className="flex items-center gap-2">
               Bulk Upload
+            </TabsTrigger>
+            <TabsTrigger value="email-test" className="flex items-center gap-2">
+              Email Test
             </TabsTrigger>
           </TabsList>
 
@@ -94,6 +98,12 @@ export default function TyreManagement() {
             {/** Lazy import would be ideal; direct import for simplicity */}
             {/* @ts-ignore */}
             <BulkUpload businessId={business.id} onComplete={() => setActiveTab('dashboard')} />
+          </TabsContent>
+
+          <TabsContent value="email-test">
+            <div className="flex justify-center">
+              <EmailTestInterface />
+            </div>
           </TabsContent>
         </Tabs>
 

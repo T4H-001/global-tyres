@@ -9,6 +9,7 @@ import StepBusinessForm from "@/components/onboarding/StepBusinessForm";
 import StepPlanSelect from "@/components/onboarding/StepPlanSelect";
 import StepPayment from "@/components/onboarding/StepPayment";
 import StepOwnerDetails from "@/components/onboarding/StepOwnerDetails";
+import { EmailService } from "@/services/emailService";
 
 type StepKey = "plan" | "business" | "owner" | "payment";
 
@@ -53,8 +54,24 @@ export default function Onboarding() {
     goNext();
   };
 
-  const handleOwnerComplete = () => {
-    toast({ title: "Setup complete! Welcome to TLRS!" });
+  const handleOwnerComplete = async (ownerData?: { email: string; name: string }) => {
+    // Send welcome email if owner data is provided
+    if (ownerData) {
+      try {
+        await EmailService.sendWelcomeEmail(ownerData.email, ownerData.name);
+        toast({ 
+          title: "Setup complete! Welcome to TLRS!", 
+          description: "A welcome email has been sent to your inbox."
+        });
+      } catch (error) {
+        toast({ 
+          title: "Setup complete! Welcome to TLRS!", 
+          description: "Note: Welcome email could not be sent."
+        });
+      }
+    } else {
+      toast({ title: "Setup complete! Welcome to TLRS!" });
+    }
     navigate("/tyres");
   };
 

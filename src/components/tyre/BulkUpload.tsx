@@ -6,6 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { toast } from '@/hooks/use-toast';
 import Papa from 'papaparse';
 import { supabase } from '@/integrations/supabase/client';
+import { EmailService } from '@/services/emailService';
 
 interface BulkUploadProps {
   businessId: string;
@@ -82,6 +83,21 @@ export default function BulkUpload({ businessId, onComplete }: BulkUploadProps) 
       if (data.errors?.length) {
         console.warn('Bulk upload errors', data.errors);
       }
+
+      // Send bulk upload notification email
+      try {
+        const uploadStatus = data.failed > 0 ? 'error' : 'success';
+        // Use a default email for demo - in production this would come from user session
+        await EmailService.sendBulkUploadEmail(
+          'troy.latter@gmail.com', 
+          data.inserted, 
+          uploadStatus, 
+          data.failed
+        );
+      } catch (emailError) {
+        console.error('Failed to send bulk upload email:', emailError);
+      }
+
       onComplete?.();
     } catch (e: any) {
       toast({ title: 'Upload failed', description: e.message || 'Unknown error', variant: 'destructive' });

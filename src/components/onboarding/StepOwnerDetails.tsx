@@ -10,7 +10,7 @@ import { useSessionId } from "@/hooks/useSessionId";
 
 type Props = {
   onBack: () => void;
-  onComplete: () => void;
+  onComplete: (ownerData?: { email: string; name: string }) => void;
 };
 
 export default function StepOwnerDetails({ onBack, onComplete }: Props) {
@@ -73,7 +73,12 @@ export default function StepOwnerDetails({ onBack, onComplete }: Props) {
       }
 
       toast({ title: "Profile saved successfully!" });
-      onComplete();
+      
+      // Pass owner data for welcome email
+      onComplete({
+        email: email || '',
+        name: fullName
+      });
     } catch (error: any) {
       console.error("Failed to save owner profile:", error);
       toast({ title: "Error", description: "Failed to save profile. Please try again." });
