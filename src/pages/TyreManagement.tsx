@@ -8,6 +8,7 @@ import { toast } from '@/hooks/use-toast';
 import TyreRegistrationForm from '@/components/tyre/TyreRegistrationForm';
 import TyreDashboard from '@/components/tyre/TyreDashboard';
 import { QrCode, BarChart3, Plus, ArrowLeft } from 'lucide-react';
+import BulkUpload from '@/components/tyre/BulkUpload';
 
 export default function TyreManagement() {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ export default function TyreManagement() {
 
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 max-w-md">
+          <TabsList className="grid w-full grid-cols-3 max-w-xl">
             <TabsTrigger value="dashboard" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
               Dashboard
@@ -68,6 +69,9 @@ export default function TyreManagement() {
             <TabsTrigger value="register" className="flex items-center gap-2">
               <QrCode className="h-4 w-4" />
               Register
+            </TabsTrigger>
+            <TabsTrigger value="bulk" className="flex items-center gap-2">
+              Bulk Upload
             </TabsTrigger>
           </TabsList>
 
@@ -80,6 +84,12 @@ export default function TyreManagement() {
               businessId={business.id}
               onRegistrationComplete={handleRegistrationComplete}
             />
+          </TabsContent>
+
+          <TabsContent value="bulk">
+            {/** Lazy import would be ideal; direct import for simplicity */}
+            {/* @ts-ignore */}
+            <BulkUpload businessId={business.id} onComplete={() => setActiveTab('dashboard')} />
           </TabsContent>
         </Tabs>
 
