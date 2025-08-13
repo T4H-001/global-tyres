@@ -15,6 +15,9 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import Dashboard from "./pages/Dashboard";
 import RetailerPortal from "./pages/RetailerPortal";
 import RetailerOnboarding from "./pages/RetailerOnboarding";
+import Contact from "./pages/Contact";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import RequireAuth from "@/components/auth/RequireAuth";
 import RedirectIfAuthed from "@/components/auth/RedirectIfAuthed";
 
@@ -37,6 +40,9 @@ const App = () => (
           <Route path="/tyres" element={<TyreManagement />} />
           <Route path="/retailer" element={<RetailerPortal />} />
           <Route path="/register/:retailerCode?" element={<Onboarding />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

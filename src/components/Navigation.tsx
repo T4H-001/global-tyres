@@ -54,6 +54,16 @@ export const Navigation = () => {
               </Button>
             </Link>
             
+            <Link to="/contact">
+              <Button 
+                variant={isActive("/contact") ? "default" : "ghost"}
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                Help
+              </Button>
+            </Link>
+            
             <Button variant="ghost" size="sm">
               <Settings className="h-4 w-4" />
             </Button>

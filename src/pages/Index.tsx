@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { InteractiveDemo } from "@/components/InteractiveDemo";
 import { PricingCard } from "@/components/pricing/PricingCard";
 import { UserTypeSelector } from "@/components/pricing/UserTypeSelector";
+import { Footer } from "@/components/Footer";
 
 interface PricingPlan {
   slug: string;
@@ -396,6 +397,8 @@ const Index = () => {
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 };
