@@ -4,51 +4,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from '@/hooks/use-toast';
-import { useSessionId } from '@/hooks/useSessionId';
-import { supabase } from '@/integrations/supabase/client';
 import TyreRegistrationForm from '@/components/tyre/TyreRegistrationForm';
 import TyreDashboard from '@/components/tyre/TyreDashboard';
 import { QrCode, BarChart3, Plus, ArrowLeft } from 'lucide-react';
 
 export default function TyreManagement() {
   const navigate = useNavigate();
-  const sessionId = useSessionId();
-  const [business, setBusiness] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
 
-  useEffect(() => {
-    if (sessionId) {
-      loadBusinessData();
-    }
-  }, [sessionId]);
-
-  const loadBusinessData = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('lrs_businesses')
-        .select('*')
-        .eq('session_id', sessionId)
-        .single();
-
-      if (error) {
-        console.error('Error loading business:', error);
-        toast({
-          title: "Session not found",
-          description: "Please complete the onboarding process first",
-          variant: "destructive"
-        });
-        navigate('/onboarding');
-        return;
-      }
-
-      setBusiness(data);
-    } catch (error) {
-      console.error('Failed to load business data:', error);
-      navigate('/onboarding');
-    } finally {
-      setLoading(false);
-    }
+  // Mock business data for development
+  const business = {
+    id: 'dev-business-123',
+    business_name: 'Development Business',
+    business_type: 'development',
+    contact_email: 'dev@example.com'
   };
 
   const handleRegistrationComplete = () => {
@@ -59,34 +28,6 @@ export default function TyreManagement() {
     });
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-hero flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading your dashboard...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!business) {
-    return (
-      <div className="min-h-screen bg-gradient-hero flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardContent className="p-6 text-center">
-            <h2 className="text-xl font-semibold mb-4">Business Not Found</h2>
-            <p className="text-muted-foreground mb-4">
-              Please complete the onboarding process to access tyre management.
-            </p>
-            <Button onClick={() => navigate('/onboarding')}>
-              Start Onboarding
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-hero">

@@ -25,15 +25,11 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route element={<RedirectIfAuthed to="/tyres" />}> 
-            <Route path="/auth" element={<Auth />} />
-          </Route>
+          <Route path="/auth" element={<Auth />} />
           <Route path="/faq" element={<FAQ />} />
-          <Route element={<RequireAuth />}>
-            <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/app" element={<TLRS />} />
-            <Route path="/tyres" element={<TyreManagement />} />
-          </Route>
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/app" element={<TLRS />} />
+          <Route path="/tyres" element={<TyreManagement />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

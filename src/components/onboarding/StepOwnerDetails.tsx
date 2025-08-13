@@ -157,7 +157,7 @@ export default function StepOwnerDetails({ onBack, onComplete }: Props) {
           <Checkbox 
             id="consent-terms" 
             checked={consentTerms}
-            onCheckedChange={setConsentTerms}
+            onCheckedChange={(checked) => setConsentTerms(checked === true)}
           />
           <Label htmlFor="consent-terms" className="text-sm">
             I agree to the Terms of Service and Privacy Policy *
@@ -168,7 +168,7 @@ export default function StepOwnerDetails({ onBack, onComplete }: Props) {
           <Checkbox 
             id="consent-marketing" 
             checked={consentMarketing}
-            onCheckedChange={setConsentMarketing}
+            onCheckedChange={(checked) => setConsentMarketing(checked === true)}
           />
           <Label htmlFor="consent-marketing" className="text-sm">
             I'd like to receive updates about new features and tyre safety tips
