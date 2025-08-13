@@ -7,20 +7,25 @@ import { Recycle, Shield, Globe, BarChart3, ArrowRight, CheckCircle, Zap, Buildi
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { InteractiveDemo } from "@/components/InteractiveDemo";
+import { PricingCard } from "@/components/pricing/PricingCard";
+import { UserTypeSelector } from "@/components/pricing/UserTypeSelector";
 
 interface PricingPlan {
   slug: string;
   display_name: string;
   price_cents: number;
-  currency_code: string;
+  currency: string;
   tier: string;
   features: string[];
+  target_user_type?: string;
+  max_tyres_per_month?: number;
 }
 
 const Index = () => {
   const [plans, setPlans] = useState<PricingPlan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [selectedUserType, setSelectedUserType] = useState<'individual' | 'business' | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -38,31 +43,44 @@ const Index = () => {
       
       if (error) {
         console.error('Error fetching pricing plans:', error);
-        // Fallback to static plans
+        // Fallback to static plans with free option
         setPlans([
           {
+            slug: 'free-car-owner',
+            display_name: 'Free Car Owner',
+            price_cents: 0,
+            currency: 'AUD',
+            tier: 'free',
+            target_user_type: 'individual',
+            max_tyres_per_month: 10,
+            features: ['Track up to 10 personal tyres per month', 'Basic tyre lifecycle tracking', 'QR code generation', 'Mobile-friendly interface', 'Email notifications']
+          },
+          {
             slug: 'starter',
-            display_name: 'Starter',
-            price_cents: 1900,
-            currency_code: 'AUD',
+            display_name: 'Business Starter',
+            price_cents: 5000,
+            currency: 'AUD',
             tier: 'basic',
-            features: ['Up to 500 tyres/year', 'Basic compliance reporting', 'Email support']
+            target_user_type: 'business',
+            features: ['Up to 500 tyres/month', 'Basic compliance reporting', 'Email support', 'CSV exports']
           },
           {
             slug: 'pro',
-            display_name: 'Pro',
-            price_cents: 5900,
-            currency_code: 'AUD',
+            display_name: 'Business Pro',
+            price_cents: 12000,
+            currency: 'AUD',
             tier: 'pro',
-            features: ['Up to 5,000 tyres/year', 'Advanced analytics & search', 'Priority support']
+            target_user_type: 'business',
+            features: ['Up to 5,000 tyres/month', 'Advanced analytics & search', 'Priority support', 'API access', 'Custom reports']
           },
           {
             slug: 'enterprise',
             display_name: 'Enterprise',
-            price_cents: 14900,
-            currency_code: 'AUD',
+            price_cents: 25000,
+            currency: 'AUD',
             tier: 'enterprise',
-            features: ['Unlimited tyres', 'SLA + dedicated success manager', 'Custom integrations']
+            target_user_type: 'business',
+            features: ['Unlimited tyres', 'SLA + dedicated success manager', 'Custom integrations', 'White-label options', 'Advanced security']
           }
         ]);
       } else if (data) {
@@ -71,8 +89,10 @@ const Index = () => {
           slug: plan.slug,
           display_name: plan.display_name,
           price_cents: plan.price_cents,
-          currency_code: plan.currency_code,
+          currency: plan.currency || 'AUD',
           tier: plan.tier,
+          target_user_type: plan.target_user_type,
+          max_tyres_per_month: plan.max_tyres_per_month,
           features: Array.isArray(plan.features) ? plan.features : []
         }));
         setPlans(mappedPlans);
@@ -92,6 +112,22 @@ const Index = () => {
   const handleGetStarted = () => {
     navigate('/onboarding');
   };
+
+  const handlePlanSelect = (planSlug: string) => {
+    // For free plan, go directly to tyre registration
+    if (planSlug === 'free-car-owner') {
+      navigate('/tyres/register');
+      return;
+    }
+    
+    // For paid plans, go to onboarding with plan pre-selected
+    navigate('/onboarding', { state: { selectedPlan: planSlug } });
+  };
+
+  // Filter plans based on selected user type
+  const filteredPlans = selectedUserType 
+    ? plans.filter(plan => plan.target_user_type === selectedUserType)
+    : plans;
 
   const formatPrice = (cents: number, currency?: string) => {
     const amount = cents / 100;
@@ -265,51 +301,43 @@ const Index = () => {
             <div className="text-center mb-16">
               <h3 className="text-3xl md:text-4xl font-bold mb-6">Simple, Transparent Pricing</h3>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Choose the plan that scales with your tyre stewardship needs
+                Choose the plan that fits your tyre tracking needs
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {plans.map((plan, index) => (
-                <Card 
-                  key={plan.slug} 
-                  className={`group relative hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-0 overflow-hidden ${
-                    index === 1 ? 'ring-2 ring-primary shadow-primary/20' : ''
-                  }`}
-                >
-                  {index === 1 && (
-                    <div className="absolute top-0 left-0 right-0 bg-primary text-white text-center py-2 text-sm font-semibold">
-                      Most Popular
-                    </div>
-                  )}
-                  
-                  <CardHeader className={`text-center p-8 ${index === 1 ? 'pt-12' : ''}`}>
-                    <h4 className="text-2xl font-bold mb-2">{plan.display_name}</h4>
-                    <div className="text-4xl font-bold text-primary mb-6">
-                      {formatPrice(plan.price_cents, plan.currency_code)}
-                      <span className="text-lg font-normal text-muted-foreground">/month</span>
-                    </div>
-                    
-                    <div className="space-y-3 text-left">
-                      {plan.features.map((feature, featureIndex) => (
-                        <div key={featureIndex} className="flex items-center gap-3">
-                          <CheckCircle className="h-5 w-5 text-success flex-shrink-0" />
-                          <span className="text-muted-foreground">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    <Button 
-                      className="w-full mt-8 group-hover:shadow-lg transition-all duration-300" 
-                      variant={index === 1 ? "default" : "outline"}
-                      onClick={handleGetStarted}
-                    >
-                      Get Started
-                    </Button>
-                  </CardHeader>
-                </Card>
-              ))}
-            </div>
+            {/* User Type Selector */}
+            <UserTypeSelector 
+              selectedType={selectedUserType} 
+              onSelect={setSelectedUserType} 
+            />
+            
+            {/* Pricing Cards */}
+            {selectedUserType && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                {filteredPlans.map((plan, index) => (
+                  <PricingCard
+                    key={plan.slug}
+                    plan={plan}
+                    isPopular={index === 1 && selectedUserType === 'business'}
+                    onSelect={handlePlanSelect}
+                  />
+                ))}
+              </div>
+            )}
+            
+            {/* Show all plans if no user type selected */}
+            {!selectedUserType && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto mt-8">
+                {plans.map((plan, index) => (
+                  <PricingCard
+                    key={plan.slug}
+                    plan={plan}
+                    isPopular={plan.tier === 'pro'}
+                    onSelect={handlePlanSelect}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
 

@@ -11934,11 +11934,13 @@ export type Database = {
           display_name: string
           features: Json
           is_active: boolean
+          max_tyres_per_month: number | null
           monthly_registration_limit: number | null
           price_cents: number
           slug: string
           stripe_price_id: string | null
           stripe_product_id: string | null
+          target_user_type: string | null
           tier: string
           updated_at: string
         }
@@ -11948,11 +11950,13 @@ export type Database = {
           display_name: string
           features?: Json
           is_active?: boolean
+          max_tyres_per_month?: number | null
           monthly_registration_limit?: number | null
           price_cents: number
           slug: string
           stripe_price_id?: string | null
           stripe_product_id?: string | null
+          target_user_type?: string | null
           tier: string
           updated_at?: string
         }
@@ -11962,11 +11966,13 @@ export type Database = {
           display_name?: string
           features?: Json
           is_active?: boolean
+          max_tyres_per_month?: number | null
           monthly_registration_limit?: number | null
           price_cents?: number
           slug?: string
           stripe_price_id?: string | null
           stripe_product_id?: string | null
+          target_user_type?: string | null
           tier?: string
           updated_at?: string
         }
