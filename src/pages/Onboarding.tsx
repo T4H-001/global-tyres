@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Zap, CheckCircle2, Building2, CreditCard, User } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import StepBusinessForm from "@/components/onboarding/StepBusinessForm";
 import StepPlanSelect from "@/components/onboarding/StepPlanSelect";
 import StepPayment from "@/components/onboarding/StepPayment";
@@ -31,13 +31,23 @@ export default function Onboarding() {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [isOwnerFlow, setIsOwnerFlow] = useState(false);
   const navigate = useNavigate();
+  const { retailerCode } = useParams();
 
   const steps = isOwnerFlow ? ownerSteps : businessSteps;
   const currentStep = steps[currentStepIdx].key;
 
   useEffect(() => {
     document.title = "TLRS Onboarding - 1-2-3 Setup";
-  }, []);
+    
+    // If there's a retailer code, store it and modify the flow
+    if (retailerCode) {
+      localStorage.setItem('referralCode', retailerCode);
+      toast({
+        title: "Welcome!",
+        description: `You've been referred by retailer ${retailerCode}. Complete registration to get started.`,
+      });
+    }
+  }, [retailerCode]);
 
   const goNext = () => setCurrentStepIdx((i) => Math.min(i + 1, steps.length - 1));
   const goPrev = () => setCurrentStepIdx((i) => Math.max(i - 1, 0));
