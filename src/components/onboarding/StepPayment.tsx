@@ -43,8 +43,8 @@ export default function StepPayment({ subscriptionId, onBack }: Props) {
         });
         navigate("/tyres");
       } else if (data.url) {
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
+        // Open Stripe Checkout in a new tab (recommended)
+        window.open(data.url, '_blank', 'noopener,noreferrer');
       } else {
         throw new Error("No payment URL received");
       }
