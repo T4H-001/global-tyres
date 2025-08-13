@@ -93,11 +93,12 @@ const Index = () => {
     navigate('/onboarding');
   };
 
-  const formatPrice = (cents: number, currency: string) => {
+  const formatPrice = (cents: number, currency?: string) => {
     const amount = cents / 100;
+    const currencyCode = currency && currency.length === 3 ? currency : 'AUD';
     return new Intl.NumberFormat('en-AU', {
       style: 'currency',
-      currency,
+      currency: currencyCode,
     }).format(amount);
   };
 
