@@ -10,6 +10,7 @@ import Auth from "./pages/Auth";
 import FAQ from "./pages/FAQ";
 import Onboarding from "./pages/Onboarding";
 import TyreManagement from "./pages/TyreManagement";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/app" element={<TLRS />} />
           <Route path="/tyres" element={<TyreManagement />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
