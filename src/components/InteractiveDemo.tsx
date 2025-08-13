@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Activity, DollarSign, Truck, Users } from "lucide-react";
+import tyreStackClean from '@/assets/tyre-stack-clean.jpg';
+import tyrePileIllegal from '@/assets/tyre-pile-illegal.jpg';
+import beforeAfterEnvironment from '@/assets/before-after-environment.jpg';
 
 export const InteractiveDemo = () => {
   const [tyreCount, setTyreCount] = useState(4);
@@ -84,16 +87,24 @@ export const InteractiveDemo = () => {
             {/* Sample Tyre Cards */}
             <div className="grid grid-cols-2 gap-4">
               {Array.from({ length: tyreCount }).map((_, index) => (
-                <Card key={index} className="bg-background/50 border-primary/20 hover:border-primary/40 transition-all duration-300">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                        <Truck className="h-4 w-4 text-primary" />
+                <Card key={index} className="bg-background/50 border-primary/20 hover:border-primary/40 transition-all duration-300 overflow-hidden">
+                  <CardContent className="p-2">
+                    <div className="relative h-20 mb-2">
+                      <img 
+                        src={tyreStackClean} 
+                        alt={`Tyre ${index + 1}`}
+                        className="w-full h-full object-cover rounded opacity-90"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded" />
+                      <div className="absolute bottom-1 left-1">
+                        <div className="bg-white/90 px-2 py-1 rounded text-xs font-medium">
+                          DOT: BFGX47{(index + 1).toString().padStart(2, '0')}
+                        </div>
                       </div>
-                      <div>
-                        <div className="font-medium text-sm">DOT: BFGX47{(index + 1).toString().padStart(2, '0')}</div>
-                        <div className="text-xs text-muted-foreground">QR: #{1000 + index}</div>
-                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Truck className="h-3 w-3 text-primary" />
+                      <div className="text-xs text-muted-foreground">QR: #{1000 + index}</div>
                     </div>
                   </CardContent>
                 </Card>
@@ -163,22 +174,29 @@ export const InteractiveDemo = () => {
             ))}
 
             {/* Real-world Impact */}
-            <Card className="bg-gradient-to-r from-primary/5 to-secondary/5 border-primary/20">
-              <CardContent className="p-4">
+            <Card className="bg-gradient-to-r from-primary/5 to-secondary/5 border-primary/20 relative overflow-hidden">
+              <div className="absolute inset-0 opacity-10">
+                <img 
+                  src={scenario === 'dumping' ? tyrePileIllegal : beforeAfterEnvironment} 
+                  alt="Environmental impact"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <CardContent className="p-4 relative z-10">
                 <div className="text-center">
-                  <div className="text-sm font-medium mb-2">Real-world Impact</div>
+                  <div className="text-sm font-medium mb-2 text-foreground">Real-world Impact</div>
                   {scenario === 'dumping' && (
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-xs text-foreground font-medium">
                       🚨 Springbrook QLD: 100+ tyres illegally dumped detected via QR scans
                     </div>
                   )}
                   {scenario === 'ownership' && (
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-xs text-foreground font-medium">
                       ✅ Complete ownership chain maintained for compliance and accountability
                     </div>
                   )}
                   {scenario === 'compliance' && (
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-xs text-foreground font-medium">
                       📊 95% recovery rate achieved through integrated stewardship programs
                     </div>
                   )}
