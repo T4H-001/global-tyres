@@ -14740,7 +14740,7 @@ export type Database = {
           license_plate?: string | null
           phone?: string | null
           updated_at?: string
-          user_id: string
+          user_id?: string
           vehicle_make?: string | null
           vehicle_model?: string | null
           vehicle_year?: number | null

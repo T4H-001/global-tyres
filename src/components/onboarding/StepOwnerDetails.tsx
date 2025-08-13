@@ -42,20 +42,29 @@ export default function StepOwnerDetails({ onBack, onComplete }: Props) {
     setLoading(true);
     
     try {
+      // Only include user_id if an authenticated user exists; otherwise omit it so DB default applies
+      const { data: userResp } = await supabase.auth.getUser();
+      const userId = userResp?.user?.id;
+
+      const payload: any = {
+        full_name: fullName.trim(),
+        email: email || null,
+        phone: phone || null,
+        vehicle_make: vehicleMake || null,
+        vehicle_model: vehicleModel || null,
+        vehicle_year: vehicleYear ? parseInt(vehicleYear) : null,
+        license_plate: licensePlate || null,
+        consent_marketing: consentMarketing,
+        consent_terms: consentTerms,
+      };
+
+      if (userId) {
+        payload.user_id = userId;
+      }
+
       const { error } = await supabase
         .from("owner_profiles")
-        .insert({
-          user_id: (await supabase.auth.getUser()).data.user?.id,
-          full_name: fullName.trim(),
-          email: email || null,
-          phone: phone || null,
-          vehicle_make: vehicleMake || null,
-          vehicle_model: vehicleModel || null,
-          vehicle_year: vehicleYear ? parseInt(vehicleYear) : null,
-          license_plate: licensePlate || null,
-          consent_marketing: consentMarketing,
-          consent_terms: consentTerms,
-        });
+        .insert(payload);
 
       if (error) {
         console.error("Error saving owner profile:", error);

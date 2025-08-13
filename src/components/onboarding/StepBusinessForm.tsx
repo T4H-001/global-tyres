@@ -11,6 +11,9 @@ type Props = {
   onComplete: (businessId: string) => void;
 };
 
+// Strict Australian state codes
+type AUState = "NSW" | "VIC" | "QLD" | "WA" | "SA" | "TAS" | "ACT" | "NT";
+
 export default function StepBusinessForm({ onComplete }: Props) {
   const [loading, setLoading] = useState(false);
   const sessionId = useSessionId();
@@ -20,7 +23,7 @@ export default function StepBusinessForm({ onComplete }: Props) {
   const [role, setRole] = useState<"retailer" | "supplier" | "fleet" | "mechanic" | "recycler" | "admin">("retailer");
   const [abn, setAbn] = useState("");
   const [phone, setPhone] = useState("");
-  const [state, setState] = useState("QLD");
+  const [state, setState] = useState<AUState>("QLD");
   const [suburb, setSuburb] = useState("");
 
   const handleSubmit = async () => {
@@ -96,7 +99,7 @@ export default function StepBusinessForm({ onComplete }: Props) {
           <select
             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             value={state}
-            onChange={(e) => setState(e.target.value)}
+            onChange={(e) => setState(e.target.value as AUState)}
           >
             <option>QLD</option>
             <option>NSW</option>
