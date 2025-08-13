@@ -30,33 +30,52 @@ const Index = () => {
 
   const fetchPricingPlans = async () => {
     try {
-      // For now, show static plans until database is set up
-      setPlans([
-        {
-          slug: 'starter',
-          display_name: 'Starter',
-          price_cents: 1900,
-          currency_code: 'AUD',
-          tier: 'basic',
-          features: ['Up to 500 tyres/year', 'Basic compliance reporting', 'Email support']
-        },
-        {
-          slug: 'pro',
-          display_name: 'Pro',
-          price_cents: 5900,
-          currency_code: 'AUD',
-          tier: 'pro',
-          features: ['Up to 5,000 tyres/year', 'Advanced analytics & search', 'Priority support']
-        },
-        {
-          slug: 'enterprise',
-          display_name: 'Enterprise',
-          price_cents: 14900,
-          currency_code: 'AUD',
-          tier: 'enterprise',
-          features: ['Unlimited tyres', 'SLA + dedicated success manager', 'Custom integrations']
-        }
-      ]);
+      const { data, error } = await supabase
+        .from('lrs_pricing_plans')
+        .select('*')
+        .order('price_cents');
+      
+      if (error) {
+        console.error('Error fetching pricing plans:', error);
+        // Fallback to static plans
+        setPlans([
+          {
+            slug: 'starter',
+            display_name: 'Starter',
+            price_cents: 1900,
+            currency_code: 'AUD',
+            tier: 'basic',
+            features: ['Up to 500 tyres/year', 'Basic compliance reporting', 'Email support']
+          },
+          {
+            slug: 'pro',
+            display_name: 'Pro',
+            price_cents: 5900,
+            currency_code: 'AUD',
+            tier: 'pro',
+            features: ['Up to 5,000 tyres/year', 'Advanced analytics & search', 'Priority support']
+          },
+          {
+            slug: 'enterprise',
+            display_name: 'Enterprise',
+            price_cents: 14900,
+            currency_code: 'AUD',
+            tier: 'enterprise',
+            features: ['Unlimited tyres', 'SLA + dedicated success manager', 'Custom integrations']
+          }
+        ]);
+      } else if (data) {
+        // Map database structure to our interface
+        const mappedPlans = data.map((plan: any) => ({
+          slug: plan.slug,
+          display_name: plan.display_name,
+          price_cents: plan.price_cents,
+          currency_code: plan.currency_code,
+          tier: plan.tier,
+          features: Array.isArray(plan.features) ? plan.features : []
+        }));
+        setPlans(mappedPlans);
+      }
     } catch (error) {
       console.error('Error loading pricing plans:', error);
     } finally {
