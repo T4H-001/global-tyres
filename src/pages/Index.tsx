@@ -161,31 +161,54 @@ const Index = () => {
               the 60-65% of tyres with unknown fates through cutting-edge lifecycle management.
             </p>
 
-            {/* 1-2-3 Process Highlight */}
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-12 p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">1</div>
-                  <div className="text-left">
-                    <div className="font-semibold">Register</div>
-                    <div className="text-sm text-white/80">Your business</div>
+            {/* Tyre Lifecycle Process Highlight */}
+            <div className="grid md:grid-cols-3 gap-6 mt-12 max-w-5xl mx-auto">
+              <div className="p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-300">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-lg">1</div>
+                  <div>
+                    <div className="font-bold text-lg">Register Tyre Data</div>
+                    <div className="text-sm text-white/80">Free for individuals</div>
                   </div>
                 </div>
-                <ArrowRight className="h-5 w-5 text-white/60" />
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-white font-bold">2</div>
-                  <div className="text-left">
-                    <div className="font-semibold">Choose</div>
-                    <div className="text-sm text-white/80">Your plan</div>
+                <p className="text-white/90 text-sm leading-relaxed">
+                  Add DOT codes, generate QR codes, record initial ownership. Track from purchase to end-of-life.
+                </p>
+              </div>
+
+              <div className="p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-300">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-white font-bold text-lg">2</div>
+                  <div>
+                    <div className="font-bold text-lg">Blockchain Verification</div>
+                    <div className="text-sm text-white/80">Ownership & lifecycle mapping</div>
                   </div>
                 </div>
-                <ArrowRight className="h-5 w-5 text-white/60" />
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-white font-bold">3</div>
-                  <div className="text-left">
-                    <div className="font-semibold">Start</div>
-                    <div className="text-sm text-white/80">Tracking</div>
+                <p className="text-white/90 text-sm leading-relaxed">
+                  Every ownership change, status update, and location tracked immutably. Last known owner always identifiable.
+                </p>
+              </div>
+
+              <div className="p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-300">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center text-white font-bold text-lg">3</div>
+                  <div>
+                    <div className="font-bold text-lg">Global Compliance</div>
+                    <div className="text-sm text-white/80">Alerts, fines, auto-registration</div>
                   </div>
+                </div>
+                <p className="text-white/90 text-sm leading-relaxed">
+                  Automated alerts for illegal dumping, compliance reporting, and seamless integration with global stewardship programs.
+                </p>
+              </div>
+            </div>
+
+            {/* Real-world Impact Badge */}
+            <div className="mt-8 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+              <div className="text-center">
+                <div className="font-semibold text-white mb-2">🎯 Target: Every tyre in the lifecycle ecosystem</div>
+                <div className="text-white/80 text-sm">
+                  From manufacturers to car owners, tyre shops to recyclers - comprehensive tracking for accountability
                 </div>
               </div>
             </div>
