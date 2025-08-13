@@ -2956,6 +2956,36 @@ export type Database = {
         }
         Relationships: []
       }
+      api_data_cache: {
+        Row: {
+          api_source: string
+          cache_key: string
+          created_at: string
+          data: Json
+          endpoint: string
+          expires_at: string
+          id: string
+        }
+        Insert: {
+          api_source: string
+          cache_key: string
+          created_at?: string
+          data: Json
+          endpoint: string
+          expires_at: string
+          id?: string
+        }
+        Update: {
+          api_source?: string
+          cache_key?: string
+          created_at?: string
+          data?: Json
+          endpoint?: string
+          expires_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
       api_sources: {
         Row: {
           api_endpoint: string
@@ -8714,6 +8744,75 @@ export type Database = {
         }
         Relationships: []
       }
+      email_deliveries: {
+        Row: {
+          clicked_at: string | null
+          created_at: string
+          delivered_at: string | null
+          delivery_provider: string | null
+          delivery_status: string | null
+          error_message: string | null
+          id: string
+          nudge_response_id: string | null
+          opened_at: string | null
+          provider_message_id: string | null
+          recipient_email: string
+          sent_at: string | null
+          subject: string | null
+          template_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          clicked_at?: string | null
+          created_at?: string
+          delivered_at?: string | null
+          delivery_provider?: string | null
+          delivery_status?: string | null
+          error_message?: string | null
+          id?: string
+          nudge_response_id?: string | null
+          opened_at?: string | null
+          provider_message_id?: string | null
+          recipient_email: string
+          sent_at?: string | null
+          subject?: string | null
+          template_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          clicked_at?: string | null
+          created_at?: string
+          delivered_at?: string | null
+          delivery_provider?: string | null
+          delivery_status?: string | null
+          error_message?: string | null
+          id?: string
+          nudge_response_id?: string | null
+          opened_at?: string | null
+          provider_message_id?: string | null
+          recipient_email?: string
+          sent_at?: string | null
+          subject?: string | null
+          template_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_deliveries_nudge_response_id_fkey"
+            columns: ["nudge_response_id"]
+            isOneToOne: false
+            referencedRelation: "decision_nudge_responses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_deliveries_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "email_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_subscribers: {
         Row: {
           created_at: string
@@ -8740,6 +8839,54 @@ export type Database = {
           is_active?: boolean
           name?: string | null
           preferences?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      email_templates: {
+        Row: {
+          assets: Json | null
+          branding_config: Json | null
+          created_at: string
+          custom_css: string | null
+          html_template: string | null
+          id: string
+          is_active: boolean | null
+          subject_template: string | null
+          template_name: string
+          template_type: string
+          tenant_id: string | null
+          text_template: string | null
+          updated_at: string
+        }
+        Insert: {
+          assets?: Json | null
+          branding_config?: Json | null
+          created_at?: string
+          custom_css?: string | null
+          html_template?: string | null
+          id?: string
+          is_active?: boolean | null
+          subject_template?: string | null
+          template_name: string
+          template_type?: string
+          tenant_id?: string | null
+          text_template?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assets?: Json | null
+          branding_config?: Json | null
+          created_at?: string
+          custom_css?: string | null
+          html_template?: string | null
+          id?: string
+          is_active?: boolean | null
+          subject_template?: string | null
+          template_name?: string
+          template_type?: string
+          tenant_id?: string | null
+          text_template?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -12064,7 +12211,7 @@ export type Database = {
           stripe_customer_id: string | null
           stripe_subscription_id: string | null
           updated_at: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           business_id?: string | null
@@ -12077,7 +12224,7 @@ export type Database = {
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
           updated_at?: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           business_id?: string | null
@@ -12090,7 +12237,7 @@ export type Database = {
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -22262,28 +22409,51 @@ export type Database = {
         Row: {
           config: Json
           created_at: string
+          custom_footer: string | null
+          email_branding: Json | null
+          email_template_id: string | null
+          header_image_url: string | null
           id: string
           is_active: boolean
+          logo_url: string | null
           tenant_id: string
           updated_at: string
         }
         Insert: {
           config?: Json
           created_at?: string
+          custom_footer?: string | null
+          email_branding?: Json | null
+          email_template_id?: string | null
+          header_image_url?: string | null
           id?: string
           is_active?: boolean
+          logo_url?: string | null
           tenant_id: string
           updated_at?: string
         }
         Update: {
           config?: Json
           created_at?: string
+          custom_footer?: string | null
+          email_branding?: Json | null
+          email_template_id?: string | null
+          header_image_url?: string | null
           id?: string
           is_active?: boolean
+          logo_url?: string | null
           tenant_id?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "tenant_nudge_configs_email_template_id_fkey"
+            columns: ["email_template_id"]
+            isOneToOne: false
+            referencedRelation: "email_templates"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tenant_pricing_plans: {
         Row: {
@@ -23223,6 +23393,154 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      tyre_fitment_data: {
+        Row: {
+          created_at: string
+          dot_code: string | null
+          id: string
+          make: string
+          model: string
+          oem_data: Json | null
+          tyre_size: string
+          updated_at: string
+          year_range: string | null
+        }
+        Insert: {
+          created_at?: string
+          dot_code?: string | null
+          id?: string
+          make: string
+          model: string
+          oem_data?: Json | null
+          tyre_size: string
+          updated_at?: string
+          year_range?: string | null
+        }
+        Update: {
+          created_at?: string
+          dot_code?: string | null
+          id?: string
+          make?: string
+          model?: string
+          oem_data?: Json | null
+          tyre_size?: string
+          updated_at?: string
+          year_range?: string | null
+        }
+        Relationships: []
+      }
+      tyre_lifecycle_events: {
+        Row: {
+          created_at: string
+          event_date: string
+          event_type: string
+          id: string
+          location_data: Json | null
+          notes: string | null
+          recorded_by: string | null
+          session_id: string | null
+          tyre_registration_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_date?: string
+          event_type: string
+          id?: string
+          location_data?: Json | null
+          notes?: string | null
+          recorded_by?: string | null
+          session_id?: string | null
+          tyre_registration_id: string
+        }
+        Update: {
+          created_at?: string
+          event_date?: string
+          event_type?: string
+          id?: string
+          location_data?: Json | null
+          notes?: string | null
+          recorded_by?: string | null
+          session_id?: string | null
+          tyre_registration_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tyre_lifecycle_events_tyre_registration_id_fkey"
+            columns: ["tyre_registration_id"]
+            isOneToOne: false
+            referencedRelation: "tyre_registrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tyre_registrations: {
+        Row: {
+          brand: string | null
+          business_id: string | null
+          created_at: string
+          dot_code: string | null
+          id: string
+          install_date: string | null
+          location_coordinates: unknown | null
+          location_postcode: string | null
+          location_state: string | null
+          manufacture_date: string | null
+          qr_code_url: string | null
+          session_id: string | null
+          size: string | null
+          status: string | null
+          tyre_serial: string
+          updated_at: string
+          vehicle_registration: string | null
+        }
+        Insert: {
+          brand?: string | null
+          business_id?: string | null
+          created_at?: string
+          dot_code?: string | null
+          id?: string
+          install_date?: string | null
+          location_coordinates?: unknown | null
+          location_postcode?: string | null
+          location_state?: string | null
+          manufacture_date?: string | null
+          qr_code_url?: string | null
+          session_id?: string | null
+          size?: string | null
+          status?: string | null
+          tyre_serial: string
+          updated_at?: string
+          vehicle_registration?: string | null
+        }
+        Update: {
+          brand?: string | null
+          business_id?: string | null
+          created_at?: string
+          dot_code?: string | null
+          id?: string
+          install_date?: string | null
+          location_coordinates?: unknown | null
+          location_postcode?: string | null
+          location_state?: string | null
+          manufacture_date?: string | null
+          qr_code_url?: string | null
+          session_id?: string | null
+          size?: string | null
+          status?: string | null
+          tyre_serial?: string
+          updated_at?: string
+          vehicle_registration?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tyre_registrations_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "lrs_businesses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       universal_assessment_responses: {
         Row: {

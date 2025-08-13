@@ -24,8 +24,8 @@ export default function StepPayment({ subscriptionId, onBack }: Props) {
   };
 
   const finishSetup = () => {
-    toast({ title: "Setup complete", description: "You can change plan or pay later from the app." });
-    navigate("/app");
+    toast({ title: "Setup complete", description: "Welcome to TLRS! Start managing your tyres now." });
+    navigate("/tyres");
   };
 
   return (
