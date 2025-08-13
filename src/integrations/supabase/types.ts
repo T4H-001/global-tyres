@@ -11777,6 +11777,398 @@ export type Database = {
         }
         Relationships: []
       }
+      lrs_api_keys: {
+        Row: {
+          business_id: string | null
+          created_at: string
+          id: string
+          key_hash: string
+          last_4: string | null
+          note: string | null
+          revoked_at: string | null
+          user_id: string
+        }
+        Insert: {
+          business_id?: string | null
+          created_at?: string
+          id?: string
+          key_hash: string
+          last_4?: string | null
+          note?: string | null
+          revoked_at?: string | null
+          user_id: string
+        }
+        Update: {
+          business_id?: string | null
+          created_at?: string
+          id?: string
+          key_hash?: string
+          last_4?: string | null
+          note?: string | null
+          revoked_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      lrs_businesses: {
+        Row: {
+          abn: string | null
+          business_name: string
+          created_at: string
+          id: string
+          owner_user_id: string
+          phone: string | null
+          plan_slug: string | null
+          role: string
+          state: string | null
+          suburb: string | null
+          updated_at: string
+        }
+        Insert: {
+          abn?: string | null
+          business_name: string
+          created_at?: string
+          id?: string
+          owner_user_id: string
+          phone?: string | null
+          plan_slug?: string | null
+          role: string
+          state?: string | null
+          suburb?: string | null
+          updated_at?: string
+        }
+        Update: {
+          abn?: string | null
+          business_name?: string
+          created_at?: string
+          id?: string
+          owner_user_id?: string
+          phone?: string | null
+          plan_slug?: string | null
+          role?: string
+          state?: string | null
+          suburb?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      lrs_manufacturers: {
+        Row: {
+          created_at: string
+          id: string
+          logo_url: string | null
+          name: string
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name: string
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name?: string
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      lrs_pricing_plans: {
+        Row: {
+          created_at: string
+          currency: string
+          display_name: string
+          features: Json
+          is_active: boolean
+          monthly_registration_limit: number | null
+          price_cents: number
+          slug: string
+          stripe_price_id: string | null
+          stripe_product_id: string | null
+          tier: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          display_name: string
+          features?: Json
+          is_active?: boolean
+          monthly_registration_limit?: number | null
+          price_cents: number
+          slug: string
+          stripe_price_id?: string | null
+          stripe_product_id?: string | null
+          tier: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          display_name?: string
+          features?: Json
+          is_active?: boolean
+          monthly_registration_limit?: number | null
+          price_cents?: number
+          slug?: string
+          stripe_price_id?: string | null
+          stripe_product_id?: string | null
+          tier?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      lrs_retailers: {
+        Row: {
+          created_at: string
+          id: string
+          logo_url: string | null
+          name: string
+          state: string | null
+          suburb: string | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name: string
+          state?: string | null
+          suburb?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name?: string
+          state?: string | null
+          suburb?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      lrs_status_updates: {
+        Row: {
+          created_at: string
+          id: string
+          location_state: string | null
+          new_status: string
+          notes: string | null
+          prev_status: string | null
+          tyre_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          location_state?: string | null
+          new_status: string
+          notes?: string | null
+          prev_status?: string | null
+          tyre_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          location_state?: string | null
+          new_status?: string
+          notes?: string | null
+          prev_status?: string | null
+          tyre_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lrs_status_updates_tyre_id_fkey"
+            columns: ["tyre_id"]
+            isOneToOne: false
+            referencedRelation: "lrs_tyres"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lrs_subscriptions: {
+        Row: {
+          business_id: string | null
+          created_at: string
+          current_period_end: string | null
+          id: string
+          plan_slug: string
+          status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_id?: string | null
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          plan_slug: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          business_id?: string | null
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          plan_slug?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      lrs_suppliers: {
+        Row: {
+          created_at: string
+          id: string
+          logo_url: string | null
+          name: string
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name: string
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name?: string
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      lrs_tags: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          tag_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          tag_type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          tag_type?: string
+        }
+        Relationships: []
+      }
+      lrs_tyre_tags: {
+        Row: {
+          tag_id: string
+          tyre_id: string
+        }
+        Insert: {
+          tag_id: string
+          tyre_id: string
+        }
+        Update: {
+          tag_id?: string
+          tyre_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lrs_tyre_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "lrs_tags"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lrs_tyre_tags_tyre_id_fkey"
+            columns: ["tyre_id"]
+            isOneToOne: false
+            referencedRelation: "lrs_tyres"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lrs_tyres: {
+        Row: {
+          business_id: string | null
+          created_at: string
+          id: string
+          location_state: string | null
+          manufacturer_id: string | null
+          notes: string | null
+          retailer_id: string | null
+          status: string
+          supplier_id: string | null
+          tyre_uid: string
+          updated_at: string
+          user_id: string | null
+          vehicle_make: string | null
+          vehicle_model: string | null
+          vehicle_plate: string | null
+        }
+        Insert: {
+          business_id?: string | null
+          created_at?: string
+          id?: string
+          location_state?: string | null
+          manufacturer_id?: string | null
+          notes?: string | null
+          retailer_id?: string | null
+          status?: string
+          supplier_id?: string | null
+          tyre_uid: string
+          updated_at?: string
+          user_id?: string | null
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_plate?: string | null
+        }
+        Update: {
+          business_id?: string | null
+          created_at?: string
+          id?: string
+          location_state?: string | null
+          manufacturer_id?: string | null
+          notes?: string | null
+          retailer_id?: string | null
+          status?: string
+          supplier_id?: string | null
+          tyre_uid?: string
+          updated_at?: string
+          user_id?: string | null
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_plate?: string | null
+        }
+        Relationships: []
+      }
       managerbundles: {
         Row: {
           aug_price: number | null
@@ -14890,6 +15282,36 @@ export type Database = {
           "Government Benefit / ROI"?: string | null
           "Key Actions"?: string | null
           "Maturity Stage"?: string | null
+        }
+        Relationships: []
+      }
+      "pm_pmAI_maturity_cards.csv": {
+        Row: {
+          "Card Name": string | null
+          Category: string | null
+          "Image Placeholder": string | null
+          "Maturity Stage": string | null
+          Notes: string | null
+          Role: string | null
+          Tag: string | null
+        }
+        Insert: {
+          "Card Name"?: string | null
+          Category?: string | null
+          "Image Placeholder"?: string | null
+          "Maturity Stage"?: string | null
+          Notes?: string | null
+          Role?: string | null
+          Tag?: string | null
+        }
+        Update: {
+          "Card Name"?: string | null
+          Category?: string | null
+          "Image Placeholder"?: string | null
+          "Maturity Stage"?: string | null
+          Notes?: string | null
+          Role?: string | null
+          Tag?: string | null
         }
         Relationships: []
       }

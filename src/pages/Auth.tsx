@@ -35,13 +35,13 @@ const Auth = () => {
     } else {
       await ensureProfileExists();
       toast({ title: "Welcome back" });
-      window.location.href = "/app";
+      window.location.href = "/onboarding";
     }
   };
 
   const handleSignup = async () => {
     setLoading(true);
-    const redirectUrl = `${window.location.origin}/app`;
+    const redirectUrl = `${window.location.origin}/onboarding`;
     const { error } = await supabase.auth.signUp({
       email,
       password,

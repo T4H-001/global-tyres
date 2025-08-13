@@ -1,0 +1,136 @@
+
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { toast } from "@/hooks/use-toast";
+
+type Plan = {
+  slug: string;
+  display_name: string;
+  tier: string;
+  price_cents: number;
+  currency: string;
+  monthly_registration_limit: number | null;
+  features: any;
+};
+
+type Props = {
+  businessId: string | null;
+  onBack: () => void;
+  onComplete: (planSlug: string, subscriptionId: string | null) => void;
+};
+
+export default function StepPlanSelect({ businessId, onBack, onComplete }: Props) {
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selecting, setSelecting] = useState(false);
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUserId(user?.id ?? null);
+
+      const { data, error } = await (supabase as any)
+        .from("lrs_pricing_plans")
+        .select("*")
+        .order("price_cents", { ascending: true });
+
+      setLoading(false);
+
+      if (error) {
+        console.error(error);
+        toast({ title: "Failed to load plans", description: error.message });
+        return;
+      }
+      setPlans(data ?? []);
+    })();
+  }, []);
+
+  const confirmPlan = async () => {
+    if (!selectedSlug) {
+      toast({ title: "Please select a plan" });
+      return;
+    }
+    if (!userId) {
+      toast({ title: "Not signed in", description: "Please sign in again." });
+      return;
+    }
+    setSelecting(true);
+
+    // Create a subscription record with status "incomplete"
+    const { data, error } = await (supabase as any)
+      .from("lrs_subscriptions")
+      .insert({
+        user_id: userId,
+        business_id: businessId,
+        plan_slug: selectedSlug,
+        status: "incomplete",
+      })
+      .select()
+      .maybeSingle();
+
+    setSelecting(false);
+
+    if (error) {
+      console.error(error);
+      toast({ title: "Could not create subscription", description: error.message });
+      return;
+    }
+
+    onComplete(selectedSlug, data?.id ?? null);
+  };
+
+  if (loading) {
+    return <div>Loading plans...</div>;
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="grid md:grid-cols-3 gap-4">
+        {plans.map((plan) => {
+          const active = selectedSlug === plan.slug;
+          return (
+            <Card key={plan.slug} className={active ? "ring-2 ring-primary" : ""}>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span>{plan.display_name}</span>
+                  <span className="text-primary font-semibold">
+                    {(plan.price_cents / 100).toLocaleString(undefined, {
+                      style: "currency",
+                      currency: plan.currency || "AUD",
+                      currencyDisplay: "narrowSymbol",
+                    })}
+                    /mo
+                  </span>
+                </CardTitle>
+                <CardDescription className="capitalize">{plan.tier}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {(Array.isArray(plan.features) ? plan.features : []).slice(0, 5).map((feat: string, idx: number) => (
+                  <div key={idx} className="text-sm text-muted-foreground">• {feat}</div>
+                ))}
+                <Button
+                  className="mt-2 w-full"
+                  variant={active ? "default" : "outline"}
+                  onClick={() => setSelectedSlug(plan.slug)}
+                >
+                  {active ? "Selected" : "Select"}
+                </Button>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      <div className="flex justify-between pt-2">
+        <Button variant="ghost" onClick={onBack}>Back</Button>
+        <Button onClick={confirmPlan} disabled={selecting || !selectedSlug}>
+          {selecting ? "Saving..." : "Confirm plan"}
+        </Button>
+      </div>
+    </div>
+  );
+}
