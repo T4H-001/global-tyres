@@ -3,23 +3,35 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
-import { Zap, CheckCircle2, Building2, CreditCard } from "lucide-react";
+import { Zap, CheckCircle2, Building2, CreditCard, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import StepBusinessForm from "@/components/onboarding/StepBusinessForm";
 import StepPlanSelect from "@/components/onboarding/StepPlanSelect";
 import StepPayment from "@/components/onboarding/StepPayment";
+import StepOwnerDetails from "@/components/onboarding/StepOwnerDetails";
 
-type StepKey = "business" | "plan" | "payment";
+type StepKey = "plan" | "business" | "owner" | "payment";
 
-const steps: { key: StepKey; label: string; icon: React.ComponentType<any> }[] = [
-  { key: "business", label: "Register Business", icon: Building2 },
+const businessSteps: { key: StepKey; label: string; icon: React.ComponentType<any> }[] = [
   { key: "plan", label: "Choose Plan", icon: Zap },
+  { key: "business", label: "Register Business", icon: Building2 },
   { key: "payment", label: "Payment", icon: CreditCard },
+];
+
+const ownerSteps: { key: StepKey; label: string; icon: React.ComponentType<any> }[] = [
+  { key: "plan", label: "Choose Plan", icon: Zap },
+  { key: "owner", label: "Your Details", icon: User },
 ];
 
 export default function Onboarding() {
   const [currentStepIdx, setCurrentStepIdx] = useState(0);
   const [businessId, setBusinessId] = useState<string | null>(null);
   const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const [isOwnerFlow, setIsOwnerFlow] = useState(false);
+  const navigate = useNavigate();
+
+  const steps = isOwnerFlow ? ownerSteps : businessSteps;
   const currentStep = steps[currentStepIdx].key;
 
   useEffect(() => {
@@ -29,6 +41,23 @@ export default function Onboarding() {
   const goNext = () => setCurrentStepIdx((i) => Math.min(i + 1, steps.length - 1));
   const goPrev = () => setCurrentStepIdx((i) => Math.max(i - 1, 0));
 
+  const handlePlanComplete = (planSlug: string, subId: string | null) => {
+    setSelectedPlan(planSlug);
+    setSubscriptionId(subId);
+    
+    // Determine if this is the free owner plan
+    const isFreePlan = planSlug === "car-owner-free" || subId === null;
+    setIsOwnerFlow(isFreePlan);
+    
+    toast({ title: `Plan selected: ${planSlug}` });
+    goNext();
+  };
+
+  const handleOwnerComplete = () => {
+    toast({ title: "Setup complete! Welcome to TLRS!" });
+    navigate("/tyres");
+  };
+
   return (
     <main className="min-h-screen bg-gradient-hero">
       <div className="container py-10 md:py-16">
@@ -36,7 +65,7 @@ export default function Onboarding() {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <Zap className="h-6 w-6 text-primary" />
-              <h1 className="text-2xl md:text-3xl font-bold">Let’s get you set up</h1>
+              <h1 className="text-2xl md:text-3xl font-bold">Let's get you set up</h1>
             </div>
             <div className="hidden md:flex items-center gap-2 text-sm text-muted-foreground">
               <CheckCircle2 className="h-4 w-4 text-success" />
@@ -74,6 +103,14 @@ export default function Onboarding() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
+              {currentStep === "plan" && (
+                <StepPlanSelect
+                  businessId={businessId}
+                  onBack={goPrev}
+                  onComplete={handlePlanComplete}
+                />
+              )}
+
               {currentStep === "business" && (
                 <StepBusinessForm
                   onComplete={(id) => {
@@ -84,15 +121,10 @@ export default function Onboarding() {
                 />
               )}
 
-              {currentStep === "plan" && (
-                <StepPlanSelect
-                  businessId={businessId}
+              {currentStep === "owner" && (
+                <StepOwnerDetails
                   onBack={goPrev}
-                  onComplete={(planSlug, subId) => {
-                    setSubscriptionId(subId);
-                    toast({ title: `Plan selected: ${planSlug}` });
-                    goNext();
-                  }}
+                  onComplete={handleOwnerComplete}
                 />
               )}
 

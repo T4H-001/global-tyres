@@ -56,9 +56,19 @@ export default function StepPlanSelect({ businessId, onBack, onComplete }: Props
       toast({ title: "Session not ready", description: "Please wait a moment and try again." });
       return;
     }
+
+    const selectedPlan = plans.find(p => p.slug === selectedSlug);
+    const isFreePlan = selectedPlan?.price_cents === 0;
+
+    if (isFreePlan) {
+      // For free plans, skip subscription creation and go directly to completion
+      onComplete(selectedSlug, null);
+      return;
+    }
+
     setSelecting(true);
 
-    // Create a subscription record with status "incomplete"
+    // Create a subscription record with status "incomplete" for paid plans
     const { data, error } = await (supabase as any)
       .from("lrs_subscriptions")
       .insert({
@@ -87,21 +97,29 @@ export default function StepPlanSelect({ businessId, onBack, onComplete }: Props
 
   return (
     <div className="space-y-4">
+      <div className="text-center mb-6">
+        <h3 className="text-xl font-semibold mb-2">Choose Your Plan</h3>
+        <p className="text-muted-foreground">
+          Select the plan that best fits your needs
+        </p>
+      </div>
+
       <div className="grid md:grid-cols-3 gap-4">
         {plans.map((plan) => {
           const active = selectedSlug === plan.slug;
+          const isFree = plan.price_cents === 0;
+          
           return (
             <Card key={plan.slug} className={active ? "ring-2 ring-primary" : ""}>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <span>{plan.display_name}</span>
                   <span className="text-primary font-semibold">
-                    {(plan.price_cents / 100).toLocaleString(undefined, {
+                    {isFree ? "Free" : (plan.price_cents / 100).toLocaleString(undefined, {
                       style: "currency",
                       currency: plan.currency || "AUD",
                       currencyDisplay: "narrowSymbol",
-                    })}
-                    /mo
+                    }) + "/mo"}
                   </span>
                 </CardTitle>
                 <CardDescription className="capitalize">{plan.tier}</CardDescription>
@@ -123,10 +141,9 @@ export default function StepPlanSelect({ businessId, onBack, onComplete }: Props
         })}
       </div>
 
-      <div className="flex justify-between pt-2">
-        <Button variant="ghost" onClick={onBack}>Back</Button>
+      <div className="flex justify-end pt-2">
         <Button onClick={confirmPlan} disabled={selecting || !selectedSlug || !sessionId}>
-          {selecting ? "Saving..." : "Confirm plan"}
+          {selecting ? "Saving..." : "Continue"}
         </Button>
       </div>
     </div>

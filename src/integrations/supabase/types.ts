@@ -11969,6 +11969,24 @@ export type Database = {
         }
         Relationships: []
       }
+      lobe_one_pages: {
+        Row: {
+          Checklist: string | null
+          "Key Lenses": string | null
+          "Organ Lobe": string | null
+        }
+        Insert: {
+          Checklist?: string | null
+          "Key Lenses"?: string | null
+          "Organ Lobe"?: string | null
+        }
+        Update: {
+          Checklist?: string | null
+          "Key Lenses"?: string | null
+          "Organ Lobe"?: string | null
+        }
+        Relationships: []
+      }
       lrs_api_keys: {
         Row: {
           business_id: string | null
@@ -14103,6 +14121,33 @@ export type Database = {
           },
         ]
       }
+      "one_page_views_per_name.csv": {
+        Row: {
+          "Core idea": string | null
+          Name: string | null
+          "Organ lobe": string | null
+          "Primary domain": string | null
+          "Shift with agentic AI": string | null
+          "Use in practice": string | null
+        }
+        Insert: {
+          "Core idea"?: string | null
+          Name?: string | null
+          "Organ lobe"?: string | null
+          "Primary domain"?: string | null
+          "Shift with agentic AI"?: string | null
+          "Use in practice"?: string | null
+        }
+        Update: {
+          "Core idea"?: string | null
+          Name?: string | null
+          "Organ lobe"?: string | null
+          "Primary domain"?: string | null
+          "Shift with agentic AI"?: string | null
+          "Use in practice"?: string | null
+        }
+        Relationships: []
+      }
       operational_performance_metrics: {
         Row: {
           created_at: string | null
@@ -14666,6 +14711,54 @@ export type Database = {
           applies_to?: string | null
           cost_center?: string | null
           notes?: string | null
+        }
+        Relationships: []
+      }
+      owner_profiles: {
+        Row: {
+          consent_marketing: boolean | null
+          consent_terms: boolean | null
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          license_plate: string | null
+          phone: string | null
+          updated_at: string
+          user_id: string
+          vehicle_make: string | null
+          vehicle_model: string | null
+          vehicle_year: number | null
+        }
+        Insert: {
+          consent_marketing?: boolean | null
+          consent_terms?: boolean | null
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id?: string
+          license_plate?: string | null
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_year?: number | null
+        }
+        Update: {
+          consent_marketing?: boolean | null
+          consent_terms?: boolean | null
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          license_plate?: string | null
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_year?: number | null
         }
         Relationships: []
       }
@@ -23161,6 +23254,33 @@ export type Database = {
           work_style_flags?: string | null
           workforce_risk_index?: number | null
           years_in_domain?: number | null
+        }
+        Relationships: []
+      }
+      top50_organ_mapping: {
+        Row: {
+          "Core idea": string | null
+          Name: string | null
+          "Organ lobe": string | null
+          "Primary domain": string | null
+          "Shift with agentic AI": string | null
+          "Use in practice": string | null
+        }
+        Insert: {
+          "Core idea"?: string | null
+          Name?: string | null
+          "Organ lobe"?: string | null
+          "Primary domain"?: string | null
+          "Shift with agentic AI"?: string | null
+          "Use in practice"?: string | null
+        }
+        Update: {
+          "Core idea"?: string | null
+          Name?: string | null
+          "Organ lobe"?: string | null
+          "Primary domain"?: string | null
+          "Shift with agentic AI"?: string | null
+          "Use in practice"?: string | null
         }
         Relationships: []
       }

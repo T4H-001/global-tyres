@@ -62,10 +62,19 @@ export default function StepPayment({ subscriptionId, onBack }: Props) {
 
   return (
     <div className="space-y-4">
-      <p className="text-muted-foreground">
-        Your subscription has been created. For free plans, activation is automatic. 
-        For paid plans, proceed to secure payment to activate your subscription.
-      </p>
+      <div className="text-center mb-6">
+        <h3 className="text-xl font-semibold mb-2">Complete Payment</h3>
+        <p className="text-muted-foreground">
+          Proceed to secure payment to activate your business subscription.
+        </p>
+      </div>
+      
+      <div className="bg-muted/50 rounded-lg p-4 text-center">
+        <p className="text-sm text-muted-foreground">
+          You'll be redirected to our secure payment provider (Stripe) to complete your purchase.
+        </p>
+      </div>
+      
       <div className="flex flex-col sm:flex-row gap-3 justify-end">
         <Button variant="ghost" onClick={onBack} disabled={isProcessing}>
           Back
@@ -73,13 +82,17 @@ export default function StepPayment({ subscriptionId, onBack }: Props) {
         <Button 
           onClick={handlePayment} 
           disabled={isProcessing || !subscriptionId}
+          className="min-w-[160px]"
         >
           {isProcessing ? "Processing..." : "Proceed to Payment"}
         </Button>
       </div>
-      <div className="text-xs text-muted-foreground">
-        Subscription ID: {subscriptionId ?? "N/A"}
-      </div>
+      
+      {subscriptionId && (
+        <div className="text-xs text-muted-foreground text-center">
+          Subscription ID: {subscriptionId}
+        </div>
+      )}
     </div>
   );
 }
