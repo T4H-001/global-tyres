@@ -12,6 +12,8 @@ import FAQ from "./pages/FAQ";
 import Onboarding from "./pages/Onboarding";
 import TyreManagement from "./pages/TyreManagement";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import RequireAuth from "@/components/auth/RequireAuth";
+import RedirectIfAuthed from "@/components/auth/RedirectIfAuthed";
 
 const queryClient = new QueryClient();
 
@@ -23,11 +25,15 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
+          <Route element={<RedirectIfAuthed to="/tyres" />}> 
+            <Route path="/auth" element={<Auth />} />
+          </Route>
           <Route path="/faq" element={<FAQ />} />
           <Route path="/onboarding" element={<Onboarding />} />
-          <Route path="/app" element={<TLRS />} />
-          <Route path="/tyres" element={<TyreManagement />} />
+          <Route element={<RequireAuth />}>
+            <Route path="/app" element={<TLRS />} />
+            <Route path="/tyres" element={<TyreManagement />} />
+          </Route>
           <Route path="/payment-success" element={<PaymentSuccess />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

@@ -1,7 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { CheckCircle, Car, Building2, Truck, Star, Crown } from "lucide-react";
+import individualImg from "@/assets/pricing/individual.jpg";
+import businessImg from "@/assets/pricing/business.jpg";
+import enterpriseImg from "@/assets/pricing/enterprise.jpg";
 
 interface PricingPlan {
   slug: string;
@@ -62,6 +66,13 @@ export const PricingCard = ({ plan, isPopular = false, onSelect }: PricingCardPr
   const gradientClass = getCardGradient(plan.tier, plan.target_user_type);
   const buttonText = getButtonText(plan.tier, plan.target_user_type);
   const buttonVariant = getButtonVariant(plan.tier, plan.target_user_type, isPopular);
+
+  const imageSrc = plan.tier === 'enterprise'
+    ? enterpriseImg
+    : plan.target_user_type === 'business'
+      ? businessImg
+      : individualImg;
+  const imageAlt = `${plan.display_name} plan - tyre lifecycle management`;
   
   return (
     <Card className={`group relative hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-0 overflow-hidden ${gradientClass} ${
@@ -74,72 +85,82 @@ export const PricingCard = ({ plan, isPopular = false, onSelect }: PricingCardPr
           <Star className="h-4 w-4 fill-current" />
         </div>
       )}
+
+      {/* Image header */}
+      <div className="relative">
+        <AspectRatio ratio={16 / 9}>
+          <img
+            src={imageSrc}
+            alt={imageAlt}
+            loading="lazy"
+            className="h-full w-full object-cover"
+          />
+        </AspectRatio>
+        <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/20 to-transparent" />
+      </div>
       
-      <CardHeader className={`text-center p-8 ${isPopular ? 'pt-12' : ''}`}>
-        {/* Icon */}
-        <div className={`mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 ${
-          plan.tier === 'free' || plan.target_user_type === 'individual' 
-            ? 'bg-green-500/20 text-green-600 dark:text-green-400' 
-            : plan.tier === 'enterprise'
-            ? 'bg-purple-500/20 text-purple-600 dark:text-purple-400'
-            : plan.tier === 'commercial'
-            ? 'bg-orange-500/20 text-orange-600 dark:text-orange-400'
-            : 'bg-blue-500/20 text-blue-600 dark:text-blue-400'
-        }`}>
-          <Icon className="h-8 w-8" />
-        </div>
-        
-        {/* Plan Name */}
-        <h4 className="text-2xl font-bold mb-2">{plan.display_name}</h4>
-        
-        {/* Target User Type Badge */}
-        {plan.target_user_type && (
-          <Badge variant="secondary" className="mb-4 bg-white/50 dark:bg-black/20">
-            {plan.target_user_type === 'individual' ? 'Car Owners' : 'Businesses'}
-          </Badge>
-        )}
-        
-        {/* Pricing */}
-        <div className="mb-6">
-          {plan.price_cents === 0 ? (
-            <div className="text-4xl font-bold text-green-600 dark:text-green-400">
-              FREE
-            </div>
-          ) : (
-            <>
-              <div className="text-4xl font-bold text-primary">
-                {formatPrice(plan.price_cents, plan.currency)}
-                <span className="text-lg font-normal text-muted-foreground">/month</span>
-              </div>
-              {plan.max_tyres_per_month && (
-                <div className="text-sm text-muted-foreground mt-1">
-                  Up to {plan.max_tyres_per_month} tyres/month
-                </div>
-              )}
-            </>
+      <CardHeader className={`p-6 ${isPopular ? 'pt-8' : ''}`}>
+        {/* Top row: icon + name + badge */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+            plan.tier === 'free' || plan.target_user_type === 'individual' 
+              ? 'bg-green-500/20 text-green-600 dark:text-green-400' 
+              : plan.tier === 'enterprise'
+              ? 'bg-purple-500/20 text-purple-600 dark:text-purple-400'
+              : plan.tier === 'commercial'
+              ? 'bg-orange-500/20 text-orange-600 dark:text-orange-400'
+              : 'bg-blue-500/20 text-blue-600 dark:text-blue-400'
+          }`}>
+            <Icon className="h-5 w-5" />
+          </div>
+          <h4 className="text-xl font-bold">{plan.display_name}</h4>
+          {plan.target_user_type && (
+            <Badge variant="secondary" className="ml-auto bg-white/50 dark:bg-black/20">
+              {plan.target_user_type === 'individual' ? 'Car Owners' : 'Businesses'}
+            </Badge>
           )}
         </div>
-        
+
+        {/* Price */}
+        <div className="mb-4">
+          {plan.price_cents === 0 ? (
+            <div className="text-3xl font-bold text-green-600 dark:text-green-400">FREE</div>
+          ) : (
+            <div className="flex items-baseline gap-2">
+              <div className="text-3xl font-bold text-primary">
+                {formatPrice(plan.price_cents, plan.currency)}
+              </div>
+              <span className="text-sm text-muted-foreground">/month</span>
+            </div>
+          )}
+          {plan.max_tyres_per_month && plan.price_cents > 0 && (
+            <div className="text-sm text-muted-foreground mt-1">
+              Up to {plan.max_tyres_per_month} tyres/month
+            </div>
+          )}
+        </div>
+
         {/* Features */}
-        <div className="space-y-3 text-left">
+        <div className="space-y-2">
           {Array.isArray(plan.features) ? plan.features.map((feature, featureIndex) => (
-            <div key={featureIndex} className="flex items-center gap-3">
-              <CheckCircle className="h-5 w-5 text-success flex-shrink-0" />
+            <div key={featureIndex} className="flex items-start gap-3">
+              <CheckCircle className="h-5 w-5 text-success flex-shrink-0 mt-0.5" />
               <span className="text-muted-foreground">{feature}</span>
             </div>
           )) : (
-            <div className="flex items-center gap-3">
-              <CheckCircle className="h-5 w-5 text-success flex-shrink-0" />
+            <div className="flex items-start gap-3">
+              <CheckCircle className="h-5 w-5 text-success flex-shrink-0 mt-0.5" />
               <span className="text-muted-foreground">Features included</span>
             </div>
           )}
         </div>
-        
+
         {/* CTA Button */}
         <Button 
-          className="w-full mt-8 group-hover:shadow-lg transition-all duration-300 text-lg py-6" 
+          className="w-full mt-6 group-hover:shadow-lg transition-all duration-300"
           variant={buttonVariant as any}
           onClick={() => onSelect(plan.slug)}
+          aria-label={`Select ${plan.display_name} plan`}
         >
           {buttonText}
         </Button>
