@@ -8,12 +8,20 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Lightweight logger for better debugging in Supabase logs
+const log = (step: string, details?: any) => {
+  try {
+    console.log(`[CREATE-PAYMENT] ${step}`, details ?? "");
+  } catch (_) {
+    // no-op
+  }
+};
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
-  try {
+  try { log('Start request', { method: req.method });
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_ANON_KEY") ?? ""
@@ -28,7 +36,7 @@ serve(async (req) => {
       throw new Error("User not authenticated");
     }
 
-    const { subscriptionId } = await req.json();
+    const { subscriptionId } = await req.json(); log('Received body', { subscriptionId });
     
     if (!subscriptionId) {
       throw new Error("Subscription ID required");
@@ -55,10 +63,10 @@ serve(async (req) => {
       throw new Error("Subscription not found");
     }
 
-    const plan = subscription.lrs_pricing_plans;
+    const plan = subscription.lrs_pricing_plans; log('Loaded plan', { slug: plan.slug, price_cents: plan.price_cents, currency: plan.currency });
     
     // Handle free plans - no Stripe processing needed
-    if (plan.slug === "car-owner-free" || plan.price_cents === 0) {
+    if (plan.slug === "car-owner-free" || plan.price_cents === 0) { log('Activating free plan', { subscriptionId, slug: plan.slug });
       // Update subscription to active for free plans
       const { error: updateError } = await supabaseClient
         .from("lrs_subscriptions")
@@ -134,6 +142,7 @@ serve(async (req) => {
         user_id: user.id,
       },
     });
+    log('Created Stripe checkout session', { id: session.id });
 
     return new Response(
       JSON.stringify({ url: session.url }),
