@@ -8,7 +8,7 @@
   :root {
     /* Core environmental color palette */
     --background: 0 0% 100%;
-    --foreground: 210 15% 15%;
+    --foreground: 210 20% 10%;
     
     /* Cards and surfaces */
     --card: 0 0% 100%;
@@ -29,7 +29,7 @@
     
     /* Muted earth tones */
     --muted: 200 20% 96%;
-    --muted-foreground: 210 15% 35%;
+    --muted-foreground: 210 15% 60%;
     
     /* Accent - recycling orange */
     --accent: 25 85% 50%;

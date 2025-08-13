@@ -31,33 +31,37 @@ export default function TyreManagement() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-hero">
+    <div className="min-h-screen bg-background">
       <div className="container py-6 md:py-10">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate('/')}
-              className="p-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold">Tyre Management</h1>
-              <p className="text-muted-foreground">{business.business_name}</p>
-              <p className="text-sm text-muted-foreground">Sample dataset: 5,000 tyres</p>
-            </div>
-          </div>
+        <Card className="mb-6">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Button 
+                  variant="ghost" 
+                  onClick={() => navigate('/')}
+                  className="p-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-bold text-foreground">Tyre Management</h1>
+                  <p className="text-muted-foreground">{business.business_name}</p>
+                  <p className="text-sm text-muted-foreground">Sample dataset: 5,000 tyres</p>
+                </div>
+              </div>
           
-          <Button 
-            onClick={() => setActiveTab('register')}
-            className="flex items-center gap-2"
-          >
-            <Plus className="h-4 w-4" />
-            Register Tyre
-          </Button>
-        </div>
+              <Button 
+                onClick={() => setActiveTab('register')}
+                className="flex items-center gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                Register Tyre
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
