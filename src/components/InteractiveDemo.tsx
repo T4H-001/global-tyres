@@ -7,11 +7,11 @@ import { Activity, DollarSign, Truck, Users } from "lucide-react";
 import tyreStackClean from '@/assets/tyre-stack-clean.jpg';
 import tyrePileIllegal from '@/assets/tyre-pile-illegal.jpg';
 import beforeAfterEnvironment from '@/assets/before-after-environment.jpg';
-
+import { useNavigate } from "react-router-dom";
 export const InteractiveDemo = () => {
   const [tyreCount, setTyreCount] = useState(4);
   const [scenario, setScenario] = useState<'ownership' | 'dumping' | 'compliance'>('ownership');
-
+  const navigate = useNavigate();
   const scenarios = {
     ownership: {
       title: "Ownership Chain Tracking",
@@ -214,10 +214,11 @@ export const InteractiveDemo = () => {
             <Button 
               size="lg"
               className="bg-gradient-to-r from-primary to-primary-glow hover:from-primary/90 hover:to-primary-glow/90"
+              onClick={() => navigate('/tyres?tab=register')}
             >
               Register Your First Tyre
             </Button>
-            <Button variant="outline" size="lg">
+            <Button variant="outline" size="lg" onClick={() => navigate('/tyres?demo=kirrawee')}>
               Try Business Demo
             </Button>
           </div>

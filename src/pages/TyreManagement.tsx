@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,10 +15,16 @@ import { useDemoMode } from '@/hooks/useDemoMode';
 
 export default function TyreManagement() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('dashboard');
   const demo = useDemoMode();
-
-  // Use the development business UUID that we just created
+  
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab && ['dashboard','register','bulk','email-test'].includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
   const business = {
     id: '11111111-1111-1111-1111-111111111111',
     business_name: 'Development Business',

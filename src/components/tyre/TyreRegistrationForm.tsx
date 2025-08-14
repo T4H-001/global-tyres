@@ -29,6 +29,8 @@ export default function TyreRegistrationForm({ businessId, onRegistrationComplet
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [locationSuggestions, setLocationSuggestions] = useState<any[]>([]);
 
+  const demo = useDemoMode();
+
   const australianStates = [
     'NSW', 'VIC', 'QLD', 'WA', 'SA', 'TAS', 'ACT', 'NT'
   ];
@@ -304,6 +306,22 @@ export default function TyreRegistrationForm({ businessId, onRegistrationComplet
             <p className="text-red-500 text-sm mt-1">{validationErrors.vehicle_registration}</p>
           )}
         </div>
+
+        {demo.active && (
+          <div>
+            <label className="block text-sm font-medium mb-2">Retailer (demo)</label>
+            <select
+              disabled
+              value={demo.partners[0]?.name || ''}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
+            >
+              {demo.partners.map((p) => (
+                <option key={p.name} value={p.name}>{p.name}</option>
+              ))}
+            </select>
+            <p className="text-xs text-muted-foreground mt-1">Pre-filled and read-only in demo mode</p>
+          </div>
+        )}
 
         {/* Location */}
         <div>
