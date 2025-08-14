@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
 import { tyreService, TyreRegistration } from '@/services/tyreService';
 import { apiService } from '@/services/apiService';
@@ -309,17 +310,15 @@ export default function TyreRegistrationForm({ businessId, onRegistrationComplet
 
         {demo.active && (
           <div>
-            <label className="block text-sm font-medium mb-2">Retailer (demo)</label>
-            <select
-              disabled
-              value={demo.partners[0]?.name || ''}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
-            >
+            <label className="block text-sm font-medium mb-2">Retailers (demo)</label>
+            <div className="flex flex-wrap gap-2">
               {demo.partners.map((p) => (
-                <option key={p.name} value={p.name}>{p.name}</option>
+                <Badge key={p.name} variant="secondary">{p.name}</Badge>
               ))}
-            </select>
-            <p className="text-xs text-muted-foreground mt-1">Pre-filled and read-only in demo mode</p>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Local partners for {demo.suburb}, {demo.state}. Read-only in demo mode
+            </p>
           </div>
         )}
 

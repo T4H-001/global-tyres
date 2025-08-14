@@ -36,6 +36,7 @@ export function useDemoMode() {
             setPartners([
               { name: 'RoverX', website: 'https://roverx.com.au/', suburb: 'Kirrawee', state: 'NSW' },
               { name: 'BW Automotive', website: 'https://www.bwautomotive.com.au/', suburb: 'Kirrawee', state: 'NSW' },
+              { name: 'Tubbys Tyres', website: null, suburb: 'Kirrawee', state: 'NSW' },
             ]);
           }
         }
@@ -44,6 +45,7 @@ export function useDemoMode() {
           setPartners([
             { name: 'RoverX', website: 'https://roverx.com.au/', suburb: 'Kirrawee', state: 'NSW' },
             { name: 'BW Automotive', website: 'https://www.bwautomotive.com.au/', suburb: 'Kirrawee', state: 'NSW' },
+            { name: 'Tubbys Tyres', website: null, suburb: 'Kirrawee', state: 'NSW' },
           ]);
         }
       } finally {
