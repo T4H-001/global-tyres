@@ -158,6 +158,7 @@ export default function Onboarding() {
               {currentStep === "payment" && (
                 <StepPayment
                   subscriptionId={subscriptionId}
+                  planSlug={selectedPlan}
                   onBack={goPrev}
                 />
               )}

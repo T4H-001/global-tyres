@@ -36,7 +36,7 @@ serve(async (req) => {
       throw new Error("User not authenticated");
     }
 
-    const { subscriptionId } = await req.json(); log('Received body', { subscriptionId });
+    const { subscriptionId, planSlug } = await req.json(); log('Received body', { subscriptionId, planSlug });
     
     if (!subscriptionId) {
       throw new Error("Subscription ID required");
@@ -63,31 +63,44 @@ serve(async (req) => {
       throw new Error("Subscription not found");
     }
 
-    const plan = subscription.lrs_pricing_plans; log('Loaded plan', { slug: plan.slug, price_cents: plan.price_cents, currency: plan.currency });
+    // Resolve plan information with fallback to planSlug
+    let plan: any = (subscription as any).lrs_pricing_plans;
+    if (!plan && planSlug) {
+      log('Plan missing from join. Fetching by slug', { planSlug });
+      const { data: planData, error: planError } = await supabaseClient
+        .from('lrs_pricing_plans')
+        .select('*')
+        .eq('slug', planSlug)
+        .maybeSingle();
+      if (planError) {
+        log('Error fetching plan by slug', { message: planError.message });
+      }
+      plan = planData ?? null;
+    }
+    if (!plan) {
+      throw new Error('Pricing plan not found for subscription');
+    }
+    log('Loaded plan', { slug: plan.slug, price_cents: plan.price_cents, currency: plan.currency });
     
     // Handle free plans - no Stripe processing needed
-    if (plan.slug === "car-owner-free" || plan.price_cents === 0) { log('Activating free plan', { subscriptionId, slug: plan.slug });
-      // Update subscription to active for free plans
+    if (plan.slug === 'car-owner-free' || plan.price_cents === 0) { log('Activating free plan', { subscriptionId, slug: plan.slug });
       const { error: updateError } = await supabaseClient
-        .from("lrs_subscriptions")
-        .update({ 
-          status: "active",
-          activated_at: new Date().toISOString()
-        })
-        .eq("id", subscriptionId);
+        .from('lrs_subscriptions')
+        .update({ status: 'active', activated_at: new Date().toISOString() })
+        .eq('id', subscriptionId);
 
       if (updateError) {
-        throw new Error("Failed to activate free subscription");
+        throw new Error('Failed to activate free subscription');
       }
 
       return new Response(
         JSON.stringify({ 
           success: true, 
           free_plan: true,
-          redirect_url: `${req.headers.get("origin")}/tyres`
+          redirect_url: `${req.headers.get('origin')}/tyres`
         }),
         {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           status: 200,
         }
       );

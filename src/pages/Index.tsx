@@ -231,14 +231,6 @@ const Index = () => {
                 <Play className="mr-2 h-5 w-5" />
                 Start Tracking Now
               </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                asChild
-                className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-6 text-lg"
-              >
-                <Link to="/demos">See Demos & Stories</Link>
-              </Button>
               <Link to="/faq">
                 <Button 
                   size="lg" 

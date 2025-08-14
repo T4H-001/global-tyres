@@ -7,10 +7,11 @@ import { useState } from "react";
 
 type Props = {
   subscriptionId: string | null;
+  planSlug: string | null;
   onBack: () => void;
 };
 
-export default function StepPayment({ subscriptionId, onBack }: Props) {
+export default function StepPayment({ subscriptionId, planSlug, onBack }: Props) {
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -28,7 +29,7 @@ export default function StepPayment({ subscriptionId, onBack }: Props) {
     
     try {
       const { data, error } = await supabase.functions.invoke('create-payment', {
-        body: { subscriptionId }
+        body: { subscriptionId, planSlug }
       });
 
       if (error) {
