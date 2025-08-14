@@ -6,6 +6,7 @@ import { toast } from '@/hooks/use-toast';
 import { tyreService, TyreRegistration } from '@/services/tyreService';
 import { apiService } from '@/services/apiService';
 import { QrCode, MapPin, Calendar, Truck } from 'lucide-react';
+import { useDemoMode } from '@/hooks/useDemoMode';
 
 interface Props {
   businessId: string;

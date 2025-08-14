@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from '@/hooks/use-toast';
 import TyreRegistrationForm from '@/components/tyre/TyreRegistrationForm';
@@ -10,10 +11,12 @@ import TyreDashboard from '@/components/tyre/TyreDashboard';
 import { QrCode, BarChart3, Plus, ArrowLeft } from 'lucide-react';
 import BulkUpload from '@/components/tyre/BulkUpload';
 import EmailTestInterface from '@/components/admin/EmailTestInterface';
+import { useDemoMode } from '@/hooks/useDemoMode';
 
 export default function TyreManagement() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('dashboard');
+  const demo = useDemoMode();
 
   // Use the development business UUID that we just created
   const business = {
@@ -34,6 +37,22 @@ export default function TyreManagement() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container py-6 md:py-10">
+        {/* Kirrawee Demo Banner */}
+        {demo.active && (
+          <Card className="mb-6 border-primary/20">
+            <CardContent className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+              <div>
+                <div className="font-semibold">Kirrawee Demo Mode</div>
+                <div className="text-sm text-muted-foreground">NSW 2232 • Local partners preloaded</div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {demo.partners.map((p) => (
+                  <Badge key={p.name} variant="secondary">{p.name}</Badge>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
         {/* Header */}
         <Card className="mb-6">
           <CardContent className="p-6">

@@ -265,6 +265,23 @@ class ApiService {
       return null;
     }
   }
+
+  // Supabase: Kirrawee demo helpers
+  async getLocalRetailersByArea(suburb: string, state: string): Promise<Array<{ name: string; website?: string; suburb?: string; state?: string; logo_url?: string }> | null> {
+    try {
+      const { data, error } = await supabase
+        .from('lrs_retailers')
+        .select('name, website, suburb, state, logo_url')
+        .eq('suburb', suburb)
+        .eq('state', state)
+        .order('name');
+      if (error) throw error;
+      return data || [];
+    } catch (e) {
+      console.error('getLocalRetailersByArea failed:', e);
+      return null;
+    }
+  }
 }
 
 export const apiService = new ApiService();

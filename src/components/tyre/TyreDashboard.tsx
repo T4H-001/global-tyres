@@ -288,8 +288,16 @@ export default function TyreDashboard({ businessId }: Props) {
                             size="sm"
                             variant="outline"
                             onClick={() => {
-                              navigator.clipboard.writeText(tyre.qr_code_url!);
-                              toast({ title: "QR code URL copied to clipboard" });
+                              try {
+                                let url = tyre.qr_code_url!;
+                                if (!/^https?:\/\//i.test(url)) {
+                                  url = `${window.location.origin}${url.startsWith('/') ? '' : '/'}${url}`;
+                                }
+                                navigator.clipboard.writeText(url);
+                                toast({ title: "QR code URL copied to clipboard" });
+                              } catch (e) {
+                                toast({ title: "Unable to copy QR URL", variant: "destructive" });
+                              }
                             }}
                           >
                             Copy QR

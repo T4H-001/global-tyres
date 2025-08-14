@@ -10,6 +10,7 @@ import { InteractiveDemo } from "@/components/InteractiveDemo";
 import { PricingCard } from "@/components/pricing/PricingCard";
 import { UserTypeSelector } from "@/components/pricing/UserTypeSelector";
 import { Footer } from "@/components/Footer";
+import { useDemoMode } from "@/hooks/useDemoMode";
 
 interface PricingPlan {
   slug: string;
@@ -28,12 +29,20 @@ const Index = () => {
   const [user, setUser] = useState(null);
   const [selectedUserType, setSelectedUserType] = useState<'individual' | 'business' | null>(null);
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const demo = useDemoMode();
 
   useEffect(() => {
     fetchPricingPlans();
     checkUser();
   }, []);
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.title = demo.active 
+        ? 'Kirrawee NSW Tyre Tracking Demo | TLRS'
+        : 'Tyre Lifecycle Management | TLRS';
+    }
+  }, [demo.active]);
 
   const fetchPricingPlans = async () => {
     try {
@@ -234,6 +243,40 @@ const Index = () => {
           </div>
         </div>
       </div>
+
+      {/* Kirrawee Demo Banner + Local Partners */}
+      {demo.active && (
+        <section className="bg-muted/30 border-b">
+          <div className="max-w-7xl mx-auto px-6 py-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-semibold text-foreground">Kirrawee Demo Mode</h2>
+                <p className="text-sm text-muted-foreground">Preloaded local partners in Kirrawee, NSW 2232</p>
+              </div>
+              <Link to="/tyres?demo=kirrawee">
+                <Button variant="outline">Open Tyre Management</Button>
+              </Link>
+            </div>
+            {demo.partners?.length > 0 && (
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                {demo.partners.map((p) => (
+                  <Card key={p.name} className="hover:shadow-sm transition">
+                    <CardContent className="p-4 flex items-center justify-between">
+                      <div>
+                        <div className="font-medium">{p.name}</div>
+                        <div className="text-xs text-muted-foreground">{p.suburb}, {p.state}</div>
+                      </div>
+                      {p.website && (
+                        <a href={p.website} target="_blank" rel="noopener noreferrer" className="text-primary text-sm">Visit</a>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Enhanced Features Section */}
       <div className="max-w-7xl mx-auto px-6 py-24">
