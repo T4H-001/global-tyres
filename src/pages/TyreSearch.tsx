@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,42 +6,69 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Search, Filter, Download, Eye } from "lucide-react";
+import { useDemoMode } from "@/hooks/useDemoMode";
+import { tyreService, TyreRegistration } from "@/services/tyreService";
+
+// Display type for search results
+type DisplayTyre = {
+  id: string;
+  manufacturer?: string;
+  size?: string;
+  status: string;
+  location?: string;
+  lastUpdated?: string;
+  dotCode?: string;
+  serial?: string;
+};
 
 export const TyreSearch = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [locationFilter, setLocationFilter] = useState("all");
+  const demo = useDemoMode();
+  const [items, setItems] = useState<DisplayTyre[]>([]);
 
-  // Mock data - will be replaced with Supabase queries
-  const tyres = [
-    { 
-      id: "TYR-001234", 
-      manufacturer: "Michelin", 
-      size: "205/55R16", 
-      status: "In Use", 
-      location: "Sydney, AU", 
-      lastUpdated: "2024-08-11",
-      dotCode: "DOT-4A3Y-1234-2525"
-    },
-    { 
-      id: "TYR-001235", 
-      manufacturer: "Bridgestone", 
-      size: "225/50R17", 
-      status: "Collected", 
-      location: "Melbourne, AU", 
-      lastUpdated: "2024-08-10",
-      dotCode: "DOT-B5K2-5678-1523"
-    },
-    { 
-      id: "TYR-001236", 
-      manufacturer: "Goodyear", 
-      size: "195/65R15", 
-      status: "Recycled", 
-      location: "Brisbane, AU", 
-      lastUpdated: "2024-08-09",
-      dotCode: "DOT-G7X9-9012-3421"
-    }
+  useEffect(() => {
+    document.title = "Search Tyres | TLRS";
+  }, []);
+
+  // Default mock data
+  const defaultMock: DisplayTyre[] = [
+    { id: "TYR-001234", manufacturer: "Michelin", size: "205/55R16", status: "In Use", location: "Sydney, AU", lastUpdated: "2024-08-11", dotCode: "DOT-4A3Y-1234-2525" },
+    { id: "TYR-001235", manufacturer: "Bridgestone", size: "225/50R17", status: "Collected", location: "Melbourne, AU", lastUpdated: "2024-08-10", dotCode: "DOT-B5K2-5678-1523" },
+    { id: "TYR-001236", manufacturer: "Goodyear", size: "195/65R15", status: "Recycled", location: "Brisbane, AU", lastUpdated: "2024-08-09", dotCode: "DOT-G7X9-9012-3421" },
   ];
+
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      if (!demo.active) {
+        setItems(defaultMock);
+        return;
+      }
+      // In demo mode, pull live data from the sample business
+      const businessId = '11111111-1111-1111-1111-111111111111';
+      const { tyres } = await tyreService.getBusinessTyresPaginated(businessId, 1, 50);
+      if (cancelled) return;
+      if (!tyres || tyres.length === 0) {
+        setItems(defaultMock);
+        return;
+      }
+      const mapped: DisplayTyre[] = tyres.map((t: TyreRegistration) => ({
+        id: t.id || t.tyre_serial,
+        manufacturer: t.brand || undefined,
+        size: t.size || undefined,
+        status: t.status === 'active' ? 'In Use' : t.status.charAt(0).toUpperCase() + t.status.slice(1),
+        location: [t.location_postcode, t.location_state].filter(Boolean).join(', '),
+        lastUpdated: t.install_date || t.manufacture_date,
+        dotCode: t.dot_code,
+        serial: t.tyre_serial,
+      }));
+      setItems(mapped);
+    };
+    load();
+    return () => { cancelled = true; };
+  }, [demo.active]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -135,33 +162,35 @@ export const TyreSearch = () => {
       <Card className="shadow-card">
         <CardHeader>
           <CardTitle>Search Results</CardTitle>
-          <CardDescription>Found {tyres.length} tyres matching your criteria</CardDescription>
+          <CardDescription>Found {items.length} tyres matching your criteria</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {tyres.map((tyre) => (
+            {items.map((tyre) => (
               <div key={tyre.id} className="flex items-center justify-between p-4 border border-border rounded-lg bg-gradient-earth">
                 <div className="flex items-center space-x-6">
                   <div>
-                    <p className="font-bold text-foreground">{tyre.id}</p>
-                    <p className="text-sm text-muted-foreground">DOT: {tyre.dotCode}</p>
+                    <p className="font-bold text-foreground">{tyre.serial || tyre.id}</p>
+                    <p className="text-sm text-muted-foreground">DOT: {tyre.dotCode || '—'}</p>
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">{tyre.manufacturer}</p>
-                    <p className="text-sm text-muted-foreground">Size: {tyre.size}</p>
+                    <p className="font-medium text-foreground">{tyre.manufacturer || '—'}</p>
+                    <p className="text-sm text-muted-foreground">Size: {tyre.size || '—'}</p>
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">{tyre.location}</p>
-                    <p className="text-sm text-muted-foreground">Updated: {tyre.lastUpdated}</p>
+                    <p className="font-medium text-foreground">{tyre.location || '—'}</p>
+                    <p className="text-sm text-muted-foreground">Updated: {tyre.lastUpdated ? new Date(tyre.lastUpdated).toLocaleDateString() : '—'}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
                   <Badge className={getStatusColor(tyre.status)}>
                     {tyre.status}
                   </Badge>
-                  <Button variant="outline" size="sm">
-                    <Eye className="h-4 w-4 mr-2" />
-                    View Details
+                  <Button variant="outline" size="sm" asChild>
+                    <a href={tyre.serial ? `/track/${encodeURIComponent(tyre.serial)}` : '#'}>
+                      <Eye className="h-4 w-4 mr-2" />
+                      View Details
+                    </a>
                   </Button>
                 </div>
               </div>

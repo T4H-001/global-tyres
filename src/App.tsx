@@ -19,8 +19,10 @@ import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import TyreSearch from "./pages/TyreSearch";
+import TyreTrack from "./pages/TyreTrack";
 import RequireAuth from "@/components/auth/RequireAuth";
 import RedirectIfAuthed from "@/components/auth/RedirectIfAuthed";
+import DemoToggle from "@/components/DemoToggle";
 
 const queryClient = new QueryClient();
 
@@ -53,10 +55,12 @@ const App = () => (
           <Route path="/terms" element={<Terms />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/search" element={<TyreSearch />} />
+          <Route path="/track/:tyreSerial" element={<TyreTrack />} />
           <Route path="/tyres/register" element={<RedirectTyresRegister />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <DemoToggle />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

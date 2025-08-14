@@ -8,10 +8,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from '@/hooks/use-toast';
 import TyreRegistrationForm from '@/components/tyre/TyreRegistrationForm';
 import TyreDashboard from '@/components/tyre/TyreDashboard';
-import { QrCode, BarChart3, Plus, ArrowLeft } from 'lucide-react';
+import { QrCode, BarChart3, Plus, ArrowLeft, Sparkles } from 'lucide-react';
 import BulkUpload from '@/components/tyre/BulkUpload';
 import EmailTestInterface from '@/components/admin/EmailTestInterface';
 import { useDemoMode } from '@/hooks/useDemoMode';
+import { tyreService, TyreRegistration } from '@/services/tyreService';
 
 export default function TyreManagement() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export default function TyreManagement() {
     business_name: 'Development Business',
     business_type: 'retail',
     contact_email: 'dev@example.com'
-  };
+  } as const;
 
   const handleRegistrationComplete = () => {
     setActiveTab('dashboard');
@@ -39,6 +40,57 @@ export default function TyreManagement() {
       description: "Your tyre has been added to the tracking system"
     });
   };
+
+  // Demo: Lightweight guided tour state
+  const [showTour, setShowTour] = useState(false);
+  useEffect(() => {
+    if (demo.active) {
+      const dismissed = localStorage.getItem('tyre_demo_tour_dismissed');
+      if (!dismissed) setShowTour(true);
+    }
+  }, [demo.active]);
+
+  // Demo: Sample data generator
+  const [generating, setGenerating] = useState(false);
+  async function generateSampleData() {
+    if (generating) return;
+    setGenerating(true);
+    try {
+      const brands = ['Michelin', 'Bridgestone', 'Goodyear', 'Pirelli'];
+      const sizes = ['205/55R16', '225/50R17', '195/65R15', '215/60R16'];
+      const statuses: Array<TyreRegistration['status']> = ['active','active','active','removed','recycled'];
+      const tasks = Array.from({ length: 12 }).map(async (_, i) => {
+        const brand = brands[i % brands.length];
+        const size = sizes[i % sizes.length];
+        const serial = `${brand.substring(0,3).toUpperCase()}-${Date.now()}-${i.toString().padStart(2,'0')}`;
+        const status = statuses[i % statuses.length];
+        const reg = await tyreService.registerTyre({
+          business_id: business.id,
+          tyre_serial: serial,
+          dot_code: `DOT-${Math.random().toString(36).substring(2,6).toUpperCase()}-${(1000+i)}`,
+          brand,
+          size,
+          manufacture_date: new Date(Date.now() - 1000*60*60*24*90).toISOString(),
+          install_date: new Date(Date.now() - 1000*60*60*24*30).toISOString(),
+          vehicle_registration: `KIR-${Math.floor(100 + Math.random()*900)}`,
+          location_state: 'NSW',
+          location_postcode: '2232',
+          status,
+        });
+        // Optionally add a status event for non-active
+        if (reg && status !== 'active') {
+          await tyreService.updateTyreStatus(reg.id as string, status);
+        }
+      });
+      await Promise.all(tasks);
+      toast({ title: 'Sample data generated', description: '12 demo tyres added. Opening Dashboard…' });
+      setActiveTab('dashboard');
+    } catch (e) {
+      toast({ title: 'Failed to generate sample data', description: 'Please try again.' });
+    } finally {
+      setGenerating(false);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -77,14 +129,28 @@ export default function TyreManagement() {
                   <p className="text-sm text-muted-foreground">Sample dataset: 5,000 tyres</p>
                 </div>
               </div>
-          
-              <Button 
-                onClick={() => setActiveTab('register')}
-                className="flex items-center gap-2"
-              >
-                <Plus className="h-4 w-4" />
-                Register Tyre
-              </Button>
+              <div className="flex items-center gap-2">
+                {demo.active && (
+                  <Button 
+                    variant="outline"
+                    onClick={async () => {
+                      await generateSampleData();
+                    }}
+                    className="flex items-center gap-2"
+                    disabled={generating}
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    {generating ? 'Generating…' : 'Generate sample data'}
+                  </Button>
+                )}
+                <Button 
+                  onClick={() => setActiveTab('register')}
+                  className="flex items-center gap-2"
+                >
+                  <Plus className="h-4 w-4" />
+                  Register Tyre
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -160,7 +226,29 @@ export default function TyreManagement() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Lightweight Guided Tour */}
+        {demo.active && showTour && (
+          <div className="fixed bottom-4 left-4 z-40 max-w-sm">
+            <Card className="shadow-lg border-primary/30">
+              <CardHeader>
+                <CardTitle className="text-base">Welcome to Kirrawee Demo</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                <p className="text-muted-foreground">Try registering a tyre, then view it on the dashboard. You can also generate sample data.</p>
+                <div className="flex gap-2">
+                  <Button size="sm" onClick={() => setActiveTab('register')}>Register a Tyre</Button>
+                  <Button size="sm" variant="secondary" onClick={() => setActiveTab('dashboard')}>Open Dashboard</Button>
+                </div>
+                <div className="flex justify-end">
+                  <Button size="sm" variant="ghost" onClick={() => { localStorage.setItem('tyre_demo_tour_dismissed','1'); setShowTour(false); }}>Dismiss</Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );
 }
+
