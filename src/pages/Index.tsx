@@ -11,6 +11,7 @@ import { PricingCard } from "@/components/pricing/PricingCard";
 import { UserTypeSelector } from "@/components/pricing/UserTypeSelector";
 import { Footer } from "@/components/Footer";
 import { useDemoMode } from "@/hooks/useDemoMode";
+import PartnersCarousel from "@/components/PartnersCarousel";
 
 interface PricingPlan {
   slug: string;
@@ -230,6 +231,14 @@ const Index = () => {
                 <Play className="mr-2 h-5 w-5" />
                 Start Tracking Now
               </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                asChild
+                className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-6 text-lg"
+              >
+                <Link to="/demos">See Demos & Stories</Link>
+              </Button>
               <Link to="/faq">
                 <Button 
                   size="lg" 
@@ -244,20 +253,27 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Kirrawee Demo Banner + Local Partners */}
+      {/* Demo Banner */}
       {demo.active && (
         <section className="bg-muted/30 border-b">
           <div className="max-w-7xl mx-auto px-6 py-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
-                <h2 className="text-xl font-semibold text-foreground">Kirrawee Demo Mode</h2>
-                <p className="text-sm text-muted-foreground">Preloaded local partners in Kirrawee, NSW 2232</p>
+                <h2 className="text-xl font-semibold text-foreground">
+                  {demo.isGeneric ? 'Demo Mode' : 'Kirrawee Demo Mode'}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {demo.isGeneric 
+                    ? 'Interactive demonstrations available' 
+                    : 'Preloaded local partners in Kirrawee, NSW 2232'
+                  }
+                </p>
               </div>
-              <Link to="/tyres?demo=kirrawee">
+              <Link to={demo.isGeneric ? "/tyres?demo=on" : "/tyres?demo=kirrawee"}>
                 <Button variant="outline">Open Tyre Management</Button>
               </Link>
             </div>
-            {demo.partners?.length > 0 && (
+            {demo.isLocationSpecific && demo.partners?.length > 0 && (
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 {demo.partners.map((p) => (
                   <Card key={p.name} className="hover:shadow-sm transition">
@@ -277,6 +293,11 @@ const Index = () => {
           </div>
         </section>
       )}
+
+      {/* Partners Section */}
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <PartnersCarousel />
+      </div>
 
       {/* Enhanced Features Section */}
       <div className="max-w-7xl mx-auto px-6 py-24">

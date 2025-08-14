@@ -12,14 +12,16 @@ export interface Partner {
 export function useDemoMode() {
   const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const demoKey = params?.get('demo')?.toLowerCase();
-  const active = demoKey === 'kirrawee' || demoKey === 'sutherland' || demoKey === 'sutherland-shire';
+  const active = demoKey === 'kirrawee' || demoKey === 'sutherland' || demoKey === 'sutherland-shire' || demoKey === 'on';
+  const isGeneric = demoKey === 'on';
+  const isLocationSpecific = demoKey === 'kirrawee' || demoKey === 'sutherland' || demoKey === 'sutherland-shire';
   const [partners, setPartners] = useState<Partner[]>([]);
   const [loading, setLoading] = useState(false);
 
   const area = useMemo(() => {
-    if (!active) return null;
+    if (!active || isGeneric) return null;
     return { suburb: 'Kirrawee', state: 'NSW' } as const;
-  }, [active]);
+  }, [active, isGeneric]);
 
   useEffect(() => {
     let cancelled = false;
@@ -58,6 +60,8 @@ export function useDemoMode() {
 
   return {
     active,
+    isGeneric,
+    isLocationSpecific,
     suburb: area?.suburb,
     state: area?.state,
     partners,

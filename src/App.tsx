@@ -12,6 +12,7 @@ import FAQ from "./pages/FAQ";
 import Onboarding from "./pages/Onboarding";
 import TyreManagement from "./pages/TyreManagement";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import Demos from "./pages/Demos";
 import Dashboard from "./pages/Dashboard";
 import RetailerPortal from "./pages/RetailerPortal";
 import RetailerOnboarding from "./pages/RetailerOnboarding";
@@ -56,6 +57,7 @@ const App = () => (
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/search" element={<TyreSearch />} />
           <Route path="/track/:tyreSerial" element={<TyreTrack />} />
+          <Route path="/demos" element={<Demos />} />
           <Route path="/tyres/register" element={<RedirectTyresRegister />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

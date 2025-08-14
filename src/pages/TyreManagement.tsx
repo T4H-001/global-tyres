@@ -72,9 +72,9 @@ export default function TyreManagement() {
           size,
           manufacture_date: new Date(Date.now() - 1000*60*60*24*90).toISOString(),
           install_date: new Date(Date.now() - 1000*60*60*24*30).toISOString(),
-          vehicle_registration: `KIR-${Math.floor(100 + Math.random()*900)}`,
-          location_state: 'NSW',
-          location_postcode: '2232',
+          vehicle_registration: demo.isLocationSpecific ? `KIR-${Math.floor(100 + Math.random()*900)}` : `DEMO${Math.floor(100 + Math.random()*900)}`,
+          location_state: demo.isLocationSpecific ? 'NSW' : '',
+          location_postcode: demo.isLocationSpecific ? '2232' : '',
           status,
         });
         // Optionally add a status event for non-active
@@ -95,19 +95,28 @@ export default function TyreManagement() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container py-6 md:py-10">
-        {/* Kirrawee Demo Banner */}
+        {/* Demo Banner */}
         {demo.active && (
           <Card className="mb-6 border-primary/20">
             <CardContent className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
               <div>
-                <div className="font-semibold">Kirrawee Demo Mode</div>
-                <div className="text-sm text-muted-foreground">NSW 2232 • Local partners preloaded</div>
+                <div className="font-semibold">
+                  {demo.isGeneric ? 'Demo Mode' : 'Kirrawee Demo Mode'}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {demo.isGeneric 
+                    ? 'Interactive demonstration mode' 
+                    : 'NSW 2232 • Local partners preloaded'
+                  }
+                </div>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {demo.partners.map((p) => (
-                  <Badge key={p.name} variant="secondary">{p.name}</Badge>
-                ))}
-              </div>
+              {demo.isLocationSpecific && demo.partners.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {demo.partners.map((p) => (
+                    <Badge key={p.name} variant="secondary">{p.name}</Badge>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         )}

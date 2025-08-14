@@ -16,7 +16,7 @@ export default function DemoToggle() {
     if (demoActive) {
       next.delete('demo');
     } else {
-      next.set('demo', 'kirrawee');
+      next.set('demo', 'on');
     }
     navigate({ pathname: location.pathname, search: next.toString() }, { replace: true });
   };

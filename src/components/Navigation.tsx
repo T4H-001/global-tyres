@@ -54,6 +54,16 @@ export const Navigation = () => {
               </Button>
             </Link>
             
+            <Link to="/demos">
+              <Button 
+                variant={isActive("/demos") ? "default" : "ghost"}
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                Demos
+              </Button>
+            </Link>
+            
             <Link to="/contact">
               <Button 
                 variant={isActive("/contact") ? "default" : "ghost"}
