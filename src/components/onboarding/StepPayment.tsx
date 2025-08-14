@@ -35,6 +35,10 @@ export default function StepPayment({ subscriptionId, onBack }: Props) {
         throw error;
       }
 
+      if (data?.error) {
+        throw new Error(typeof data.error === 'string' ? data.error : JSON.stringify(data.error));
+      }
+
       if (data.free_plan) {
         // Free plan activated automatically
         toast({
@@ -50,9 +54,13 @@ export default function StepPayment({ subscriptionId, onBack }: Props) {
       }
     } catch (error: any) {
       console.error("Payment error:", error);
+      const msg = error?.message || String(error);
+      const hint = msg.toLowerCase().includes('stripe') || msg.toLowerCase().includes('secret')
+        ? 'Stripe is not configured yet. Please set the Stripe secrets and try again.'
+        : 'Failed to process payment. Please try again.';
       toast({
         title: "Payment Error",
-        description: error.message || "Failed to process payment. Please try again.",
+        description: `${msg}. ${hint}`,
         variant: "destructive",
       });
     } finally {
