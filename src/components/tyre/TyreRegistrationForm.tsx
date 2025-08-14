@@ -90,6 +90,27 @@ export default function TyreRegistrationForm({ businessId, onRegistrationComplet
     }
   };
 
+  const handleUseMyLocation = async () => {
+    try {
+      const loc = await apiService.getUserLocation();
+      if (loc) {
+        setFormData(prev => ({
+          ...prev,
+          location_state: loc.state || '',
+          location_postcode: loc.postcode || ''
+        }));
+        toast({
+          title: "Location detected",
+          description: `${loc.city ? loc.city + ', ' : ''}${loc.state} ${loc.postcode}`
+        });
+      } else {
+        toast({ title: "Unable to detect location", variant: "destructive" });
+      }
+    } catch (e) {
+      toast({ title: "Location error", variant: "destructive" });
+    }
+  };
+
   const generateSerialNumber = () => {
     const prefix = formData.brand ? formData.brand.substring(0, 3).toUpperCase() : 'TYR';
     const timestamp = Date.now().toString().slice(-6);
@@ -289,7 +310,7 @@ export default function TyreRegistrationForm({ businessId, onRegistrationComplet
             <MapPin className="h-4 w-4" />
             Location (optional)
           </label>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
             <select
               value={formData.location_state}
               onChange={(e) => handleInputChange('location_state', e.target.value)}
@@ -307,6 +328,14 @@ export default function TyreRegistrationForm({ businessId, onRegistrationComplet
               placeholder="Postcode"
               className={validationErrors.location_postcode ? 'border-red-500' : ''}
             />
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleUseMyLocation}
+            >
+              Use my location
+            </Button>
 
             <Button
               type="button"

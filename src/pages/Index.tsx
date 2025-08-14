@@ -152,9 +152,7 @@ const Index = () => {
             </Badge>
             
             <h1 className="text-6xl md:text-7xl font-bold tracking-tight leading-tight">
-              Stop Illegal Dumping.
-              <br />
-              <span className="text-primary-glow animate-pulse">Track Every Tyre.</span>
+              Track tyre lifecycles. Simply.
             </h1>
             
             <p className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed text-white/90">

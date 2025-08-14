@@ -100,26 +100,24 @@ class ApiService {
     if (cached) return cached;
 
     try {
-      const response = await fetch('http://ip-api.com/json/');
-      
+      const response = await fetch('https://ipwho.is/');
       if (!response.ok) throw new Error('Failed to get user location');
-      
+
       const data = await response.json();
-      
-      if (data.status !== 'success') return null;
-      
+      if (data.success === false) return null;
+
       const locationData: LocationData = {
-        country: data.country,
-        state: data.regionName,
-        city: data.city,
-        postcode: data.zip,
+        country: data.country || '',
+        state: data.region || '',
+        city: data.city || '',
+        postcode: data.postal || '',
         coordinates: {
-          lat: data.lat,
-          lng: data.lon
+          lat: typeof data.latitude === 'number' ? data.latitude : parseFloat(data.latitude),
+          lng: typeof data.longitude === 'number' ? data.longitude : parseFloat(data.longitude)
         }
       };
 
-      await this.cacheApiData('ip-api', 'json', cacheKey, locationData);
+      await this.cacheApiData('ipwhois', 'root', cacheKey, locationData);
       return locationData;
     } catch (error) {
       console.error('User location detection failed:', error);
@@ -211,6 +209,61 @@ class ApiService {
 
     await this.cacheApiData('tsa', 'factsheet', 'tsa_annual_data', tsaData);
     return tsaData;
+  }
+
+  // Universities API (Hipo Labs) - AU universities
+  async getAustralianUniversities(name?: string): Promise<any[] | null> {
+    const cacheKey = `unis_au_${name ? name.toLowerCase() : 'all'}`;
+    const cached = await this.getCachedData(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const url = `https://universities.hipolabs.com/search?country=Australia${name ? `&name=${encodeURIComponent(name)}` : ''}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Failed to fetch universities');
+      const data = await res.json();
+      await this.cacheApiData('hipolabs', 'universities', cacheKey, data);
+      return data;
+    } catch (error) {
+      console.error('Universities fetch failed:', error);
+      return null;
+    }
+  }
+
+  // JSONPlaceholder mock users
+  async getMockUsers(): Promise<any[] | null> {
+    const cacheKey = 'jsonplaceholder_users';
+    const cached = await this.getCachedData(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const res = await fetch('https://jsonplaceholder.typicode.com/users');
+      if (!res.ok) throw new Error('Failed to fetch mock users');
+      const data = await res.json();
+      await this.cacheApiData('jsonplaceholder', 'users', cacheKey, data);
+      return data;
+    } catch (error) {
+      console.error('Mock users fetch failed:', error);
+      return null;
+    }
+  }
+
+  // REST Countries - country info
+  async getCountryInfo(country: string): Promise<any[] | null> {
+    const cacheKey = `country_${country.toLowerCase()}`;
+    const cached = await this.getCachedData(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const res = await fetch(`https://restcountries.com/v3.1/name/${encodeURIComponent(country)}`);
+      if (!res.ok) throw new Error('Failed to fetch country info');
+      const data = await res.json();
+      await this.cacheApiData('restcountries', 'name', cacheKey, data);
+      return data;
+    } catch (error) {
+      console.error('Country info fetch failed:', error);
+      return null;
+    }
   }
 }
 
