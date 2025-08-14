@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import TLRS from "./pages/TLRS";
@@ -18,10 +18,18 @@ import RetailerOnboarding from "./pages/RetailerOnboarding";
 import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import TyreSearch from "./pages/TyreSearch";
 import RequireAuth from "@/components/auth/RequireAuth";
 import RedirectIfAuthed from "@/components/auth/RedirectIfAuthed";
 
 const queryClient = new QueryClient();
+
+const RedirectTyresRegister = () => {
+  const location = useLocation();
+  const qs = new URLSearchParams(location.search);
+  qs.set('tab', 'register');
+  return <Navigate to={`/tyres?${qs.toString()}`} replace />;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -44,6 +52,8 @@ const App = () => (
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/search" element={<TyreSearch />} />
+          <Route path="/tyres/register" element={<RedirectTyresRegister />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -126,7 +126,7 @@ const Index = () => {
   const handlePlanSelect = (planSlug: string) => {
     // For free plan, go directly to tyre registration
     if (planSlug === 'free-car-owner') {
-      navigate('/tyres/register');
+      navigate('/tyres?tab=register');
       return;
     }
     
