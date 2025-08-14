@@ -266,7 +266,7 @@ class ApiService {
     }
   }
 
-  // Supabase: Kirrawee demo helpers
+  // Supabase: Demo helpers
   async getLocalRetailersByArea(suburb: string, state: string): Promise<Array<{ name: string; website?: string; suburb?: string; state?: string; logo_url?: string }> | null> {
     try {
       const { data, error } = await supabase

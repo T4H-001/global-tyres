@@ -12,15 +12,14 @@ export interface Partner {
 export function useDemoMode() {
   const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const demoKey = params?.get('demo')?.toLowerCase();
-  const active = demoKey === 'kirrawee' || demoKey === 'sutherland' || demoKey === 'sutherland-shire' || demoKey === 'on';
+  const active = demoKey === 'on';
   const isGeneric = demoKey === 'on';
-  const isLocationSpecific = demoKey === 'kirrawee' || demoKey === 'sutherland' || demoKey === 'sutherland-shire';
+  const isLocationSpecific = false;
   const [partners, setPartners] = useState<Partner[]>([]);
   const [loading, setLoading] = useState(false);
 
   const area = useMemo(() => {
-    if (!active || isGeneric) return null;
-    return { suburb: 'Kirrawee', state: 'NSW' } as const;
+    return null;
   }, [active, isGeneric]);
 
   useEffect(() => {
@@ -35,20 +34,12 @@ export function useDemoMode() {
             setPartners(list as Partner[]);
           } else {
             // Fallback to static partners for demo reliability
-            setPartners([
-              { name: 'RoverX', website: 'https://roverx.com.au/', suburb: 'Kirrawee', state: 'NSW' },
-              { name: 'BW Automotive', website: 'https://www.bwautomotive.com.au/', suburb: 'Kirrawee', state: 'NSW' },
-              { name: 'Tubbys Tyres', website: null, suburb: 'Kirrawee', state: 'NSW' },
-            ]);
+            setPartners([]);
           }
         }
       } catch {
         if (!cancelled) {
-          setPartners([
-            { name: 'RoverX', website: 'https://roverx.com.au/', suburb: 'Kirrawee', state: 'NSW' },
-            { name: 'BW Automotive', website: 'https://www.bwautomotive.com.au/', suburb: 'Kirrawee', state: 'NSW' },
-            { name: 'Tubbys Tyres', website: null, suburb: 'Kirrawee', state: 'NSW' },
-          ]);
+          setPartners([]);
         }
       } finally {
         if (!cancelled) setLoading(false);

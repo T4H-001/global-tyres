@@ -40,7 +40,7 @@ const Index = () => {
   useEffect(() => {
     if (typeof document !== 'undefined') {
       document.title = demo.active 
-        ? 'Kirrawee NSW Tyre Tracking Demo | TLRS'
+        ? 'Demo Mode | TLRS'
         : 'Tyre Lifecycle Management | TLRS';
     }
   }, [demo.active]);
@@ -259,17 +259,10 @@ const Index = () => {
           <div className="max-w-7xl mx-auto px-6 py-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
-                <h2 className="text-xl font-semibold text-foreground">
-                  {demo.isGeneric ? 'Demo Mode' : 'Kirrawee Demo Mode'}
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  {demo.isGeneric 
-                    ? 'Interactive demonstrations available' 
-                    : 'Preloaded local partners in Kirrawee, NSW 2232'
-                  }
-                </p>
+                <h2 className="text-xl font-semibold text-foreground">Demo Mode</h2>
+                <p className="text-sm text-muted-foreground">Interactive demonstrations available</p>
               </div>
-              <Link to={demo.isGeneric ? "/tyres?demo=on" : "/tyres?demo=kirrawee"}>
+              <Link to="/tyres?demo=on">
                 <Button variant="outline">Open Tyre Management</Button>
               </Link>
             </div>

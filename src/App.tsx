@@ -23,7 +23,7 @@ import TyreSearch from "./pages/TyreSearch";
 import TyreTrack from "./pages/TyreTrack";
 import RequireAuth from "@/components/auth/RequireAuth";
 import RedirectIfAuthed from "@/components/auth/RedirectIfAuthed";
-import DemoToggle from "@/components/DemoToggle";
+
 
 const queryClient = new QueryClient();
 
@@ -62,7 +62,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <DemoToggle />
+        
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

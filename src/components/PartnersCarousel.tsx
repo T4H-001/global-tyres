@@ -10,6 +10,20 @@ interface Partner {
   category: string;
 }
 
+const curatedPartners: Partner[] = [
+  { id: 'bridgestone', name: 'Bridgestone', logo_url: null, website_url: 'https://www.bridgestone.com/', category: 'manufacturer' },
+  { id: 'michelin', name: 'Michelin', logo_url: null, website_url: 'https://www.michelin.com/', category: 'manufacturer' },
+  { id: 'goodyear', name: 'Goodyear', logo_url: null, website_url: 'https://www.goodyear.com/', category: 'manufacturer' },
+  { id: 'pirelli', name: 'Pirelli', logo_url: null, website_url: 'https://www.pirelli.com/', category: 'manufacturer' },
+  { id: 'continental', name: 'Continental', logo_url: null, website_url: 'https://www.continental-tires.com/', category: 'manufacturer' },
+  { id: 'yokohama', name: 'Yokohama', logo_url: null, website_url: 'https://www.yokohamatire.com/', category: 'manufacturer' },
+  { id: 'hankook', name: 'Hankook', logo_url: null, website_url: 'https://www.hankooktire.com/', category: 'manufacturer' },
+  { id: 'dunlop', name: 'Dunlop', logo_url: null, website_url: 'https://www.dunloptires.com/', category: 'manufacturer' },
+  { id: 'tyrepower', name: 'Tyrepower', logo_url: null, website_url: 'https://www.tyrepower.com.au/', category: 'retailer' },
+  { id: 'beaurepaires', name: 'Beaurepaires', logo_url: null, website_url: 'https://www.beaurepaires.com.au/', category: 'retailer' },
+  { id: 'bob-jane', name: 'Bob Jane T-Marts', logo_url: null, website_url: 'https://www.bobjane.com.au/', category: 'retailer' },
+];
+
 export default function PartnersCarousel() {
   const [partners, setPartners] = useState<Partner[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,10 +34,10 @@ export default function PartnersCarousel() {
 
   const fetchPartners = async () => {
     try {
-      // First, try to fetch logos for partners without them
+      // Attempt to enrich partner logos
       await supabase.functions.invoke('fetch-partner-logos');
 
-      // Then fetch all partners
+      // Fetch active partners from DB
       const { data, error } = await supabase
         .from('lrs_partners')
         .select('*')
@@ -31,9 +45,21 @@ export default function PartnersCarousel() {
         .order('display_order', { ascending: true });
 
       if (error) throw error;
-      setPartners(data || []);
+      const list = (data || []) as Partner[];
+
+      // Deduplicate by name and filter out empties
+      const unique = Array.from(
+        new Map(
+          list
+            .filter((p) => p && p.name)
+            .map((p) => [p.name.trim().toLowerCase(), p])
+        ).values()
+      );
+
+      setPartners(unique.length ? unique : curatedPartners);
     } catch (error) {
       console.error('Error fetching partners:', error);
+      setPartners(curatedPartners);
     } finally {
       setLoading(false);
     }

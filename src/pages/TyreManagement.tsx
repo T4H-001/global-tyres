@@ -101,13 +101,10 @@ export default function TyreManagement() {
             <CardContent className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
               <div>
                 <div className="font-semibold">
-                  {demo.isGeneric ? 'Demo Mode' : 'Kirrawee Demo Mode'}
+                  Demo Mode
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  {demo.isGeneric 
-                    ? 'Interactive demonstration mode' 
-                    : 'NSW 2232 • Local partners preloaded'
-                  }
+                  Interactive demonstration mode
                 </div>
               </div>
               {demo.isLocationSpecific && demo.partners.length > 0 && (
@@ -241,7 +238,7 @@ export default function TyreManagement() {
           <div className="fixed bottom-4 left-4 z-40 max-w-sm">
             <Card className="shadow-lg border-primary/30">
               <CardHeader>
-                <CardTitle className="text-base">Welcome to Kirrawee Demo</CardTitle>
+                <CardTitle className="text-base">Welcome to Demo</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
                 <p className="text-muted-foreground">Try registering a tyre, then view it on the dashboard. You can also generate sample data.</p>

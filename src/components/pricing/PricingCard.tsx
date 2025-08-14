@@ -6,6 +6,9 @@ import { CheckCircle, Car, Building2, Truck, Star, Crown } from "lucide-react";
 import individualImg from "@/assets/pricing/individual.jpg";
 import businessImg from "@/assets/pricing/business.jpg";
 import enterpriseImg from "@/assets/pricing/enterprise.jpg";
+import tyreStackClean from "@/assets/tyre-stack-clean.jpg";
+import tyreRecycling from "@/assets/tyre-recycling-facility.jpg";
+import environmental from "@/assets/before-after-environment.jpg";
 
 interface PricingPlan {
   slug: string;
@@ -67,11 +70,23 @@ export const PricingCard = ({ plan, isPopular = false, onSelect }: PricingCardPr
   const buttonText = getButtonText(plan.tier, plan.target_user_type);
   const buttonVariant = getButtonVariant(plan.tier, plan.target_user_type, isPopular);
 
-  const imageSrc = plan.tier === 'enterprise'
-    ? enterpriseImg
-    : plan.target_user_type === 'business'
-      ? businessImg
-      : individualImg;
+  let imageSrc: string;
+  if (plan.slug?.includes('enterprise') || plan.tier === 'enterprise') {
+    imageSrc = enterpriseImg;
+  } else if (plan.slug?.includes('pro')) {
+    imageSrc = tyreRecycling;
+  } else if (
+    plan.slug?.includes('starter') ||
+    plan.slug?.includes('basic') ||
+    plan.tier === 'basic' ||
+    plan.tier === 'commercial'
+  ) {
+    imageSrc = tyreStackClean;
+  } else if (plan.price_cents === 0 || plan.tier === 'free' || plan.target_user_type === 'individual') {
+    imageSrc = individualImg;
+  } else {
+    imageSrc = businessImg;
+  }
   const imageAlt = `${plan.display_name} plan - tyre lifecycle management`;
   
   return (

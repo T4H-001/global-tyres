@@ -86,29 +86,34 @@ export const InteractiveDemo = () => {
 
             {/* Sample Tyre Cards */}
             <div className="grid grid-cols-2 gap-4">
-              {Array.from({ length: tyreCount }).map((_, index) => (
-                <Card key={index} className="bg-background/50 border-primary/20 hover:border-primary/40 transition-all duration-300 overflow-hidden">
-                  <CardContent className="p-2">
-                    <div className="relative h-20 mb-2">
-                      <img 
-                        src={tyreStackClean} 
-                        alt={`Tyre ${index + 1}`}
-                        className="w-full h-full object-cover rounded opacity-90"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded" />
-                      <div className="absolute bottom-1 left-1">
-                        <div className="bg-white/90 px-2 py-1 rounded text-xs font-medium">
-                          DOT: BFGX47{(index + 1).toString().padStart(2, '0')}
+              {Array.from({ length: tyreCount }).map((_, index) => {
+                const images = [tyreStackClean, beforeAfterEnvironment, tyrePileIllegal];
+                const img = images[index % images.length];
+                return (
+                  <Card key={index} className="bg-background/50 border-primary/20 hover:border-primary/40 transition-all duration-300 overflow-hidden">
+                    <CardContent className="p-2">
+                      <div className="relative h-20 mb-2">
+                        <img 
+                          src={img} 
+                          alt={`Tyre card visual ${index + 1}`}
+                          className="w-full h-full object-cover rounded opacity-90"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded" />
+                        <div className="absolute bottom-1 left-1">
+                          <div className="bg-white/90 px-2 py-1 rounded text-xs font-medium">
+                            DOT: BFGX47{(index + 1).toString().padStart(2, '0')}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Truck className="h-3 w-3 text-primary" />
-                      <div className="text-xs text-muted-foreground">QR: #{1000 + index}</div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                      <div className="flex items-center gap-2">
+                        <Truck className="h-3 w-3 text-primary" />
+                        <div className="text-xs text-muted-foreground">QR: #{1000 + index}</div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
 
             <div className="flex items-center justify-center gap-4">
@@ -218,7 +223,7 @@ export const InteractiveDemo = () => {
             >
               Register Your First Tyre
             </Button>
-            <Button variant="outline" size="lg" onClick={() => navigate('/tyres?demo=kirrawee')}>
+            <Button variant="outline" size="lg" onClick={() => navigate('/tyres?demo=on')}>
               Try Business Demo
             </Button>
           </div>
