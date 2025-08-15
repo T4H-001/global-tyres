@@ -12,6 +12,8 @@ import { UserTypeSelector } from "@/components/pricing/UserTypeSelector";
 import { Footer } from "@/components/Footer";
 import { useDemoMode } from "@/hooks/useDemoMode";
 import PartnersCarousel from "@/components/PartnersCarousel";
+import heroImage from "@/assets/tyre-pile-illegal.jpg";
+import { Helmet } from "react-helmet";
 
 interface PricingPlan {
   slug: string;
@@ -151,9 +153,22 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Enhanced Hero Section with Motion */}
+      <Helmet>
+        <title>Tyre Lifecycle Management | TLRS</title>
+        <meta name="description" content="Track tyre lifecycles from purchase to recycling. Combat illegal dumping with TLRS—tyre lifecycle, recycling, and compliance tracking." />
+        <link rel="canonical" href="/" />
+      </Helmet>
+       {/* Enhanced Hero Section with Motion */}
       <div className="relative overflow-hidden bg-gradient-hero text-white">
-        <div className="absolute inset-0 bg-[url('/api/placeholder/1920/1080')] bg-cover bg-center opacity-10"></div>
+        <img
+          src={heroImage}
+          alt="Illegal tyre dumpsite with towering piles of discarded tyres"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover -z-10"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/40 to-background/80 z-0"></div>
         <div className="relative max-w-7xl mx-auto px-6 py-32">
           <div className="text-center space-y-8 animate-fade-in">
             <Badge className="mx-auto px-4 py-2 bg-white/10 text-white border-white/20 hover:bg-white/20 transition-all duration-300">
