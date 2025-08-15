@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Plus, Search, BarChart3, Settings } from "lucide-react";
+import { Plus, Search, BarChart3, Settings, Shield } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useDemoMode } from "@/hooks/useDemoMode";
 
 export const Navigation = () => {
   const location = useLocation();
@@ -54,6 +55,19 @@ export const Navigation = () => {
               </Button>
             </Link>
             
+            {/* Demo-only admin link */}
+            {useDemoMode().active && (
+              <Link to="/admin/demo">
+                <Button 
+                  variant={isActive("/admin/demo") ? "default" : "ghost"}
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <Shield className="h-4 w-4" />
+                  Admin
+                </Button>
+              </Link>
+            )}
             
             <Link to="/contact">
               <Button 

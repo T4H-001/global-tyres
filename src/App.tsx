@@ -23,7 +23,7 @@ import TyreSearch from "./pages/TyreSearch";
 import TyreTrack from "./pages/TyreTrack";
 import RequireAuth from "@/components/auth/RequireAuth";
 import RedirectIfAuthed from "@/components/auth/RedirectIfAuthed";
-
+import AdminDemo from "./pages/AdminDemo";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +59,10 @@ const App = () => (
           <Route path="/track/:tyreSerial" element={<TyreTrack />} />
           
           <Route path="/tyres/register" element={<RedirectTyresRegister />} />
+          {/* Protected admin routes */}
+          <Route element={<RequireAuth />}>
+            <Route path="/admin/demo" element={<AdminDemo />} />
+          </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
