@@ -56,6 +56,11 @@ export const Footer = () => {
                   Retailer Portal
                 </Link>
               </li>
+              <li>
+                <Link to="/board" className="text-muted-foreground hover:text-primary transition-colors">
+                  Advisory Board
+                </Link>
+              </li>
             </ul>
           </div>
 

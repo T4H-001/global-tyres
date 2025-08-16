@@ -26,14 +26,19 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://globaltyres.org/manage</loc>
+    <loc>https://globaltyres.org/tyres</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://globaltyres.org/tlrs</loc>
+    <loc>https://globaltyres.org/app</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://globaltyres.org/board</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://globaltyres.org/retailer-onboarding</loc>

@@ -24,6 +24,7 @@ import TyreTrack from "./pages/TyreTrack";
 import RequireAuth from "@/components/auth/RequireAuth";
 import RedirectIfAuthed from "@/components/auth/RedirectIfAuthed";
 import AdminDemo from "./pages/AdminDemo";
+import AdvisoryBoard from "./pages/AdvisoryBoard";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ const App = () => (
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/search" element={<TyreSearch />} />
           <Route path="/track/:tyreSerial" element={<TyreTrack />} />
+          <Route path="/board" element={<AdvisoryBoard />} />
           
           <Route path="/tyres/register" element={<RedirectTyresRegister />} />
           {/* Protected admin routes */}
