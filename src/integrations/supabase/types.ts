@@ -6003,6 +6003,79 @@ export type Database = {
         }
         Relationships: []
       }
+      community_reports: {
+        Row: {
+          business_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_public: boolean
+          lat: number | null
+          lng: number | null
+          photo_path: string | null
+          report_type: string
+          reporter_id: string
+          status: string
+          title: string | null
+          tyre_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          business_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          lat?: number | null
+          lng?: number | null
+          photo_path?: string | null
+          report_type: string
+          reporter_id: string
+          status?: string
+          title?: string | null
+          tyre_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          business_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          lat?: number | null
+          lng?: number | null
+          photo_path?: string | null
+          report_type?: string
+          reporter_id?: string
+          status?: string
+          title?: string | null
+          tyre_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_reports_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "lrs_businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_reports_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_reports_tyre_id_fkey"
+            columns: ["tyre_id"]
+            isOneToOne: false
+            referencedRelation: "tyre_registrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       "comp sku": {
         Row: {
           "Bundle Name": string | null
@@ -25001,6 +25074,66 @@ export type Database = {
         }
         Relationships: []
       }
+      tyre_eco_metrics: {
+        Row: {
+          business_id: string | null
+          co2e_saved_kg: number | null
+          created_at: string
+          hazard_score: number | null
+          id: string
+          microplastics_g_est: number | null
+          notes: string | null
+          source: string | null
+          tyre_id: string
+          updated_at: string
+          waterway_proximity_km: number | null
+          wildlife_zone: string | null
+        }
+        Insert: {
+          business_id?: string | null
+          co2e_saved_kg?: number | null
+          created_at?: string
+          hazard_score?: number | null
+          id?: string
+          microplastics_g_est?: number | null
+          notes?: string | null
+          source?: string | null
+          tyre_id: string
+          updated_at?: string
+          waterway_proximity_km?: number | null
+          wildlife_zone?: string | null
+        }
+        Update: {
+          business_id?: string | null
+          co2e_saved_kg?: number | null
+          created_at?: string
+          hazard_score?: number | null
+          id?: string
+          microplastics_g_est?: number | null
+          notes?: string | null
+          source?: string | null
+          tyre_id?: string
+          updated_at?: string
+          waterway_proximity_km?: number | null
+          wildlife_zone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tyre_eco_metrics_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "lrs_businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tyre_eco_metrics_tyre_id_fkey"
+            columns: ["tyre_id"]
+            isOneToOne: false
+            referencedRelation: "tyre_registrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tyre_fitment_data: {
         Row: {
           created_at: string
@@ -28747,6 +28880,102 @@ export type Database = {
           avg_privacy_impact: number | null
           category_name: string | null
           total_consents: number | null
+        }
+        Relationships: []
+      }
+      consent_registry_category_summary: {
+        Row: {
+          avg_complexity: number | null
+          category: string | null
+          high_complexity_count: number | null
+          total: number | null
+        }
+        Relationships: []
+      }
+      consent_registry_combined: {
+        Row: {
+          age_of_subject: string | null
+          agent_required: string | null
+          applicable_age_range: string | null
+          automated_processing: string | null
+          awareness_level: string | null
+          can_revoke_text: string | null
+          category: string | null
+          collected_by: string | null
+          complexity_band: string | null
+          complexity_score: number | null
+          consent_expiry: string | null
+          consent_giver: string | null
+          consent_id: string | null
+          consent_language_complexity: string | null
+          consent_log_id: string | null
+          consent_mechanism: string | null
+          consent_method_traceable: string | null
+          consent_name: string | null
+          consent_scope: string | null
+          consent_trigger: string | null
+          consent_type: string | null
+          consent_update_required: string | null
+          data_captured: string | null
+          data_controller: string | null
+          data_retention_estimate: string | null
+          data_retention_policy: string | null
+          data_type: string | null
+          data_usage: string | null
+          disputed_rights: string | null
+          example_data_collectors: string | null
+          flags_count: number | null
+          frequency: string | null
+          guardian_involvement: string | null
+          impact_on_opportunities: string | null
+          inference_based: string | null
+          insights_derived: string | null
+          jurisdictional_threshold: string | null
+          legal_owner: string | null
+          life_domain: string | null
+          life_stage: string | null
+          linked_services: string | null
+          linked_systems: string | null
+          linked_systems_count: number | null
+          minor_involvement: string | null
+          ownership_notes: string | null
+          policy_sources: string | null
+          profiling_applied: string | null
+          profiling_risk: string | null
+          registry_code: string | null
+          retention_period: string | null
+          revocation_available: string | null
+          revocation_method: string | null
+          risk_level: string | null
+          risk_of_misuse: string | null
+          risk_rating: string | null
+          sensitivity: string | null
+          shared_with: string | null
+          shared_with_third_parties: string | null
+          source: string | null
+          status: string | null
+          subject_age: string | null
+          used_for_decision_making: string | null
+          visibility_to_subject: string | null
+          vulnerability_flag: string | null
+        }
+        Relationships: []
+      }
+      consent_registry_life_stage_summary: {
+        Row: {
+          avg_complexity: number | null
+          high_complexity_count: number | null
+          life_stage: string | null
+          total: number | null
+        }
+        Relationships: []
+      }
+      consent_registry_type_summary: {
+        Row: {
+          avg_complexity: number | null
+          consent_type: string | null
+          high_complexity_count: number | null
+          total: number | null
         }
         Relationships: []
       }
