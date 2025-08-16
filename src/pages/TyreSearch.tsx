@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Filter, Download, Eye } from "lucide-react";
 import { useDemoMode } from "@/hooks/useDemoMode";
 import { tyreService, TyreRegistration } from "@/services/tyreService";
+import Papa from "papaparse";
 
 // Display type for search results
 type DisplayTyre = {
@@ -34,9 +35,9 @@ export const TyreSearch = () => {
 
   // Default mock data
   const defaultMock: DisplayTyre[] = [
-    { id: "TYR-001234", manufacturer: "Michelin", size: "205/55R16", status: "In Use", location: "Sydney, AU", lastUpdated: "2024-08-11", dotCode: "DOT-4A3Y-1234-2525" },
-    { id: "TYR-001235", manufacturer: "Bridgestone", size: "225/50R17", status: "Collected", location: "Melbourne, AU", lastUpdated: "2024-08-10", dotCode: "DOT-B5K2-5678-1523" },
-    { id: "TYR-001236", manufacturer: "Goodyear", size: "195/65R15", status: "Recycled", location: "Brisbane, AU", lastUpdated: "2024-08-09", dotCode: "DOT-G7X9-9012-3421" },
+    { id: "TYR-001234", manufacturer: "Michelin", size: "205/55R16", status: "In Use", location: "Sydney, AU", lastUpdated: "2024-08-11", dotCode: "DOT-4A3Y-1234-2525", serial: "TYR-001234" },
+    { id: "TYR-001235", manufacturer: "Bridgestone", size: "225/50R17", status: "Collected", location: "Melbourne, AU", lastUpdated: "2024-08-10", dotCode: "DOT-B5K2-5678-1523", serial: "TYR-001235" },
+    { id: "TYR-001236", manufacturer: "Goodyear", size: "195/65R15", status: "Recycled", location: "Brisbane, AU", lastUpdated: "2024-08-09", dotCode: "DOT-G7X9-9012-3421", serial: "TYR-001236" },
   ];
 
   useEffect(() => {
@@ -81,6 +82,48 @@ export const TyreSearch = () => {
     }
   };
 
+  const filteredItems = useMemo(() => {
+    return items.filter(item => {
+      const matchesSearch = !searchQuery || 
+        item.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.dotCode?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.serial?.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesStatus = statusFilter === "all" || item.status === statusFilter;
+      
+      const matchesLocation = locationFilter === "all" || 
+        item.location?.toLowerCase().includes(locationFilter.toLowerCase());
+      
+      return matchesSearch && matchesStatus && matchesLocation;
+    });
+  }, [items, searchQuery, statusFilter, locationFilter]);
+
+  const handleExport = () => {
+    if (filteredItems.length === 0) return;
+    
+    const csvData = filteredItems.map(item => ({
+      ID: item.id,
+      Serial: item.serial || '',
+      Manufacturer: item.manufacturer || '',
+      Size: item.size || '',
+      Status: item.status,
+      Location: item.location || '',
+      'Last Updated': item.lastUpdated || '',
+      'DOT Code': item.dotCode || ''
+    }));
+    
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `tyre-search-results-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
@@ -91,7 +134,12 @@ export const TyreSearch = () => {
           </h1>
           <p className="text-muted-foreground">Find and track tyres in the system</p>
         </div>
-        <Button variant="outline" className="flex items-center gap-2">
+        <Button 
+          variant="outline" 
+          className="flex items-center gap-2"
+          onClick={handleExport}
+          disabled={filteredItems.length === 0}
+        >
           <Download className="h-4 w-4" />
           Export Results
         </Button>
@@ -162,11 +210,11 @@ export const TyreSearch = () => {
       <Card className="shadow-card">
         <CardHeader>
           <CardTitle>Search Results</CardTitle>
-          <CardDescription>Found {items.length} tyres matching your criteria</CardDescription>
+          <CardDescription>Found {filteredItems.length} tyres matching your criteria</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {items.map((tyre) => (
+            {filteredItems.map((tyre) => (
               <div key={tyre.id} className="flex items-center justify-between p-4 border border-border rounded-lg bg-gradient-earth">
                 <div className="flex items-center space-x-6">
                   <div>
@@ -187,7 +235,7 @@ export const TyreSearch = () => {
                     {tyre.status}
                   </Badge>
                   <Button variant="outline" size="sm" asChild>
-                    <a href={tyre.serial ? `/track/${encodeURIComponent(tyre.serial)}` : '#'}>
+                    <a href={`/track/${encodeURIComponent(tyre.serial || tyre.id)}`}>
                       <Eye className="h-4 w-4 mr-2" />
                       View Details
                     </a>
