@@ -85,7 +85,7 @@ export default function Privacy() {
             </p>
             <p className="text-muted-foreground">
               Email: info@globaltyres.org<br />
-              Address: Level 15, 100 Miller Street, North Sydney, NSW 2060, Australia
+              Address: HQ - Sydney, Australia
             </p>
           </section>
         </div>

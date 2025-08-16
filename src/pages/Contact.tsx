@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Mail, Phone, MapPin, MessageSquare, Send } from "lucide-react";
+import { Mail, MapPin, MessageSquare, Send } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 
@@ -136,9 +136,7 @@ export default function Contact() {
                   <div>
                     <h3 className="font-medium">Office</h3>
                     <p className="text-muted-foreground">
-                      Level 15, 100 Miller Street<br />
-                      North Sydney, NSW 2060<br />
-                      Australia
+                      HQ - Sydney, Australia
                     </p>
                   </div>
                 </div>

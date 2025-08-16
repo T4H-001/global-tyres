@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Mail, Phone, MapPin, ExternalLink } from "lucide-react";
+import { Mail, MapPin, ExternalLink } from "lucide-react";
 
 export const Footer = () => {
   return (
@@ -27,7 +27,7 @@ export const Footer = () => {
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
-                <span>Sydney, NSW, Australia</span>
+                <span>HQ - Sydney, Australia</span>
               </div>
             </div>
           </div>
