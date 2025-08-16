@@ -16,8 +16,12 @@ import {
   CheckCircle,
   Clock,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Radio,
+  Zap,
+  Factory
 } from 'lucide-react';
+import { VerificationBadge } from './VerificationBadge';
 
 interface Props {
   businessId: string;
@@ -220,6 +224,11 @@ export default function TyreDashboard({ businessId }: Props) {
                             {getStatusIcon(tyre.status)}
                             {tyre.status}
                           </Badge>
+                          {tyre.identification_method === 'rfid_tag' && <Radio className="h-4 w-4 text-blue-500" />}
+                          {tyre.identification_method === 'laser_etched' && <Zap className="h-4 w-4 text-yellow-500" />}
+                          {tyre.identification_method === 'oem_stamped' && <Factory className="h-4 w-4 text-green-500" />}
+                          {(!tyre.identification_method || tyre.identification_method === 'serial_qr') && <QrCode className="h-4 w-4" />}
+                          <VerificationBadge status={tyre.verification_status || 'self_reported'} />
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">

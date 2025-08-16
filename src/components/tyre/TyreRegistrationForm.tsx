@@ -8,6 +8,7 @@ import { tyreService, TyreRegistration } from '@/services/tyreService';
 import { apiService } from '@/services/apiService';
 import { QrCode, MapPin, Calendar, Truck } from 'lucide-react';
 import { useDemoMode } from '@/hooks/useDemoMode';
+import { IdentificationMethodSelector } from './IdentificationMethodSelector';
 
 interface Props {
   businessId: string;
@@ -25,7 +26,9 @@ export default function TyreRegistrationForm({ businessId, onRegistrationComplet
     install_date: '',
     vehicle_registration: '',
     location_state: '',
-    location_postcode: ''
+    location_postcode: '',
+    identification_method: 'serial_qr' as 'serial_qr' | 'rfid_tag' | 'laser_etched' | 'oem_stamped',
+    rfid_tag_id: ''
   });
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [locationSuggestions, setLocationSuggestions] = useState<any[]>([]);
@@ -144,12 +147,26 @@ export default function TyreRegistrationForm({ businessId, onRegistrationComplet
         vehicle_registration: formData.vehicle_registration.replace(/\s/g, '') || undefined,
         location_state: formData.location_state || undefined,
         location_postcode: formData.location_postcode || undefined,
-        status: 'active'
+        status: 'active',
+        identification_method: formData.identification_method,
+        rfid_tag_id: formData.identification_method === 'rfid_tag' ? formData.rfid_tag_id : undefined
       };
 
       const result = await tyreService.registerTyre(registrationData);
       
       if (result) {
+        // If RFID tag was specified, activate it
+        if (formData.identification_method === 'rfid_tag' && formData.rfid_tag_id) {
+          const activated = await tyreService.activateRfidTag(formData.rfid_tag_id, result.id!);
+          if (!activated) {
+            toast({
+              title: "Warning",
+              description: "Tyre registered but RFID tag activation failed. Please check tag ID.",
+              variant: "destructive",
+            });
+          }
+        }
+        
         toast({
           title: "Tyre registered successfully",
           description: `QR code generated for tracking: ${result.tyre_serial}`
@@ -165,7 +182,9 @@ export default function TyreRegistrationForm({ businessId, onRegistrationComplet
           install_date: '',
           vehicle_registration: '',
           location_state: '',
-          location_postcode: ''
+          location_postcode: '',
+          identification_method: 'serial_qr' as 'serial_qr' | 'rfid_tag' | 'laser_etched' | 'oem_stamped',
+          rfid_tag_id: ''
         });
         
         onRegistrationComplete?.(result);
@@ -193,6 +212,26 @@ export default function TyreRegistrationForm({ businessId, onRegistrationComplet
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Identification Method */}
+        <IdentificationMethodSelector
+          value={formData.identification_method}
+          onValueChange={(value) => setFormData(prev => ({ ...prev, identification_method: value as any }))}
+        />
+
+        {formData.identification_method === 'rfid_tag' && (
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              RFID Tag ID *
+            </label>
+            <Input
+              value={formData.rfid_tag_id}
+              onChange={(e) => handleInputChange('rfid_tag_id', e.target.value)}
+              placeholder="Enter RFID tag identifier"
+              required
+            />
+          </div>
+        )}
+
         {/* Serial Number */}
         <div>
           <label className="block text-sm font-medium mb-2">

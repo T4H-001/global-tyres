@@ -16,6 +16,12 @@ export interface TyreRegistration {
   status: 'active' | 'removed' | 'recycled' | 'disposed';
   qr_code_url?: string;
   session_id?: string;
+  identification_method?: 'serial_qr' | 'rfid_tag' | 'laser_etched' | 'oem_stamped';
+  verification_status?: 'self_reported' | 'partner_verified' | 'api_verified' | 'fully_verified';
+  rfid_tag_id?: string;
+  laser_code?: string;
+  partner_verification?: any;
+  api_verification?: any;
 }
 
 export interface TyreLifecycleEvent {
@@ -60,15 +66,19 @@ class TyreService {
         );
       }
 
+      const tyreRegistrationData = {
+        ...tyreData,
+        qr_code_url,
+        identification_method: tyreData.identification_method || 'serial_qr',
+        verification_status: tyreData.verification_status || 'self_reported',
+        location_coordinates: location_data?.coordinates 
+          ? `POINT(${location_data.coordinates.lng} ${location_data.coordinates.lat})`
+          : null
+      };
+
       const { data, error } = await supabase
         .from('tyre_registrations')
-        .insert([{
-          ...tyreData,
-          qr_code_url,
-          location_coordinates: location_data?.coordinates 
-            ? `POINT(${location_data.coordinates.lng} ${location_data.coordinates.lat})`
-            : null
-        }])
+        .insert([tyreRegistrationData])
         .select()
         .single();
 
@@ -306,6 +316,27 @@ class TyreService {
     } catch (error) {
       console.error('Failed to get waste insights:', error);
       return null;
+    }
+  }
+
+  async activateRfidTag(tagId: string, tyreRegistrationId: string): Promise<boolean> {
+    try {
+      const { data, error } = await supabase.functions.invoke('activate-rfid-tag', {
+        body: {
+          tag_id: tagId,
+          tyre_registration_id: tyreRegistrationId
+        }
+      });
+
+      if (error) {
+        console.error('Error activating RFID tag:', error);
+        return false;
+      }
+
+      return data?.success || false;
+    } catch (error) {
+      console.error('Error in activateRfidTag:', error);
+      return false;
     }
   }
 }
