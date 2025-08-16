@@ -12,6 +12,7 @@ import { UserTypeSelector } from "@/components/pricing/UserTypeSelector";
 import { Footer } from "@/components/Footer";
 import { useDemoMode } from "@/hooks/useDemoMode";
 import PartnersCarousel from "@/components/PartnersCarousel";
+import { HeroCarousel } from "@/components/HeroCarousel";
 import heroImage from "@/assets/tyre-pile-illegal.jpg";
 import { Helmet } from "react-helmet";
 
@@ -158,107 +159,9 @@ const Index = () => {
         <meta name="description" content="Track tyre lifecycles from purchase to recycling. Combat illegal dumping with TLRS—tyre lifecycle, recycling, and compliance tracking." />
         <link rel="canonical" href="/" />
       </Helmet>
-       {/* Enhanced Hero Section with Motion */}
-      <div className="relative overflow-hidden bg-gradient-hero text-white">
-        <img
-          src={heroImage}
-          alt="Illegal tyre dumpsite with towering piles of discarded tyres"
-          loading="eager"
-          fetchPriority="high"
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover -z-10"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/40 to-background/80 z-0"></div>
-        <div className="relative max-w-7xl mx-auto px-6 py-32">
-          <div className="text-center space-y-8 animate-fade-in">
-            <Badge className="mx-auto px-4 py-2 bg-white/10 text-white border-white/20 hover:bg-white/20 transition-all duration-300">
-              <Zap className="h-4 w-4 mr-2" />
-              Global Tyre Lifecycle Management
-            </Badge>
-            
-            <h1 className="text-6xl md:text-7xl font-bold tracking-tight leading-tight">
-              Track tyre lifecycles. Simply.
-            </h1>
-            
-            <p className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed text-white/90">
-              Join the revolution in tyre stewardship. Our comprehensive tracking system combats 
-              the 60-65% of tyres with unknown fates through cutting-edge lifecycle management.
-            </p>
-
-            {/* Tyre Lifecycle Process Highlight */}
-            <div className="grid md:grid-cols-3 gap-6 mt-12 max-w-5xl mx-auto">
-              <div className="p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-300">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-lg">1</div>
-                  <div>
-                    <div className="font-bold text-lg">Register Tyre Data</div>
-                    <div className="text-sm text-white/80">Free for individuals</div>
-                  </div>
-                </div>
-                <p className="text-white/90 text-sm leading-relaxed">
-                  Add DOT codes, generate QR codes, record initial ownership. Track from purchase to end-of-life.
-                </p>
-              </div>
-
-              <div className="p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-300">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-white font-bold text-lg">2</div>
-                  <div>
-                    <div className="font-bold text-lg">Blockchain Verification</div>
-                    <div className="text-sm text-white/80">Ownership & lifecycle mapping</div>
-                  </div>
-                </div>
-                <p className="text-white/90 text-sm leading-relaxed">
-                  Every ownership change, status update, and location tracked immutably. Last known owner always identifiable.
-                </p>
-              </div>
-
-              <div className="p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-300">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center text-white font-bold text-lg">3</div>
-                  <div>
-                    <div className="font-bold text-lg">Global Compliance</div>
-                    <div className="text-sm text-white/80">Alerts, fines, auto-registration</div>
-                  </div>
-                </div>
-                <p className="text-white/90 text-sm leading-relaxed">
-                  Automated alerts for illegal dumping, compliance reporting, and seamless integration with global stewardship programs.
-                </p>
-              </div>
-            </div>
-
-            {/* Real-world Impact Badge */}
-            <div className="mt-8 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
-              <div className="text-center">
-                <div className="font-semibold text-white mb-2">🎯 Target: Every tyre in the lifecycle ecosystem</div>
-                <div className="text-white/80 text-sm">
-                  From manufacturers to car owners, tyre shops to recyclers - comprehensive tracking for accountability
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex flex-col sm:flex-row justify-center gap-4 pt-8">
-              <Button 
-                size="lg" 
-                onClick={handleGetStarted}
-                className="bg-white text-primary hover:bg-white/90 shadow-2xl hover:shadow-white/20 transition-all duration-300 px-8 py-6 text-lg font-semibold"
-              >
-                <Play className="mr-2 h-5 w-5" />
-                Start Tracking Now
-              </Button>
-              <Link to="/faq">
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-6 text-lg"
-                >
-                  Learn More
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
+      
+      {/* Dramatic Hero Carousel */}
+      <HeroCarousel onGetStarted={handleGetStarted} />
 
       {/* Demo Banner */}
       {demo.active && (
