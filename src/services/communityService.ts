@@ -43,7 +43,7 @@ class CommunityService {
         .single();
 
       if (error) throw error;
-      return data;
+      return data as CommunityReport;
     } catch (error) {
       console.error('Failed to submit community report:', error);
       return null;
@@ -60,7 +60,7 @@ class CommunityService {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data || [];
+      return (data || []) as CommunityReport[];
     } catch (error) {
       console.error('Failed to fetch public reports:', error);
       return [];
@@ -75,7 +75,7 @@ class CommunityService {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data || [];
+      return (data || []) as CommunityReport[];
     } catch (error) {
       console.error('Failed to fetch user reports:', error);
       return [];

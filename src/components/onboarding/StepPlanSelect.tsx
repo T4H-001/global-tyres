@@ -34,6 +34,7 @@ export default function StepPlanSelect({ businessId, onBack, onComplete }: Props
       const { data, error } = await (supabase as any)
         .from("lrs_pricing_plans")
         .select("*")
+        .eq("is_active", true)
         .order("price_cents", { ascending: true });
 
       setLoading(false);
@@ -93,6 +94,20 @@ export default function StepPlanSelect({ businessId, onBack, onComplete }: Props
 
   if (loading) {
     return <div>Loading plans...</div>;
+  }
+
+  if (plans.length === 0) {
+    return (
+      <div className="text-center space-y-4">
+        <h3 className="text-xl font-semibold">No Plans Available</h3>
+        <p className="text-muted-foreground">
+          No pricing plans are currently available. Please try refreshing the page or contact support.
+        </p>
+        <Button variant="outline" onClick={() => window.location.reload()}>
+          Refresh Page
+        </Button>
+      </div>
+    );
   }
 
   return (

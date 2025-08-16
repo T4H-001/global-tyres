@@ -27306,6 +27306,7 @@ export type Database = {
           integration_complexity: string | null
           internal_lead_role: string | null
           is_active: boolean | null
+          is_canonical: boolean
           kpi_metrics: string | null
           legacy_id: string | null
           margin_percent: number | null
@@ -27322,6 +27323,7 @@ export type Database = {
           next_best_offer: string | null
           notes: string | null
           old_role_description: string | null
+          parent_id: string | null
           preferred_delivery_partner: string | null
           prerequisites: string[] | null
           primary_sector: string | null
@@ -27335,6 +27337,7 @@ export type Database = {
           revenue_forecast_max: number | null
           revenue_forecast_min: number | null
           sales_narrative: string | null
+          schema_version: number
           sla_details: Json | null
           slug: string | null
           solution_approach: string | null
@@ -27402,6 +27405,7 @@ export type Database = {
           integration_complexity?: string | null
           internal_lead_role?: string | null
           is_active?: boolean | null
+          is_canonical?: boolean
           kpi_metrics?: string | null
           legacy_id?: string | null
           margin_percent?: number | null
@@ -27418,6 +27422,7 @@ export type Database = {
           next_best_offer?: string | null
           notes?: string | null
           old_role_description?: string | null
+          parent_id?: string | null
           preferred_delivery_partner?: string | null
           prerequisites?: string[] | null
           primary_sector?: string | null
@@ -27431,6 +27436,7 @@ export type Database = {
           revenue_forecast_max?: number | null
           revenue_forecast_min?: number | null
           sales_narrative?: string | null
+          schema_version?: number
           sla_details?: Json | null
           slug?: string | null
           solution_approach?: string | null
@@ -27498,6 +27504,7 @@ export type Database = {
           integration_complexity?: string | null
           internal_lead_role?: string | null
           is_active?: boolean | null
+          is_canonical?: boolean
           kpi_metrics?: string | null
           legacy_id?: string | null
           margin_percent?: number | null
@@ -27514,6 +27521,7 @@ export type Database = {
           next_best_offer?: string | null
           notes?: string | null
           old_role_description?: string | null
+          parent_id?: string | null
           preferred_delivery_partner?: string | null
           prerequisites?: string[] | null
           primary_sector?: string | null
@@ -27527,6 +27535,7 @@ export type Database = {
           revenue_forecast_max?: number | null
           revenue_forecast_min?: number | null
           sales_narrative?: string | null
+          schema_version?: number
           sla_details?: Json | null
           slug?: string | null
           solution_approach?: string | null
@@ -27555,6 +27564,13 @@ export type Database = {
           workstream?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "work_packages_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "work_packages"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "work_packages_tenant_id_fkey"
             columns: ["tenant_id"]
@@ -29875,6 +29891,39 @@ export type Database = {
       get_user_organization_ids: {
         Args: Record<PropertyKey, never>
         Returns: string[]
+      }
+      get_work_packages_unified: {
+        Args: { p_tenant_domain?: string }
+        Returns: {
+          ai_leverage_level: string
+          base_cost: number
+          base_price: number
+          category: string
+          created_at: string
+          customer_outcome: string
+          deliverables: Json
+          delivery_method: string
+          delivery_timeframe_days: number
+          description: string
+          estimated_revenue_per_engagement: number
+          gross_margin_calculated: number
+          id: string
+          is_active: boolean
+          legacy_id: string
+          margin_percent: number
+          name: string
+          problem_statement: string
+          slug: string
+          solution_summary: string
+          subcategory: string
+          success_metrics: Json
+          tags: string[]
+          target_audience: string
+          technical_requirements: Json
+          tenant_id: string
+          tier: string
+          updated_at: string
+        }[]
       }
       has_role: {
         Args: { _role: Database["public"]["Enums"]["app_role"] }

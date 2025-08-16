@@ -53,6 +53,7 @@ const Index = () => {
       const { data, error } = await supabase
         .from('lrs_pricing_plans')
         .select('*')
+        .eq('is_active', true)
         .order('price_cents');
       
       if (error) {
@@ -301,7 +302,7 @@ const Index = () => {
             />
             
             {/* Pricing Cards */}
-            {selectedUserType && (
+            {selectedUserType && filteredPlans.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 {filteredPlans.map((plan, index) => (
                   <PricingCard
@@ -311,6 +312,15 @@ const Index = () => {
                     onSelect={handlePlanSelect}
                   />
                 ))}
+              </div>
+            )}
+            
+            {/* Empty state for filtered plans */}
+            {selectedUserType && filteredPlans.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">
+                  No plans available for {selectedUserType} users. Please try a different category.
+                </p>
               </div>
             )}
             
@@ -327,6 +337,19 @@ const Index = () => {
                 ))}
               </div>
             )}
+          </div>
+        )}
+
+        {/* Empty state for no plans at all */}
+        {!isLoading && plans.length === 0 && (
+          <div className="mt-24 text-center">
+            <h3 className="text-2xl font-bold mb-4">Pricing Information Unavailable</h3>
+            <p className="text-muted-foreground mb-6">
+              Pricing plans are temporarily unavailable. Please try again later or contact support.
+            </p>
+            <Button onClick={handleGetStarted}>
+              Get Started Anyway
+            </Button>
           </div>
         )}
 
