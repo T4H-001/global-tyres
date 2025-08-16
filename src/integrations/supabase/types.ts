@@ -6485,6 +6485,162 @@ export type Database = {
         }
         Relationships: []
       }
+      consent_categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          id: string
+          is_active: boolean | null
+          name: string
+          parent_category_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          parent_category_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          parent_category_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consent_categories_parent_category_id_fkey"
+            columns: ["parent_category_id"]
+            isOneToOne: false
+            referencedRelation: "consent_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consent_events: {
+        Row: {
+          consent_id: string
+          created_at: string | null
+          created_by: string | null
+          event_type: string
+          id: string
+          metadata: Json | null
+          new_status: string | null
+          previous_status: string | null
+          reason: string | null
+        }
+        Insert: {
+          consent_id: string
+          created_at?: string | null
+          created_by?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          new_status?: string | null
+          previous_status?: string | null
+          reason?: string | null
+        }
+        Update: {
+          consent_id?: string
+          created_at?: string | null
+          created_by?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          new_status?: string | null
+          previous_status?: string | null
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consent_events_consent_id_fkey"
+            columns: ["consent_id"]
+            isOneToOne: false
+            referencedRelation: "user_consents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consent_templates: {
+        Row: {
+          automated_processing: boolean | null
+          can_customize: boolean | null
+          category_id: string
+          created_at: string | null
+          created_by: string | null
+          data_types: string[] | null
+          default_expiry_months: number | null
+          description: string
+          id: string
+          is_active: boolean | null
+          is_required: boolean | null
+          legal_basis: string | null
+          privacy_impact_score: number | null
+          retention_period_months: number | null
+          template_version: number | null
+          third_party_sharing: boolean | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          automated_processing?: boolean | null
+          can_customize?: boolean | null
+          category_id: string
+          created_at?: string | null
+          created_by?: string | null
+          data_types?: string[] | null
+          default_expiry_months?: number | null
+          description: string
+          id?: string
+          is_active?: boolean | null
+          is_required?: boolean | null
+          legal_basis?: string | null
+          privacy_impact_score?: number | null
+          retention_period_months?: number | null
+          template_version?: number | null
+          third_party_sharing?: boolean | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          automated_processing?: boolean | null
+          can_customize?: boolean | null
+          category_id?: string
+          created_at?: string | null
+          created_by?: string | null
+          data_types?: string[] | null
+          default_expiry_months?: number | null
+          description?: string
+          id?: string
+          is_active?: boolean | null
+          is_required?: boolean | null
+          legal_basis?: string | null
+          privacy_impact_score?: number | null
+          retention_period_months?: number | null
+          template_version?: number | null
+          third_party_sharing?: boolean | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consent_templates_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "consent_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       consultant_performance_metrics: {
         Row: {
           activity_score: number | null
@@ -10020,6 +10176,80 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      family_groups: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          primary_guardian_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          primary_guardian_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          primary_guardian_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      family_members: {
+        Row: {
+          contact_email: string | null
+          created_at: string | null
+          date_of_birth: string | null
+          family_group_id: string
+          guardian_id: string | null
+          id: string
+          is_minor: boolean | null
+          name: string
+          relationship: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          contact_email?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          family_group_id: string
+          guardian_id?: string | null
+          id?: string
+          is_minor?: boolean | null
+          name: string
+          relationship?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          contact_email?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          family_group_id?: string
+          guardian_id?: string | null
+          id?: string
+          is_minor?: boolean | null
+          name?: string
+          relationship?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_members_family_group_id_fkey"
+            columns: ["family_group_id"]
+            isOneToOne: false
+            referencedRelation: "family_groups"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       featureflags: {
         Row: {
@@ -16774,6 +17004,45 @@ export type Database = {
         }
         Relationships: []
       }
+      pricing_agreements: {
+        Row: {
+          calculated_values: Json
+          contact_info: Json
+          created_at: string
+          id: string
+          mou_content: string
+          pricing_model: Json
+          selected_model: string
+          status: string | null
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          calculated_values: Json
+          contact_info: Json
+          created_at?: string
+          id?: string
+          mou_content: string
+          pricing_model: Json
+          selected_model: string
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          calculated_values?: Json
+          contact_info?: Json
+          created_at?: string
+          id?: string
+          mou_content?: string
+          pricing_model?: Json
+          selected_model?: string
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pricing_tiers: {
         Row: {
           base_monthly_cost: number
@@ -22719,6 +22988,53 @@ export type Database = {
           },
         ]
       }
+      stripe_sync_audit: {
+        Row: {
+          created_at: string
+          id: string
+          message: string | null
+          metadata: Json | null
+          operation_type: string
+          performed_by: string | null
+          status: string
+          stripe_price_id: string | null
+          stripe_product_id: string | null
+          work_package_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          metadata?: Json | null
+          operation_type: string
+          performed_by?: string | null
+          status: string
+          stripe_price_id?: string | null
+          stripe_product_id?: string | null
+          work_package_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          metadata?: Json | null
+          operation_type?: string
+          performed_by?: string | null
+          status?: string
+          stripe_price_id?: string | null
+          stripe_product_id?: string | null
+          work_package_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stripe_sync_audit_work_package_id_fkey"
+            columns: ["work_package_id"]
+            isOneToOne: false
+            referencedRelation: "work_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       subscribers: {
         Row: {
           created_at: string
@@ -23777,6 +24093,7 @@ export type Database = {
           name: string
           primary_color: string | null
           secondary_color: string | null
+          settings: Json | null
           slug: string
           updated_at: string | null
         }
@@ -23788,6 +24105,7 @@ export type Database = {
           name: string
           primary_color?: string | null
           secondary_color?: string | null
+          settings?: Json | null
           slug: string
           updated_at?: string | null
         }
@@ -23799,6 +24117,7 @@ export type Database = {
           name?: string
           primary_color?: string | null
           secondary_color?: string | null
+          settings?: Json | null
           slug?: string
           updated_at?: string | null
         }
@@ -25136,6 +25455,65 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_consents: {
+        Row: {
+          consent_method: string | null
+          created_at: string | null
+          custom_conditions: Json | null
+          expires_at: string | null
+          family_member_id: string | null
+          granted_at: string | null
+          id: string
+          ip_address: unknown | null
+          status: string
+          template_id: string
+          updated_at: string | null
+          user_agent: string | null
+          user_id: string
+          withdrawn_at: string | null
+        }
+        Insert: {
+          consent_method?: string | null
+          created_at?: string | null
+          custom_conditions?: Json | null
+          expires_at?: string | null
+          family_member_id?: string | null
+          granted_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          status?: string
+          template_id: string
+          updated_at?: string | null
+          user_agent?: string | null
+          user_id: string
+          withdrawn_at?: string | null
+        }
+        Update: {
+          consent_method?: string | null
+          created_at?: string | null
+          custom_conditions?: Json | null
+          expires_at?: string | null
+          family_member_id?: string | null
+          granted_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          status?: string
+          template_id?: string
+          updated_at?: string | null
+          user_agent?: string | null
+          user_id?: string
+          withdrawn_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_consents_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "consent_templates"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_interaction_analytics: {
         Row: {
@@ -26796,6 +27174,7 @@ export type Database = {
           internal_lead_role: string | null
           is_active: boolean | null
           kpi_metrics: string | null
+          legacy_id: string | null
           margin_percent: number | null
           meta_description: string | null
           meta_title: string | null
@@ -26831,6 +27210,10 @@ export type Database = {
           specific_outputs: Json | null
           stakeholder_benefits: Json | null
           stakeholder_impact: string | null
+          stripe_last_synced: string | null
+          stripe_price_id: string | null
+          stripe_product_id: string | null
+          stripe_sync_status: string | null
           subcategory: string | null
           success_metrics: Json | null
           support_resources: Json | null
@@ -26887,6 +27270,7 @@ export type Database = {
           internal_lead_role?: string | null
           is_active?: boolean | null
           kpi_metrics?: string | null
+          legacy_id?: string | null
           margin_percent?: number | null
           meta_description?: string | null
           meta_title?: string | null
@@ -26922,6 +27306,10 @@ export type Database = {
           specific_outputs?: Json | null
           stakeholder_benefits?: Json | null
           stakeholder_impact?: string | null
+          stripe_last_synced?: string | null
+          stripe_price_id?: string | null
+          stripe_product_id?: string | null
+          stripe_sync_status?: string | null
           subcategory?: string | null
           success_metrics?: Json | null
           support_resources?: Json | null
@@ -26978,6 +27366,7 @@ export type Database = {
           internal_lead_role?: string | null
           is_active?: boolean | null
           kpi_metrics?: string | null
+          legacy_id?: string | null
           margin_percent?: number | null
           meta_description?: string | null
           meta_title?: string | null
@@ -27013,6 +27402,10 @@ export type Database = {
           specific_outputs?: Json | null
           stakeholder_benefits?: Json | null
           stakeholder_impact?: string | null
+          stripe_last_synced?: string | null
+          stripe_price_id?: string | null
+          stripe_product_id?: string | null
+          stripe_sync_status?: string | null
           subcategory?: string | null
           success_metrics?: Json | null
           support_resources?: Json | null
@@ -28335,6 +28728,28 @@ export type Database = {
         }
         Relationships: []
       }
+      consent_analytics: {
+        Row: {
+          active_consents: number | null
+          denied_consents: number | null
+          expired_consents: number | null
+          pending_consents: number | null
+          total_consents: number | null
+          unique_templates: number | null
+          unique_users: number | null
+          withdrawn_consents: number | null
+        }
+        Relationships: []
+      }
+      consent_category_analytics: {
+        Row: {
+          active_consents: number | null
+          avg_privacy_impact: number | null
+          category_name: string | null
+          total_consents: number | null
+        }
+        Relationships: []
+      }
       "Core roster": {
         Row: {
           agent_code: string | null
@@ -29032,6 +29447,17 @@ export type Database = {
         }
         Relationships: []
       }
+      user_consent_analytics: {
+        Row: {
+          active_consents: number | null
+          first_consent_date: string | null
+          last_activity_date: string | null
+          pending_consents: number | null
+          total_consents: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       calculate_excess_capacity_value: {
@@ -29249,6 +29675,10 @@ export type Database = {
         Args: { org_id: string }
         Returns: boolean
       }
+      is_user_org_admin: {
+        Args: { org_id: string }
+        Returns: boolean
+      }
       is_user_organization_member: {
         Args: { org_id: string }
         Returns: boolean
@@ -29316,6 +29746,20 @@ export type Database = {
           last_sync_date: string
           sync_needed: boolean
           total_records: number
+        }[]
+      }
+      track_tyre_by_serial: {
+        Args: { tyre_serial_param: string }
+        Returns: {
+          brand: string
+          created_at: string
+          lifecycle_events: Json
+          location_state: string
+          qr_code: string
+          size: string
+          status: string
+          tyre_id: string
+          tyre_serial: string
         }[]
       }
       update_comment_like_count: {

@@ -267,19 +267,51 @@ class TyreService {
     lifecycle: TyreLifecycleEvent[];
   }> {
     try {
-      const { data: registration, error: regError } = await supabase
-        .from('tyre_registrations')
-        .select('*')
-        .eq('tyre_serial', tyreSerial)
-        .single();
+      // Use the public RPC function for safe tyre tracking
+      const { data, error } = await supabase.rpc('track_tyre_by_serial', {
+        tyre_serial_param: tyreSerial
+      });
 
-      if (regError || !registration) {
+      if (error) {
+        console.error('Error tracking tyre:', error);
         return { registration: null, lifecycle: [] };
       }
 
-      const lifecycle = await this.getTyreLifecycle(registration.id);
+      if (!data || data.length === 0) {
+        return { registration: null, lifecycle: [] };
+      }
 
-      return { registration: registration as TyreRegistration, lifecycle };
+      const result = data[0];
+      
+      // Transform the result to match our interface
+      const registration: TyreRegistration = {
+        id: result.tyre_id,
+        tyre_serial: result.tyre_serial,
+        brand: result.brand,
+        size: result.size,
+        status: result.status as TyreRegistration['status'],
+        location_state: result.location_state,
+        qr_code_url: result.qr_code,
+        business_id: '', // Not exposed in public RPC for security
+        dot_code: '', // Not included in tracking view
+        identification_method: 'serial_qr', // Default
+        verification_status: 'self_reported', // Default
+        session_id: '', // Not exposed for security
+      };
+
+      const lifecycle: TyreLifecycleEvent[] = Array.isArray(result.lifecycle_events) 
+        ? result.lifecycle_events.map((event: any) => ({
+        id: event.id,
+        tyre_registration_id: result.tyre_id,
+        event_type: event.event_type,
+        event_date: event.event_date,
+        notes: event.notes,
+        recorded_by: '', // Not exposed for security
+        session_id: '', // Not exposed for security
+      }))
+        : [];
+
+      return { registration, lifecycle };
     } catch (error) {
       console.error('Failed to track tyre:', error);
       return { registration: null, lifecycle: [] };

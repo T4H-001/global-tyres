@@ -37,6 +37,13 @@ export default function StepBusinessForm({ onComplete }: Props) {
     }
     setLoading(true);
     console.log("Creating business...", { businessName, role, abn, phone, state, suburb });
+    
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast({ title: "Authentication required", description: "Please log in to continue." });
+      return;
+    }
+
     const { data, error } = await (supabase as any)
       .from("lrs_businesses")
       .insert({
@@ -47,6 +54,7 @@ export default function StepBusinessForm({ onComplete }: Props) {
         state: state || null,
         suburb: suburb || null,
         session_id: sessionId,
+        owner_user_id: user.id,
       })
       .select()
       .maybeSingle();
