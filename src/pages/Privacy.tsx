@@ -84,8 +84,7 @@ export default function Privacy() {
               If you have any questions about this Privacy Policy, please contact us at:
             </p>
             <p className="text-muted-foreground">
-              Email: privacy@tlrs.app<br />
-              Phone: +61 (02) 8064 2345<br />
+              Email: info@globaltyres.org<br />
               Address: Level 15, 100 Miller Street, North Sydney, NSW 2060, Australia
             </p>
           </section>

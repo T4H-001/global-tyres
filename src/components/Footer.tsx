@@ -23,11 +23,7 @@ export const Footer = () => {
             <div className="flex flex-col space-y-2 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                <span>support@tlrs.app</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4" />
-                <span>+61 (02) 8064 2345</span>
+                <span>info@globaltyres.org</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />

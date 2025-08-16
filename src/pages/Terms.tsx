@@ -90,8 +90,7 @@ export default function Terms() {
               For questions about these Terms of Service, contact us at:
             </p>
             <p className="text-muted-foreground">
-              Email: legal@tlrs.app<br />
-              Phone: +61 (02) 8064 2345<br />
+              Email: info@globaltyres.org<br />
               Address: Level 15, 100 Miller Street, North Sydney, NSW 2060, Australia
             </p>
           </section>

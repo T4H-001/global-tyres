@@ -38,7 +38,7 @@ export default function Contact() {
       const { data, error } = await supabase.functions.invoke('send-notification', {
         body: {
           type: 'welcome', // We'll use welcome template for now
-          to: 'support@tlrs.app',
+          to: 'info@globaltyres.org',
           data: {
             name: formData.name,
             businessName: `Contact Form: ${formData.subject}`,
@@ -79,7 +79,7 @@ export default function Contact() {
       console.error('Contact form error:', error);
       toast({
         title: "Failed to send message",
-        description: "Please try again or email us directly at support@tlrs.app",
+        description: "Please try again or email us directly at info@globaltyres.org",
         variant: "destructive",
       });
     } finally {
@@ -123,23 +123,13 @@ export default function Contact() {
                   <Mail className="h-5 w-5 text-primary mt-1" />
                   <div>
                     <h3 className="font-medium">Email</h3>
-                    <p className="text-muted-foreground">support@tlrs.app</p>
+                    <p className="text-muted-foreground">info@globaltyres.org</p>
                     <p className="text-sm text-muted-foreground">
                       We aim to respond within 24 hours
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3">
-                  <Phone className="h-5 w-5 text-primary mt-1" />
-                  <div>
-                    <h3 className="font-medium">Phone</h3>
-                    <p className="text-muted-foreground">+61 (02) 8064 2345</p>
-                    <p className="text-sm text-muted-foreground">
-                      Mon-Fri, 9AM-5PM AEDT
-                    </p>
-                  </div>
-                </div>
 
                 <div className="flex items-start gap-3">
                   <MapPin className="h-5 w-5 text-primary mt-1" />
