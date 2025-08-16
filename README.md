@@ -1,6 +1,8 @@
 # Tyre Recovery System – Comprehensive Guide (Engineers, End Users, Marketing)
 
-A modern, full‑stack web app for tyre lifecycle transparency and recovery. Built with Vite, React, TypeScript, Tailwind (design tokens), and shadcn‑ui. Supabase powers auth, database, storage, and Edge Functions.
+A modern, full‑stack web app for tyre lifecycle transparency and recovery with phased tyre identification (QR codes, RFID tags). Built with Vite, React, TypeScript, Tailwind (design tokens), and shadcn‑ui. Supabase powers auth, database, storage, and Edge Functions.
+
+**Contact**: info@globaltyres.org | HQ - Sydney, Australia
 
 
 ## Table of Contents
@@ -17,11 +19,13 @@ A modern, full‑stack web app for tyre lifecycle transparency and recovery. Bui
 
 
 ## Overview
-- Purpose: Provide a simple, verifiable way to register, track, and recover tyres across the lifecycle.
+- Purpose: Provide a simple, verifiable way to register, track, and recover tyres across the lifecycle with phased identification methods.
 - Key Features:
+  - **Phased Tyre Identification**: QR codes (immediate), RFID tags (future), partner data integration
+  - **Enhanced Verification**: Multi-method identification with verification badges
   - Demos & Stories hub with role-based vignettes and optional voice narration
-  - Tyre registration and dashboard tools
-  - Retailer portal (onboarding, bulk upload)
+  - Tyre registration and dashboard tools with identification method selection
+  - Retailer portal (onboarding, bulk upload, RFID inventory management)
   - Partners carousel (major manufacturers, retailers, recyclers)
   - Prefill helpers for smoother UX
 - Live (Lovable Preview): https://lovable.dev/projects/901576d5-f4bc-4bb3-b759-687108e5297d
@@ -31,7 +35,7 @@ A modern, full‑stack web app for tyre lifecycle transparency and recovery. Bui
 - Navigation
   - Home: Overview, benefits, and quick links
   - Demos & Stories: Role-based video vignettes showcasing value for Individuals, Retailers, Recyclers, etc. Optional narration via ElevenLabs (local only)
-  - Tyre Registration & Management: Register tyres, search, and track lifecycle events
+  - Tyre Registration & Management: Register tyres with QR/RFID identification, search, and track lifecycle events
   - Retailer Portal: Onboarding, plan selection, owner/business details, payment
   - FAQ, Terms, Privacy, Contact: Standard support/info pages
 
@@ -125,8 +129,19 @@ Project URL (Lovable): https://lovable.dev/projects/901576d5-f4bc-4bb3-b759-6871
 - Uses publishable anon key; sessions persisted to localStorage
 
 ### Edge Functions
-- fetch-partner-logos: supabase/functions/fetch-partner-logos/index.ts
+- **fetch-partner-logos**: supabase/functions/fetch-partner-logos/index.ts
   - Fetches public logos (e.g., Clearbit) and updates lrs_partners.logo_url
+- **activate-rfid-tag**: supabase/functions/activate-rfid-tag/index.ts
+  - Activates RFID tags and links them to tyre registrations
+- **ingest-partner-data**: supabase/functions/ingest-partner-data/index.ts
+  - Ingests tyre data from partner systems with validation
+- **send-notification**: Email notifications for important events
+- **create-payment**: Stripe payment processing
+- **stripe-webhook**: Handles Stripe webhook events
+- **tyres-add-event**: Adds lifecycle events to tyres
+- **tyres-bulk-upload**: Bulk tyre registration processing
+- **perplexity-chat**: AI-powered chat functionality
+- **sync-stripe-products**: Syncs Stripe product catalog
 
 ### Coding Standards
 - TypeScript everywhere; strict types in content files
@@ -137,11 +152,32 @@ Project URL (Lovable): https://lovable.dev/projects/901576d5-f4bc-4bb3-b759-6871
 
 ## Data & Integrations
 
-### Partners Table (lrs_partners)
+### Core Tables
+
+#### Partners Table (lrs_partners)
 - Purpose: Store partner metadata and stable logo URLs for the carousel and other uses
-- Columns (typical):
-  - id (uuid), name (text), website (text), suburb (text), state (text), logo_url (text), created_at, updated_at
+- Columns: id (uuid), name (text), website (text), suburb (text), state (text), logo_url (text), created_at, updated_at
 - Access: Exposed read-only to public UI with appropriate RLS; writes via admin flows or Edge Functions
+
+#### Tyre Registrations (tyre_registrations) - Enhanced
+- Purpose: Store tyre registration data with phased identification methods
+- New columns: identification_method (qr_code/rfid_tag), verification_status (pending/verified/failed), rfid_tag_id, verification_notes, verified_at
+- Features: Multi-method identification, verification tracking, audit trail
+
+#### RFID Tag Inventory (rfid_tag_inventory)
+- Purpose: Manage RFID tag lifecycle and allocation
+- Columns: tag_id (text), status (available/allocated/activated/decommissioned), allocated_to, allocated_at, metadata
+- Features: Tag inventory management, allocation tracking, status updates
+
+#### Partner Integrations (partner_integrations)
+- Purpose: Configure data integration settings for partners
+- Columns: partner_id, integration_type, endpoint_url, auth_config, field_mappings, status, last_sync_at
+- Features: Flexible partner data ingestion, authentication management, field mapping
+
+#### Data Ingestion Logs (data_ingestion_logs)
+- Purpose: Track all partner data ingestion attempts and results
+- Columns: partner_id, integration_type, status, records_processed, error_details, processed_at
+- Features: Audit trail, error tracking, performance monitoring
 
 ### Logo Fetching
 - Edge Function: fetch-partner-logos
@@ -176,12 +212,25 @@ Project URL (Lovable): https://lovable.dev/projects/901576d5-f4bc-4bb3-b759-6871
 - Partners: Add/edit rows in lrs_partners via Supabase Dashboard; logos will be fetched automatically when possible
 - Images: Add under src/assets and reference in content
 
+### Email Testing & Notifications
+- Email testing interface available at `/admin/email-test` for administrators
+- Test email delivery using the EmailTestInterface component
+- Notifications sent via send-notification Edge Function for registration confirmations, RFID activations, etc.
+
+### SEO & Analytics
+- Sitemap: `/sitemap.xml` for search engine optimization
+- Robots.txt: `/robots.txt` with sitemap reference
+- Structured data implementation for enhanced search visibility
+- Google Analytics integration ready (configure in environment)
+
 
 ## Troubleshooting
 - Build/runtime errors: Check browser console and the Lovable console logs panel
 - Missing logos: Trigger fetch-partner-logos Edge Function (see below)
 - Narration not working: Ensure ElevenLabs key is entered on Demos page; clear localStorage key elevenLabsKey to reset
 - Demo mode not active: Ensure you have the query string ?demo=on (or a supported location key)
+- RFID activation issues: Check rfid_tag_inventory table for tag status and allocation
+- Partner data ingestion: Review data_ingestion_logs table for error details
 
 ### Invoke Edge Function (example)
 Use the Supabase REST endpoint for your project (replace the URL if needed):
