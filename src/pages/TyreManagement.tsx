@@ -50,40 +50,81 @@ export default function TyreManagement() {
     }
   }, [demo.active]);
 
-  // Demo: Sample data generator
+  // Demo: Enhanced sample data generator
   const [generating, setGenerating] = useState(false);
+  const [sampleSize, setSampleSize] = useState(50);
+  
   async function generateSampleData() {
     if (generating) return;
     setGenerating(true);
     try {
-      const brands = ['Michelin', 'Bridgestone', 'Goodyear', 'Pirelli'];
-      const sizes = ['205/55R16', '225/50R17', '195/65R15', '215/60R16'];
-      const statuses: Array<TyreRegistration['status']> = ['active','active','active','removed','recycled'];
-      const tasks = Array.from({ length: 12 }).map(async (_, i) => {
-        const brand = brands[i % brands.length];
-        const size = sizes[i % sizes.length];
-        const serial = `${brand.substring(0,3).toUpperCase()}-${Date.now()}-${i.toString().padStart(2,'0')}`;
-        const status = statuses[i % statuses.length];
-        const reg = await tyreService.registerTyre({
-          business_id: business.id,
-          tyre_serial: serial,
-          dot_code: `DOT-${Math.random().toString(36).substring(2,6).toUpperCase()}-${(1000+i)}`,
-          brand,
-          size,
-          manufacture_date: new Date(Date.now() - 1000*60*60*24*90).toISOString(),
-          install_date: new Date(Date.now() - 1000*60*60*24*30).toISOString(),
-          vehicle_registration: demo.isLocationSpecific ? `KIR-${Math.floor(100 + Math.random()*900)}` : `DEMO${Math.floor(100 + Math.random()*900)}`,
-          location_state: demo.isLocationSpecific ? 'NSW' : '',
-          location_postcode: demo.isLocationSpecific ? '2232' : '',
-          status,
+      const brands = ['Michelin', 'Bridgestone', 'Goodyear', 'Pirelli', 'Continental', 'Dunlop', 'Yokohama', 'Toyo'];
+      const sizes = ['205/55R16', '225/50R17', '195/65R15', '215/60R16', '235/45R18', '255/35R19', '185/70R14', '275/40R20'];
+      const states = ['NSW', 'VIC', 'QLD', 'WA', 'SA', 'TAS', 'ACT', 'NT'];
+      const postcodes = {
+        'NSW': ['2000', '2010', '2150', '2232', '2500'],
+        'VIC': ['3000', '3142', '3161', '3182', '3199'],
+        'QLD': ['4000', '4101', '4215', '4350', '4567'],
+        'WA': ['6000', '6102', '6210', '6330', '6440'],
+        'SA': ['5000', '5162', '5216', '5290', '5432'],
+        'TAS': ['7000', '7250', '7301', '7320', '7470'],
+        'ACT': ['2600', '2602', '2605', '2609', '2612'],
+        'NT': ['0800', '0810', '0820', '0870', '0886']
+      };
+      
+      // Realistic status distribution: 70% active, 20% recycled, 8% removed, 2% disposed
+      const getRandomStatus = (): TyreRegistration['status'] => {
+        const rand = Math.random();
+        if (rand < 0.70) return 'active';
+        if (rand < 0.90) return 'recycled';
+        if (rand < 0.98) return 'removed';
+        return 'disposed';
+      };
+      
+      const batchSize = 10;
+      let processed = 0;
+      
+      for (let batch = 0; batch < Math.ceil(sampleSize / batchSize); batch++) {
+        const batchTasks = Array.from({ length: Math.min(batchSize, sampleSize - processed) }).map(async (_, i) => {
+          const idx = processed + i;
+          const brand = brands[idx % brands.length];
+          const size = sizes[idx % sizes.length];
+          const state = states[idx % states.length];
+          const postcode = postcodes[state][idx % postcodes[state].length];
+          const serial = `${brand.substring(0,3).toUpperCase()}-${Date.now()}-${idx.toString().padStart(4,'0')}`;
+          const status = getRandomStatus();
+          
+          // Random dates within last 2 years
+          const manufactureDate = new Date(Date.now() - Math.random() * 730 * 24 * 60 * 60 * 1000);
+          const installDate = new Date(manufactureDate.getTime() + Math.random() * 180 * 24 * 60 * 60 * 1000);
+          
+          const reg = await tyreService.registerTyre({
+            business_id: business.id,
+            tyre_serial: serial,
+            dot_code: `DOT${Math.random().toString(36).substring(2,6).toUpperCase()}${(1000+idx)}`,
+            brand,
+            size,
+            manufacture_date: manufactureDate.toISOString(),
+            install_date: installDate.toISOString(),
+            vehicle_registration: demo.isLocationSpecific ? `${state}${Math.floor(100 + Math.random()*900)}` : `DEMO${Math.floor(100 + Math.random()*900)}`,
+            location_state: state,
+            location_postcode: postcode,
+            status,
+          });
+          
+          if (reg && status !== 'active') {
+            await tyreService.updateTyreStatus(reg.id as string, status);
+          }
         });
-        // Optionally add a status event for non-active
-        if (reg && status !== 'active') {
-          await tyreService.updateTyreStatus(reg.id as string, status);
-        }
+        
+        await Promise.all(batchTasks);
+        processed += batchTasks.length;
+      }
+      
+      toast({ 
+        title: 'Sample data generated', 
+        description: `${sampleSize} demo tyres added across all Australian states. Opening Dashboard…` 
       });
-      await Promise.all(tasks);
-      toast({ title: 'Sample data generated', description: '12 demo tyres added. Opening Dashboard…' });
       setActiveTab('dashboard');
     } catch (e) {
       toast({ title: 'Failed to generate sample data', description: 'Please try again.' });
@@ -132,22 +173,36 @@ export default function TyreManagement() {
                 <div>
                   <h1 className="text-2xl md:text-3xl font-bold text-foreground">Tyre Management</h1>
                   <p className="text-muted-foreground">{business.business_name}</p>
-                  <p className="text-sm text-muted-foreground">Sample dataset: 5,000 tyres</p>
+                  <p className="text-sm text-muted-foreground">
+                    {demo.active ? 'Demo Environment' : 'Production Environment'}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 {demo.active && (
-                  <Button 
-                    variant="outline"
-                    onClick={async () => {
-                      await generateSampleData();
-                    }}
-                    className="flex items-center gap-2"
-                    disabled={generating}
-                  >
-                    <Sparkles className="h-4 w-4" />
-                    {generating ? 'Generating…' : 'Generate sample data'}
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <select 
+                      value={sampleSize} 
+                      onChange={(e) => setSampleSize(Number(e.target.value))}
+                      className="px-3 py-1 border rounded text-sm"
+                      disabled={generating}
+                    >
+                      <option value={50}>50 tyres</option>
+                      <option value={100}>100 tyres</option>
+                      <option value={500}>500 tyres</option>
+                      <option value={1000}>1,000 tyres</option>
+                      <option value={5000}>5,000 tyres</option>
+                    </select>
+                    <Button 
+                      variant="outline"
+                      onClick={generateSampleData}
+                      className="flex items-center gap-2"
+                      disabled={generating}
+                    >
+                      <Sparkles className="h-4 w-4" />
+                      {generating ? 'Generating…' : 'Generate Data'}
+                    </Button>
+                  </div>
                 )}
                 <Button 
                   onClick={() => setActiveTab('register')}

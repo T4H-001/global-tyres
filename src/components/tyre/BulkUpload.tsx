@@ -46,6 +46,7 @@ export default function BulkUpload({ businessId, onComplete }: BulkUploadProps) 
   const [uploading, setUploading] = useState<boolean>(false);
   const [preview, setPreview] = useState<any[]>([]);
   const [rows, setRows] = useState<any[]>([]);
+  const [uploadStats, setUploadStats] = useState<any>(null);
 
   const handleFile = (file: File) => {
     setFileName(file.name);
@@ -79,7 +80,11 @@ export default function BulkUpload({ businessId, onComplete }: BulkUploadProps) 
 
       if (error) throw error;
 
-      toast({ title: 'Bulk upload complete', description: `Processed ${data.processed}, inserted ${data.inserted}, failed ${data.failed}` });
+      setUploadStats(data);
+      toast({ 
+        title: 'Bulk upload complete', 
+        description: `Processed ${data.processed}, inserted ${data.inserted}, failed ${data.failed}. Environmental impact calculated.` 
+      });
       if (data.errors?.length) {
         console.warn('Bulk upload errors', data.errors);
       }
@@ -145,6 +150,26 @@ export default function BulkUpload({ businessId, onComplete }: BulkUploadProps) 
           </Button>
           {uploading && <Progress value={60} className="w-48" />}
         </div>
+
+        {uploadStats && (
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <h4 className="font-medium text-green-800 mb-2">Upload Success!</h4>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="font-medium">Processed:</span> {uploadStats.processed}
+              </div>
+              <div>
+                <span className="font-medium">Inserted:</span> {uploadStats.inserted}
+              </div>
+              <div>
+                <span className="font-medium">Environmental Impact:</span> ~{(uploadStats.inserted * 9).toLocaleString()}kg waste tracked
+              </div>
+              <div>
+                <span className="font-medium">Community Contribution:</span> {uploadStats.inserted} tyres protected from illegal dumping
+              </div>
+            </div>
+          </div>
+        )}
 
         <p className="text-muted-foreground text-xs">
           Tip: You can also POST CSV directly to the API at functions/v1/tyres-bulk-upload with Content-Type: text/csv and ?businessId=…

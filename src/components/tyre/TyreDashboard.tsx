@@ -22,12 +22,14 @@ import {
   Factory
 } from 'lucide-react';
 import { VerificationBadge } from './VerificationBadge';
+import EnhancedDashboard from './EnhancedDashboard';
 
 interface Props {
   businessId: string;
 }
 
 export default function TyreDashboard({ businessId }: Props) {
+  const [viewMode, setViewMode] = useState<string>('basic');
   const [tyres, setTyres] = useState<TyreRegistration[]>([]);
   const [insights, setInsights] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -136,8 +138,31 @@ export default function TyreDashboard({ businessId }: Props) {
     );
   }
 
+  if (viewMode === 'enhanced') {
+    return <EnhancedDashboard businessId={businessId} />;
+  }
+
   return (
     <div className="space-y-6">
+      {/* View Toggle */}
+      <div className="flex justify-end">
+        <div className="flex items-center gap-2">
+          <Button
+            variant={viewMode === 'basic' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setViewMode('basic')}
+          >
+            Basic View
+          </Button>
+          <Button
+            variant={viewMode === 'enhanced' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setViewMode('enhanced')}
+          >
+            Enhanced Analytics
+          </Button>
+        </div>
+      </div>
       {/* Statistics Cards */}
       {insights && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

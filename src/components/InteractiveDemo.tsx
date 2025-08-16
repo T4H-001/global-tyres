@@ -124,7 +124,7 @@ export const InteractiveDemo = () => {
               >
                 Remove Tyre
               </Button>
-              <span className="text-sm font-medium">{tyreCount} tyres tracked</span>
+              <span className="text-sm font-medium">{tyreCount} sample tyres in this scenario</span>
               <Button
                 variant="outline"
                 onClick={() => setTyreCount(Math.min(8, tyreCount + 1))}
@@ -212,6 +212,12 @@ export const InteractiveDemo = () => {
         </div>
 
         <div className="mt-8 text-center">
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4 mb-4">
+            <h4 className="font-semibold text-green-800 mb-2">🌍 Be Part of the Solution</h4>
+            <p className="text-sm text-green-700">
+              Join a global community preventing 1.5 billion waste tyres annually. Every registration helps combat illegal dumping and protects our environment.
+            </p>
+          </div>
           <Badge variant="secondary" className="mb-4">
             🎯 Every tyre tracked from cradle to grave - no unknown fates
           </Badge>
