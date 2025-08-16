@@ -60,6 +60,10 @@ const App = () => (
           <Route path="/track/:tyreSerial" element={<TyreTrack />} />
           <Route path="/board" element={<AdvisoryBoard />} />
           
+          {/* Route aliases for better UX */}
+          <Route path="/tlrs" element={<Navigate to="/app" replace />} />
+          <Route path="/manage" element={<Navigate to="/tyres" replace />} />
+          
           <Route path="/tyres/register" element={<RedirectTyresRegister />} />
           {/* Protected admin routes */}
           <Route element={<RequireAuth />}>
