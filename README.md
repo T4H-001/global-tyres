@@ -34,9 +34,9 @@ A modern, full‑stack web app for tyre lifecycle transparency and recovery with
 ## For End Users (Feature Guide)
 - Navigation
   - Home: Overview, benefits, and quick links
-  - Demos & Stories: Role-based video vignettes showcasing value for Individuals, Retailers, Recyclers, etc. Optional narration via ElevenLabs (local only)
+  - Demos: Role-based video vignettes showcasing value for Individuals, Retailers, Recyclers, etc. Optional narration via ElevenLabs (local only)
   - Tyre Registration & Management: Register tyres with QR/RFID identification, search, and track lifecycle events
-  - Retailer Portal: Onboarding, plan selection, owner/business details, payment
+  - Retailer Portal: Onboarding, plan selection, owner/business details, payment (accessible at `/retailer`)
   - FAQ, Terms, Privacy, Contact: Standard support/info pages
 
 - Voice Narration (optional)
@@ -135,6 +135,8 @@ Project URL (Lovable): https://lovable.dev/projects/901576d5-f4bc-4bb3-b759-6871
   - Activates RFID tags and links them to tyre registrations
 - **ingest-partner-data**: supabase/functions/ingest-partner-data/index.ts
   - Ingests tyre data from partner systems with validation
+- **blockchain-anchor**: supabase/functions/blockchain-anchor/index.ts
+  - Anchors tyre data to blockchain for immutable verification
 - **send-notification**: Email notifications for important events
 - **create-payment**: Stripe payment processing
 - **stripe-webhook**: Handles Stripe webhook events
@@ -142,6 +144,21 @@ Project URL (Lovable): https://lovable.dev/projects/901576d5-f4bc-4bb3-b759-6871
 - **tyres-bulk-upload**: Bulk tyre registration processing
 - **perplexity-chat**: AI-powered chat functionality
 - **sync-stripe-products**: Syncs Stripe product catalog
+
+### Blockchain Anchoring (Beta)
+- Edge Function: blockchain-anchor
+- Purpose: Creates immutable blockchain records for tyre registrations and lifecycle events
+- Features: Smart contract integration, verification proofs, tamper-evident audit trails
+- Contract: contracts/TyreLedger.sol (Solidity smart contract for tyre lifecycle management)
+
+### Mobile App (Capacitor)
+- Native mobile app wrapper using Capacitor framework
+- Configuration: capacitor.config.ts with live reload from sandbox
+- Supports iOS and Android platforms
+- Commands:
+  - `npx cap add ios` / `npx cap add android` - Add native platforms
+  - `npx cap sync` - Sync web assets to native platforms
+  - `npx cap run ios` / `npx cap run android` - Run on device/emulator
 
 ### Coding Standards
 - TypeScript everywhere; strict types in content files

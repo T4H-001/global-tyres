@@ -28,6 +28,7 @@ import RequireAuth from "@/components/auth/RequireAuth";
 import RedirectIfAuthed from "@/components/auth/RedirectIfAuthed";
 import AdminDemo from "./pages/AdminDemo";
 import AdvisoryBoard from "./pages/AdvisoryBoard";
+import Demos from "./pages/Demos";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +66,7 @@ const App = () => (
           <Route path="/search" element={<TyreSearch />} />
           <Route path="/track/:tyreSerial" element={<TyreTrack />} />
           <Route path="/board" element={<AdvisoryBoard />} />
+          <Route path="/demos" element={<Demos />} />
           
           {/* Route aliases for better UX */}
           <Route path="/tlrs" element={<Navigate to="/app" replace />} />
