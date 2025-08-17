@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Navigation } from "@/components/Navigation";
 import TyreDashboard from "@/components/tyre/TyreDashboard";
-import { BarChart3, Package, Recycle, AlertTriangle, TrendingUp, Database, Users, ShieldCheck, Factory, DollarSign, Globe2, Activity } from "lucide-react";
+import { BarChart3, Package, Recycle, AlertTriangle, TrendingUp, Database, Users, ShieldCheck, Factory, DollarSign, Globe2, Activity, Building, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -79,6 +79,51 @@ export const Dashboard = () => {
               <Button className="bg-gradient-primary hover:opacity-90">
                 Manage Tyres
               </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Role Selection */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">Choose Your Role</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Link to="/retailer-dashboard">
+              <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                <div className="flex items-center gap-4 mb-4">
+                  <Building className="h-8 w-8 text-primary" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Tyre Retailer</h3>
+                    <p className="text-sm text-muted-foreground">Manage sales and compliance</p>
+                  </div>
+                </div>
+                <p className="text-sm">Track sales, inventory, and disposal compliance requirements.</p>
+              </Card>
+            </Link>
+
+            <Link to="/recycler-dashboard">
+              <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                <div className="flex items-center gap-4 mb-4">
+                  <Recycle className="h-8 w-8 text-primary" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Recycling Facility</h3>
+                    <p className="text-sm text-muted-foreground">Process and recycle tyres</p>
+                  </div>
+                </div>
+                <p className="text-sm">Monitor collections, processing capacity, and environmental impact.</p>
+              </Card>
+            </Link>
+
+            <Link to="/government-dashboard">
+              <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                <div className="flex items-center gap-4 mb-4">
+                  <Shield className="h-8 w-8 text-primary" />
+                  <div>
+                    <h3 className="text-lg font-semibold">Government/Regulator</h3>
+                    <p className="text-sm text-muted-foreground">Oversee compliance</p>
+                  </div>
+                </div>
+                <p className="text-sm">Track industry compliance and environmental targets.</p>
+              </Card>
             </Link>
           </div>
         </div>

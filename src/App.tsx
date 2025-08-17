@@ -16,6 +16,9 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import Dashboard from "./pages/Dashboard";
 import RetailerPortal from "./pages/RetailerPortal";
 import RetailerOnboarding from "./pages/RetailerOnboarding";
+import RetailerDashboard from "./pages/dashboards/RetailerDashboard";
+import RecyclerDashboard from "./pages/dashboards/RecyclerDashboard";
+import GovernmentDashboard from "./pages/dashboards/GovernmentDashboard";
 import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
@@ -51,6 +54,9 @@ const App = () => (
           <Route path="/app" element={<TLRS />} />
           <Route path="/tyres" element={<TyreManagement />} />
           <Route path="/retailer" element={<RetailerPortal />} />
+          <Route path="/retailer-dashboard" element={<RetailerDashboard />} />
+          <Route path="/recycler-dashboard" element={<RecyclerDashboard />} />
+          <Route path="/government-dashboard" element={<GovernmentDashboard />} />
           <Route path="/register/:retailerCode?" element={<Onboarding />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy" element={<Privacy />} />
