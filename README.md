@@ -271,5 +271,89 @@ Note: Use an appropriate key for protected routes; anon key may be sufficient if
   - No direct color classes; tokens only
 
 
+## Multi-Tenant Integration Guide
+
+### Overview
+The Augmented Humanity platform supports multiple family sites sharing common infrastructure while maintaining individual branding and customization.
+
+### Active Tenant Mappings
+**Lovable.app Subdomains:**
+- chalfront-ai.lovable.app → augmented-humanity-chalfont
+- ai-at-chalfont.lovable.app → augmented-humanity-ai-chalfont  
+- canberra-consulting-ai.lovable.app → augmented-humanity-canberra
+
+**Custom Domains:**
+- www.augmentedhumanity.coach → augmented-humanity-coach
+- www.innovateme.link → augmented-humanity-innovateme-link
+- www.innovateme.systems → augmented-humanity-innovateme-systems
+- www.holo-org.com → augmented-humanity-holo
+
+### New Tenant Onboarding Runbook
+
+**1. Database Setup (Admin Task)**
+```sql
+-- Add new tenant
+INSERT INTO public.tenants (name, slug, settings, is_active) VALUES (
+  'New Site Name',
+  'augmented-humanity-new-site',
+  jsonb_build_object(
+    'branding', jsonb_build_object('primary_color', '#your-color', 'logo_variant', 'default'),
+    'features', jsonb_build_object('show_tenant_indicator', true)
+  ),
+  true
+);
+
+-- Add domain mapping  
+INSERT INTO public.domain_tenant_mappings (domain, tenant_id) VALUES (
+  'your-domain.com',
+  (SELECT id FROM tenants WHERE slug = 'augmented-humanity-new-site')
+);
+
+-- Add allowed domain for authentication
+INSERT INTO public.allowed_domains (domain, is_active) VALUES ('your-domain.com', true);
+```
+
+**2. Code Integration**
+Update `src/services/tenantService.ts` getTenantIdFromDomain() method:
+```typescript
+// For lovable.app subdomains:
+case 'your-subdomain': return 'augmented-humanity-your-site';
+
+// For custom domains:  
+case 'www.yoursite.com':
+case 'yoursite.com': return 'augmented-humanity-your-site';
+```
+
+**3. Asset Management**
+Upload tenant-specific assets:
+```sql
+INSERT INTO public.shared_assets (asset_key, asset_name, asset_url, tenant_id, asset_category, is_global, is_active) 
+VALUES ('ahc-logo', 'Your Site Logo', 'https://your-cdn.com/logo.png', 
+        (SELECT id FROM tenants WHERE slug = 'augmented-humanity-your-site'), 'branding', false, true);
+```
+
+**4. Testing Checklist**
+- [ ] Tenant detection: `console.log(tenantService.getTenantIdFromDomain())`
+- [ ] Asset loading: Verify logo/favicon load correctly  
+- [ ] Mobile app: Test tenant detection in Capacitor
+- [ ] Authentication: Verify domain is in allowed_domains
+- [ ] Stripe: Update redirect domains in Stripe dashboard
+- [ ] DNS: Configure A records to point to Lovable (185.158.133.1)
+
+### Architecture Components
+- **Tenant Detection**: `src/services/tenantService.ts` - Domain-based tenant identification
+- **Asset Management**: `src/services/assetService.ts` - Tenant-specific asset resolution with global fallbacks
+- **React Context**: `src/contexts/TenantContext.tsx` - App-wide tenant state management
+- **Shared Components**: `src/components/shared/` - Reusable multi-tenant UI components
+- **Mobile Support**: Enhanced Capacitor config for tenant detection
+
+### Shared Infrastructure Benefits
+- Single sign-on across all family sites
+- Shared Stripe integration and payment processing
+- Global asset library with tenant overrides  
+- Unified analytics and reporting
+- Automatic favicon and logo management
+- Cross-tenant data insights while maintaining isolation
+
 ## License
 Proprietary – internal use for the Tyre Recovery System project team. Contact maintainers for reuse or distribution.

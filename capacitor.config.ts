@@ -7,6 +7,12 @@ const config: CapacitorConfig = {
   server: {
     url: 'https://901576d5-f4bc-4bb3-b759-687108e5297d.lovableproject.com?forceHideBadge=true',
     cleartext: true
+  },
+  // Support for tenant detection in mobile app
+  plugins: {
+    CapacitorHttp: {
+      enabled: true
+    }
   }
 };
 
