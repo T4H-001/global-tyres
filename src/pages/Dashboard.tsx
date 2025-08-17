@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Navigation } from "@/components/Navigation";
 import TyreDashboard from "@/components/tyre/TyreDashboard";
+import BlockchainStatus from "@/components/BlockchainStatus";
 import { BarChart3, Package, Recycle, AlertTriangle, TrendingUp, Database, Users, ShieldCheck, Factory, DollarSign, Globe2, Activity, Building, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
@@ -231,7 +232,14 @@ export const Dashboard = () => {
           </TabsContent>
 
           <TabsContent value="tyres" className="mt-6">
-            <TyreDashboard businessId="mock-business-id" />
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+              <div className="lg:col-span-3">
+                <TyreDashboard businessId="mock-business-id" />
+              </div>
+              <div className="lg:col-span-1">
+                <BlockchainStatus />
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="lifecycle" className="space-y-6 mt-6">

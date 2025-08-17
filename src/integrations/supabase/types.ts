@@ -3998,6 +3998,42 @@ export type Database = {
         }
         Relationships: []
       }
+      beta_signups: {
+        Row: {
+          company: string | null
+          created_at: string | null
+          email: string
+          id: string
+          name: string
+          notes: string | null
+          role_interest: string | null
+          source: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string | null
+          email: string
+          id?: string
+          name: string
+          notes?: string | null
+          role_interest?: string | null
+          source?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          company?: string | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          role_interest?: string | null
+          source?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       billingevents: {
         Row: {
           amount: number | null
@@ -4067,6 +4103,42 @@ export type Database = {
             referencedColumns: ["customer_id"]
           },
         ]
+      }
+      blockchain_anchors: {
+        Row: {
+          anchor_date: string
+          batch_id: string
+          block_number: number | null
+          chain_id: number | null
+          created_at: string
+          id: string
+          merkle_root: string
+          status: string | null
+          transaction_hash: string | null
+        }
+        Insert: {
+          anchor_date?: string
+          batch_id: string
+          block_number?: number | null
+          chain_id?: number | null
+          created_at?: string
+          id?: string
+          merkle_root: string
+          status?: string | null
+          transaction_hash?: string | null
+        }
+        Update: {
+          anchor_date?: string
+          batch_id?: string
+          block_number?: number | null
+          chain_id?: number | null
+          created_at?: string
+          id?: string
+          merkle_root?: string
+          status?: string | null
+          transaction_hash?: string | null
+        }
+        Relationships: []
       }
       boilerplate_library: {
         Row: {
@@ -9893,6 +9965,38 @@ export type Database = {
           "Trolley Margin"?: number | null
         }
         Relationships: []
+      }
+      event_hashes: {
+        Row: {
+          batch_id: string | null
+          created_at: string
+          event_hash: string
+          event_id: string | null
+          id: string
+        }
+        Insert: {
+          batch_id?: string | null
+          created_at?: string
+          event_hash: string
+          event_id?: string | null
+          id?: string
+        }
+        Update: {
+          batch_id?: string | null
+          created_at?: string
+          event_hash?: string
+          event_id?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_hashes_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "tyre_lifecycle_events"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       excess_capacity_marketplace: {
         Row: {
@@ -16773,6 +16877,45 @@ export type Database = {
         }
         Relationships: []
       }
+      pilot_requests: {
+        Row: {
+          company_size: string | null
+          contact_email: string
+          contact_name: string
+          created_at: string | null
+          id: string
+          organization_name: string
+          phone: string | null
+          program_goals: string | null
+          target_roles: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          company_size?: string | null
+          contact_email: string
+          contact_name: string
+          created_at?: string | null
+          id?: string
+          organization_name: string
+          phone?: string | null
+          program_goals?: string | null
+          target_roles?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          company_size?: string | null
+          contact_email?: string
+          contact_name?: string
+          created_at?: string | null
+          id?: string
+          organization_name?: string
+          phone?: string | null
+          program_goals?: string | null
+          target_roles?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       plan_tasks: {
         Row: {
           assigned_to: string | null
@@ -21913,6 +22056,89 @@ export type Database = {
           id?: number
           interest_level?: string | null
           most_valuable?: string | null
+        }
+        Relationships: []
+      }
+      site_inventory: {
+        Row: {
+          created_at: string
+          detected_type: string | null
+          domain: string
+          extracted_entities: string[] | null
+          id: string
+          mapped_work_package_slug: string | null
+          page_title: string | null
+          run_id: string
+          status_code: number | null
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          detected_type?: string | null
+          domain: string
+          extracted_entities?: string[] | null
+          id?: string
+          mapped_work_package_slug?: string | null
+          page_title?: string | null
+          run_id: string
+          status_code?: number | null
+          url: string
+        }
+        Update: {
+          created_at?: string
+          detected_type?: string | null
+          domain?: string
+          extracted_entities?: string[] | null
+          id?: string
+          mapped_work_package_slug?: string | null
+          page_title?: string | null
+          run_id?: string
+          status_code?: number | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "site_inventory_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "site_inventory_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      site_inventory_runs: {
+        Row: {
+          created_at: string
+          error_count: number | null
+          finished_at: string | null
+          id: string
+          requested_by: string | null
+          seed_domain: string
+          status: string
+          success_count: number | null
+          total_urls: number | null
+        }
+        Insert: {
+          created_at?: string
+          error_count?: number | null
+          finished_at?: string | null
+          id?: string
+          requested_by?: string | null
+          seed_domain: string
+          status?: string
+          success_count?: number | null
+          total_urls?: number | null
+        }
+        Update: {
+          created_at?: string
+          error_count?: number | null
+          finished_at?: string | null
+          id?: string
+          requested_by?: string | null
+          seed_domain?: string
+          status?: string
+          success_count?: number | null
+          total_urls?: number | null
         }
         Relationships: []
       }
@@ -29705,6 +29931,19 @@ export type Database = {
       }
     }
     Functions: {
+      calculate_batch_merkle_root: {
+        Args: { p_batch_id: string }
+        Returns: string
+      }
+      calculate_event_hash: {
+        Args: {
+          p_event_date: string
+          p_event_type: string
+          p_notes?: string
+          p_tyre_serial: string
+        }
+        Returns: string
+      }
       calculate_excess_capacity_value: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -29892,8 +30131,8 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string[]
       }
-      get_work_packages_unified: {
-        Args: { p_tenant_domain?: string }
+      get_work_packages_global_audit: {
+        Args: Record<PropertyKey, never>
         Returns: {
           ai_leverage_level: string
           base_cost: number
@@ -29909,20 +30148,127 @@ export type Database = {
           gross_margin_calculated: number
           id: string
           is_active: boolean
+          is_canonical: boolean
           legacy_id: string
           margin_percent: number
           name: string
+          parent_id: string
           problem_statement: string
+          schema_version: number
           slug: string
           solution_summary: string
+          source_type: string
           subcategory: string
           success_metrics: Json
           tags: string[]
           target_audience: string
           technical_requirements: Json
+          tenant_domain: string
           tenant_id: string
           tier: string
           updated_at: string
+        }[]
+      }
+      get_work_packages_unified: {
+        Args: { p_tenant_domain: string }
+        Returns: {
+          access_level: string | null
+          agentic_ai_elements: string | null
+          agentic_ai_enabled: boolean | null
+          ai_leverage_level: string | null
+          automation_score: number | null
+          base_cost: number | null
+          base_price: number | null
+          break_even_units: number | null
+          case_studies: Json | null
+          category: string
+          created_at: string | null
+          customer_outcome: string | null
+          customization_options: Json | null
+          day_30_target: string | null
+          day_60_target: string | null
+          day_90_target: string | null
+          deliverable_formats: Json | null
+          deliverables: Json | null
+          deliverables_detailed: string | null
+          delivery_method: string | null
+          delivery_timeframe_days: number | null
+          delivery_timeline_weeks: string | null
+          dependencies: string | null
+          description: string | null
+          detailed_description: string | null
+          engagement_model: string | null
+          estimated_cost_per_engagement: number | null
+          estimated_revenue_per_engagement: number | null
+          existing_customers: boolean | null
+          expected_close_rate: number | null
+          faqs: Json | null
+          gross_margin_calculated: number | null
+          gross_margin_pct: number | null
+          id: string
+          ideal_customer_types: Json | null
+          implementation_timeline: string | null
+          integration_complexity: string | null
+          internal_lead_role: string | null
+          is_active: boolean | null
+          is_canonical: boolean
+          kpi_metrics: string | null
+          legacy_id: string | null
+          margin_percent: number | null
+          meta_description: string | null
+          meta_title: string | null
+          milestone_30_day: number | null
+          milestone_60_day: number | null
+          milestone_90_day: number | null
+          milestone_deliverables: Json | null
+          monitoring_method: string | null
+          multimedia_content: Json | null
+          name: string
+          new_role_requirements: string | null
+          next_best_offer: string | null
+          notes: string | null
+          old_role_description: string | null
+          parent_id: string | null
+          preferred_delivery_partner: string | null
+          prerequisites: string[] | null
+          primary_sector: string | null
+          problem_statement: string | null
+          progression_indicator: string | null
+          quarterly_revenue_target: number | null
+          related_calculators: string[] | null
+          related_packages: string[] | null
+          requires_approval: boolean | null
+          restricted_message: string | null
+          revenue_forecast_max: number | null
+          revenue_forecast_min: number | null
+          sales_narrative: string | null
+          schema_version: number
+          sla_details: Json | null
+          slug: string | null
+          solution_approach: string | null
+          solution_summary: string | null
+          sort_order: number | null
+          specific_outputs: Json | null
+          stakeholder_benefits: Json | null
+          stakeholder_impact: string | null
+          stripe_last_synced: string | null
+          stripe_price_id: string | null
+          stripe_product_id: string | null
+          stripe_sync_status: string | null
+          subcategory: string | null
+          success_metrics: Json | null
+          support_resources: Json | null
+          system_dependencies: Json | null
+          tags: string[] | null
+          target_audience: string | null
+          team_capability_score: number | null
+          technical_requirements: Json | null
+          tenant_id: string | null
+          tier: string | null
+          track_levels: Json | null
+          updated_at: string | null
+          upsell_opportunities: string | null
+          workstream: string | null
         }[]
       }
       has_role: {
@@ -30017,6 +30363,108 @@ export type Database = {
       seed_actual_projects: {
         Args: Record<PropertyKey, never>
         Returns: boolean
+      }
+      set_work_package_active: {
+        Args: { p_active: boolean; p_id: string }
+        Returns: {
+          access_level: string | null
+          agentic_ai_elements: string | null
+          agentic_ai_enabled: boolean | null
+          ai_leverage_level: string | null
+          automation_score: number | null
+          base_cost: number | null
+          base_price: number | null
+          break_even_units: number | null
+          case_studies: Json | null
+          category: string
+          created_at: string | null
+          customer_outcome: string | null
+          customization_options: Json | null
+          day_30_target: string | null
+          day_60_target: string | null
+          day_90_target: string | null
+          deliverable_formats: Json | null
+          deliverables: Json | null
+          deliverables_detailed: string | null
+          delivery_method: string | null
+          delivery_timeframe_days: number | null
+          delivery_timeline_weeks: string | null
+          dependencies: string | null
+          description: string | null
+          detailed_description: string | null
+          engagement_model: string | null
+          estimated_cost_per_engagement: number | null
+          estimated_revenue_per_engagement: number | null
+          existing_customers: boolean | null
+          expected_close_rate: number | null
+          faqs: Json | null
+          gross_margin_calculated: number | null
+          gross_margin_pct: number | null
+          id: string
+          ideal_customer_types: Json | null
+          implementation_timeline: string | null
+          integration_complexity: string | null
+          internal_lead_role: string | null
+          is_active: boolean | null
+          is_canonical: boolean
+          kpi_metrics: string | null
+          legacy_id: string | null
+          margin_percent: number | null
+          meta_description: string | null
+          meta_title: string | null
+          milestone_30_day: number | null
+          milestone_60_day: number | null
+          milestone_90_day: number | null
+          milestone_deliverables: Json | null
+          monitoring_method: string | null
+          multimedia_content: Json | null
+          name: string
+          new_role_requirements: string | null
+          next_best_offer: string | null
+          notes: string | null
+          old_role_description: string | null
+          parent_id: string | null
+          preferred_delivery_partner: string | null
+          prerequisites: string[] | null
+          primary_sector: string | null
+          problem_statement: string | null
+          progression_indicator: string | null
+          quarterly_revenue_target: number | null
+          related_calculators: string[] | null
+          related_packages: string[] | null
+          requires_approval: boolean | null
+          restricted_message: string | null
+          revenue_forecast_max: number | null
+          revenue_forecast_min: number | null
+          sales_narrative: string | null
+          schema_version: number
+          sla_details: Json | null
+          slug: string | null
+          solution_approach: string | null
+          solution_summary: string | null
+          sort_order: number | null
+          specific_outputs: Json | null
+          stakeholder_benefits: Json | null
+          stakeholder_impact: string | null
+          stripe_last_synced: string | null
+          stripe_price_id: string | null
+          stripe_product_id: string | null
+          stripe_sync_status: string | null
+          subcategory: string | null
+          success_metrics: Json | null
+          support_resources: Json | null
+          system_dependencies: Json | null
+          tags: string[] | null
+          target_audience: string | null
+          team_capability_score: number | null
+          technical_requirements: Json | null
+          tenant_id: string | null
+          tier: string | null
+          track_levels: Json | null
+          updated_at: string | null
+          upsell_opportunities: string | null
+          workstream: string | null
+        }
       }
       sync_ses_conversations_status: {
         Args: Record<PropertyKey, never>

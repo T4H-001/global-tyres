@@ -24,7 +24,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ onGetStarted }) => {
       headline: 'Every 18 seconds, a tyre is illegally dumped',
       subline: '34% of Australia\'s 56 million end-of-life tyres vanish without trace. Springbrook National Park. Your local creek. Someone\'s backyard.',
       cta: { text: 'Stop This Now', icon: Shield },
-      microbadges: ['DOT Mandated', 'TSA Verified', 'Blockchain Secured'],
+      microbadges: ['DOT Mandated', 'TSA Verified', 'Tamper-Evident'],
       statChip: { value: '34%', label: 'Tyres Untraced' }
     },
     {
@@ -32,7 +32,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ onGetStarted }) => {
       image: beforeAfterImage,
       badge: { icon: Shield, text: 'Solution Ready', variant: 'secondary' as const },
       headline: 'Track every tyre from DOT to disposal',
-      subline: 'Our system bridges the 60-65% traceability gap. Real-time lifecycle management. Blockchain verification. Automated compliance.',
+      subline: 'Our system bridges the 60-65% traceability gap. Real-time lifecycle management. Tamper-evident hashing. Automated compliance.',
       cta: { text: 'See How It Works', icon: Play },
       microbadges: ['Real-time Tracking', 'Auto Compliance', 'Global Standard'],
       statChip: { value: '100%', label: 'Traceability' }

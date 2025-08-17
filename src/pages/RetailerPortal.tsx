@@ -57,7 +57,7 @@ export default function RetailerPortal() {
         <div className="mb-8">
           <Badge className="mb-4 px-4 py-2 bg-primary/10 text-primary border-primary/20">
             <Users className="h-4 w-4 mr-2" />
-            Retailer Dashboard
+            Retailer Dashboard (Demo)
           </Badge>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Partner Portal
