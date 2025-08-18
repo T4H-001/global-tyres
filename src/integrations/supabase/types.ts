@@ -3174,6 +3174,78 @@ export type Database = {
         }
         Relationships: []
       }
+      applications: {
+        Row: {
+          admin_notes: string | null
+          biggest_challenge: string | null
+          created_at: string
+          email: string
+          follow_up_due_at: string | null
+          goals_multi: string[] | null
+          id: string
+          main_goal: string | null
+          metadata: Json | null
+          name: string
+          organization: string | null
+          preferred_mode: string | null
+          preferred_start: string | null
+          priority: string | null
+          role: string | null
+          source: string
+          status: string | null
+          team_size: string | null
+          tech_focus: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          biggest_challenge?: string | null
+          created_at?: string
+          email: string
+          follow_up_due_at?: string | null
+          goals_multi?: string[] | null
+          id?: string
+          main_goal?: string | null
+          metadata?: Json | null
+          name: string
+          organization?: string | null
+          preferred_mode?: string | null
+          preferred_start?: string | null
+          priority?: string | null
+          role?: string | null
+          source: string
+          status?: string | null
+          team_size?: string | null
+          tech_focus?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          biggest_challenge?: string | null
+          created_at?: string
+          email?: string
+          follow_up_due_at?: string | null
+          goals_multi?: string[] | null
+          id?: string
+          main_goal?: string | null
+          metadata?: Json | null
+          name?: string
+          organization?: string | null
+          preferred_mode?: string | null
+          preferred_start?: string | null
+          priority?: string | null
+          role?: string | null
+          source?: string
+          status?: string | null
+          team_size?: string | null
+          tech_focus?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       approved_access: {
         Row: {
           access_token: string
