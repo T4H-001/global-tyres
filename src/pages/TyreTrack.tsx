@@ -7,19 +7,8 @@ import { Separator } from '@/components/ui/separator';
 import { tyreService, TyreLifecycleEvent, TyreRegistration } from '@/services/tyreService';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from '@/hooks/use-toast';
+import { SiteSEO } from '@/components/shared/SiteSEO';
 
-const setSEO = (title: string, description: string, canonicalUrl?: string) => {
-  document.title = title;
-  const metaDesc = document.querySelector('meta[name="description"]') || document.createElement('meta');
-  metaDesc.setAttribute('name', 'description');
-  metaDesc.setAttribute('content', description);
-  if (!metaDesc.parentNode) document.head.appendChild(metaDesc);
-
-  const canonical = document.querySelector('link[rel="canonical"]') || document.createElement('link');
-  canonical.setAttribute('rel', 'canonical');
-  canonical.setAttribute('href', canonicalUrl || window.location.href);
-  if (!canonical.parentNode) document.head.appendChild(canonical);
-};
 
 export default function TyreTrack() {
   const { tyreSerial } = useParams<{ tyreSerial: string }>();
@@ -38,13 +27,6 @@ export default function TyreTrack() {
     }
   }, [registration?.status]);
 
-  useEffect(() => {
-    setSEO(
-      `Track Tyre ${tyreSerial} | TLRS`,
-      `View live lifecycle and status for tyre ${tyreSerial} in the Tyre Lifecycle Register System (TLRS).`,
-      window.location.origin + location.pathname
-    );
-  }, [tyreSerial, location.pathname]);
 
   useEffect(() => {
     let cancelled = false;
@@ -74,6 +56,11 @@ export default function TyreTrack() {
 
   return (
     <main className="min-h-screen bg-background">
+      <SiteSEO 
+        title={`Track Tyre ${tyreSerial} | TLRS`}
+        description={`View live lifecycle and status for tyre ${tyreSerial} in the Tyre Lifecycle Register System (TLRS).`}
+        canonicalUrl={location.pathname}
+      />
       <div className="container py-8 space-y-6">
         <div className="flex items-center justify-between">
           <div>

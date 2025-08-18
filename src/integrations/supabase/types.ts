@@ -26195,32 +26195,44 @@ export type Database = {
       }
       user_preferences: {
         Row: {
+          accessibility_settings: Json | null
           created_at: string
-          favorite_categories: string[] | null
+          dashboard_layout: Json | null
           id: string
-          learning_path: string | null
-          notifications_enabled: boolean | null
-          preferred_difficulty: string | null
+          language: string | null
+          navigation_preferences: Json | null
+          notification_settings: Json | null
+          preferred_currency: string | null
+          quick_actions: Json | null
+          theme: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          accessibility_settings?: Json | null
           created_at?: string
-          favorite_categories?: string[] | null
+          dashboard_layout?: Json | null
           id?: string
-          learning_path?: string | null
-          notifications_enabled?: boolean | null
-          preferred_difficulty?: string | null
+          language?: string | null
+          navigation_preferences?: Json | null
+          notification_settings?: Json | null
+          preferred_currency?: string | null
+          quick_actions?: Json | null
+          theme?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          accessibility_settings?: Json | null
           created_at?: string
-          favorite_categories?: string[] | null
+          dashboard_layout?: Json | null
           id?: string
-          learning_path?: string | null
-          notifications_enabled?: boolean | null
-          preferred_difficulty?: string | null
+          language?: string | null
+          navigation_preferences?: Json | null
+          notification_settings?: Json | null
+          preferred_currency?: string | null
+          quick_actions?: Json | null
+          theme?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -30126,6 +30138,30 @@ export type Database = {
       get_tenant_id_from_email: {
         Args: { email: string }
         Returns: string
+      }
+      get_tyre_lifecycle_public: {
+        Args: { p_tyre_serial: string }
+        Returns: {
+          event_date: string
+          event_type: string
+          id: string
+          location: string
+          notes: string
+        }[]
+      }
+      get_tyre_public: {
+        Args: { p_tyre_serial: string }
+        Returns: {
+          brand: string
+          created_at: string
+          dot_code: string
+          id: string
+          location: string
+          size_info: string
+          status: string
+          tyre_serial: string
+          vehicle_info: string
+        }[]
       }
       get_user_organization_ids: {
         Args: Record<PropertyKey, never>

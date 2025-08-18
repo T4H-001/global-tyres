@@ -14,7 +14,7 @@ import { useDemoMode } from "@/hooks/useDemoMode";
 import PartnersCarousel from "@/components/PartnersCarousel";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import heroImage from "@/assets/tyre-pile-illegal.jpg";
-import { Helmet } from "react-helmet";
+import { SiteSEO } from "@/components/shared/SiteSEO";
 
 interface PricingPlan {
   slug: string;
@@ -155,11 +155,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      <Helmet>
-        <title>Tyre Lifecycle Management | TLRS</title>
-        <meta name="description" content="Track tyre lifecycles from purchase to recycling. Combat illegal dumping with TLRS—tyre lifecycle, recycling, and compliance tracking." />
-        <link rel="canonical" href="/" />
-      </Helmet>
+      <SiteSEO 
+        title="Tyre Lifecycle Management | TLRS"
+        description="Track tyre lifecycles from purchase to recycling. Combat illegal dumping with TLRS—tyre lifecycle, recycling, and compliance tracking."
+        canonicalUrl="/"
+      />
       
       {/* Dramatic Hero Carousel */}
       <HeroCarousel onGetStarted={handleGetStarted} />

@@ -26,7 +26,8 @@ class AssetService {
     metadata?: any;
     is_override: boolean;
   } | null> {
-    const cacheKey = `${assetKey}-${await this.getCurrentTenantId()}`;
+    const currentTenantId = await this.getCurrentTenantId();
+    const cacheKey = `${assetKey}-${currentTenantId || 'global'}`;
     
     if (this.assetCache.has(cacheKey)) {
       const cached = this.assetCache.get(cacheKey)!;
@@ -39,49 +40,35 @@ class AssetService {
     }
 
     try {
-      const currentTenantId = await this.getCurrentTenantId();
-      
-      // First check for tenant-specific override
-      if (currentTenantId) {
-        const { data: tenantAsset } = await supabase
-          .from('shared_assets')
-          .select('*')
-          .eq('asset_key', assetKey)
-          .eq('tenant_id', currentTenantId)
-          .eq('is_active', true)
-          .order('version_number', { ascending: false })
-          .limit(1)
-          .maybeSingle();
-
-        if (tenantAsset) {
-          this.assetCache.set(cacheKey, tenantAsset);
-          return {
-            asset_url: tenantAsset.asset_url,
-            asset_name: tenantAsset.asset_name,
-            metadata: tenantAsset.metadata,
-            is_override: true
-          };
-        }
-      }
-
-      // Fallback to global asset
-      const { data: globalAsset } = await supabase
-        .from('shared_assets')
-        .select('*')
-        .eq('asset_key', assetKey)
-        .eq('is_global', true)
-        .eq('is_active', true)
-        .order('version_number', { ascending: false })
-        .limit(1)
+      // Use the secure RPC function for asset resolution
+      const { data, error } = await supabase
+        .rpc('resolve_asset', {
+          p_asset_key: assetKey,
+          p_tenant_id: currentTenantId
+        })
         .maybeSingle();
 
-      if (globalAsset) {
-        this.assetCache.set(cacheKey, globalAsset);
+      if (!error && data) {
+        // Create a mock SharedAsset for caching
+        const asset: SharedAsset = {
+          id: crypto.randomUUID(),
+          asset_key: assetKey,
+          asset_name: data.asset_name,
+          asset_url: data.asset_url,
+          tenant_id: currentTenantId,
+          asset_category: 'branding',
+          metadata: data.metadata,
+          is_global: !data.is_override,
+          is_active: true,
+          version_number: 1
+        };
+        
+        this.assetCache.set(cacheKey, asset);
         return {
-          asset_url: globalAsset.asset_url,
-          asset_name: globalAsset.asset_name,
-          metadata: globalAsset.metadata,
-          is_override: false
+          asset_url: data.asset_url,
+          asset_name: data.asset_name,
+          metadata: data.metadata,
+          is_override: data.is_override
         };
       }
 
@@ -113,16 +100,16 @@ class AssetService {
    */
   async updateFavicon(): Promise<void> {
     const faviconUrl = await this.getFaviconUrl();
-    if (faviconUrl) {
-      const link = document.querySelector("link[rel*='icon']") as HTMLLinkElement;
-      if (link) {
-        link.href = faviconUrl;
-      } else {
-        const newLink = document.createElement('link');
-        newLink.rel = 'icon';
-        newLink.href = faviconUrl;
-        document.head.appendChild(newLink);
-      }
+    const finalFaviconUrl = faviconUrl || '/favicon.ico'; // Fallback to default
+    
+    const link = document.querySelector("link[rel*='icon']") as HTMLLinkElement;
+    if (link) {
+      link.href = finalFaviconUrl;
+    } else {
+      const newLink = document.createElement('link');
+      newLink.rel = 'icon';
+      newLink.href = finalFaviconUrl;
+      document.head.appendChild(newLink);
     }
   }
 

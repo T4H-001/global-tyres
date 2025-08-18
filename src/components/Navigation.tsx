@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, Search, BarChart3, Settings, Shield } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useDemoMode } from "@/hooks/useDemoMode";
+import { Logo } from "@/components/shared/AssetImage";
 
 export const Navigation = () => {
   const location = useLocation();
@@ -13,12 +14,15 @@ export const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link to="/" className="text-2xl font-bold text-primary">
-              TLRS
+            <Link to="/" className="flex items-center space-x-3">
+              <Logo className="h-8 w-8" fallbackSrc="/placeholder.svg" />
+              <div className="flex flex-col">
+                <span className="text-lg font-bold text-primary">TLRS</span>
+                <span className="text-xs text-muted-foreground hidden sm:block">
+                  Tyre Lifecycle Registration System
+                </span>
+              </div>
             </Link>
-            <span className="ml-2 text-sm text-muted-foreground">
-              Tyre Lifecycle Registration System
-            </span>
           </div>
           
           <div className="flex items-center space-x-4">

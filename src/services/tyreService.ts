@@ -267,49 +267,43 @@ class TyreService {
     lifecycle: TyreLifecycleEvent[];
   }> {
     try {
-      // Use the public RPC function for safe tyre tracking
-      const { data, error } = await supabase.rpc('track_tyre_by_serial', {
-        tyre_serial_param: tyreSerial
-      });
+      // Use the secure public RPC functions
+      const [tyreData, lifecycleData] = await Promise.all([
+        supabase.rpc('get_tyre_public', { p_tyre_serial: tyreSerial }).maybeSingle(),
+        supabase.rpc('get_tyre_lifecycle_public', { p_tyre_serial: tyreSerial })
+      ]);
 
-      if (error) {
-        console.error('Error tracking tyre:', error);
+      if (tyreData.error) {
+        console.error('Error fetching tyre data:', tyreData.error);
         return { registration: null, lifecycle: [] };
       }
 
-      if (!data || data.length === 0) {
+      if (lifecycleData.error) {
+        console.error('Error fetching lifecycle data:', lifecycleData.error);
         return { registration: null, lifecycle: [] };
       }
 
-      const result = data[0];
-      
-      // Transform the result to match our interface
-      const registration: TyreRegistration = {
-        id: result.tyre_id,
-        tyre_serial: result.tyre_serial,
-        brand: result.brand,
-        size: result.size,
-        status: result.status as TyreRegistration['status'],
-        location_state: result.location_state,
-        qr_code_url: result.qr_code,
-        business_id: '', // Not exposed in public RPC for security
-        dot_code: '', // Not included in tracking view
-        identification_method: 'serial_qr', // Default
-        verification_status: 'self_reported', // Default
-        session_id: '', // Not exposed for security
-      };
+      const registration = tyreData.data ? {
+        id: tyreData.data.id,
+        business_id: '', // Not exposed for security
+        tyre_serial: tyreData.data.tyre_serial,
+        brand: tyreData.data.brand,
+        size_info: tyreData.data.size_info,
+        dot_code: tyreData.data.dot_code,
+        vehicle_info: tyreData.data.vehicle_info,
+        location: tyreData.data.location,
+        status: tyreData.data.status as TyreRegistration['status'],
+        created_at: tyreData.data.created_at
+      } as TyreRegistration : null;
 
-      const lifecycle: TyreLifecycleEvent[] = Array.isArray(result.lifecycle_events) 
-        ? result.lifecycle_events.map((event: any) => ({
+      const lifecycle: TyreLifecycleEvent[] = lifecycleData.data?.map((event: any) => ({
         id: event.id,
-        tyre_registration_id: result.tyre_id,
+        tyre_registration_id: tyreData.data?.id || '',
         event_type: event.event_type,
         event_date: event.event_date,
         notes: event.notes,
-        recorded_by: '', // Not exposed for security
-        session_id: '', // Not exposed for security
-      }))
-        : [];
+        location_data: { name: event.location }
+      })) || [];
 
       return { registration, lifecycle };
     } catch (error) {
