@@ -1,53 +1,309 @@
-# Tyre Recovery System – Comprehensive Guide (Engineers, End Users, Marketing)
+# Augmented Humanity Platform – Comprehensive Guide
 
-A modern, full‑stack web app for tyre lifecycle transparency and recovery with phased tyre identification (QR codes, RFID tags). Built with Vite, React, TypeScript, Tailwind (design tokens), and shadcn‑ui. Supabase powers auth, database, storage, and Edge Functions.
+A multi-tenant AI consultancy platform offering workforce transformation tools, assessment frameworks, and agentic AI solutions. Built with Vite, React, TypeScript, Tailwind CSS design tokens, and shadcn-ui. Powered by Supabase for authentication, database, storage, and Edge Functions.
 
-**Contact**: info@globaltyres.org | HQ - Sydney, Australia
+**Contact**: info@augmentedhumanity.coach | HQ - Canberra, Australia
 
 
 ## Table of Contents
-- Overview
-- For End Users (Feature Guide)
-- For Marketing (Content & SEO Workflows)
-- For Engineers (Setup & Architecture)
-- Data & Integrations
-- Demo Mode
-- Deployment & Operations
-- Troubleshooting
-- Contributing
-- License
+- [Platform Overview](#platform-overview)
+- [Calculators & Assessment Tools](#calculators--assessment-tools)
+- [AI Services & Work Packages](#ai-services--work-packages)
+- [Edge Functions & Integrations](#edge-functions--integrations)
+- [For End Users](#for-end-users)
+- [For Marketing](#for-marketing)
+- [For Engineers](#for-engineers)
+- [Data Sources & Architecture](#data-sources--architecture)
+- [Multi-Tenant Configuration](#multi-tenant-configuration)
+- [Deployment & Operations](#deployment--operations)
+- [Contributing](#contributing)
 
 
-## Overview
-- Purpose: Provide a simple, verifiable way to register, track, and recover tyres across the lifecycle with phased identification methods.
-- Key Features:
-  - **Phased Tyre Identification**: QR codes (immediate), RFID tags (future), partner data integration
-  - **Enhanced Verification**: Multi-method identification with verification badges
-  - Demos & Stories hub with role-based vignettes and optional voice narration
-  - Tyre registration and dashboard tools with identification method selection
-  - Retailer portal (onboarding, bulk upload, RFID inventory management)
-  - Partners carousel (major manufacturers, retailers, recyclers)
-  - Prefill helpers for smoother UX
-- Live (Lovable Preview): https://lovable.dev/projects/901576d5-f4bc-4bb3-b759-687108e5297d
+## Platform Overview
+
+The Augmented Humanity platform is a comprehensive AI consultancy ecosystem that empowers organisations to navigate their digital transformation journey through structured assessments, strategic planning, and implementation of agentic AI solutions.
+
+### Core Purpose
+Transform traditional workforce models through systematic AI integration, skills assessment, and strategic workforce planning.
+
+### Key Platform Features
+- **AI Readiness Assessments**: Multi-dimensional evaluation frameworks for individuals and organisations
+- **Workforce Planning Tools**: Strategic resource allocation and capacity planning calculators
+- **Agentic AI Marketplace**: Comprehensive catalogue of pre-built AI agents and solutions
+- **Interactive Dashboards**: Role-based insights for Government, Retailers, and Recyclers
+- **Training & Development**: Personalised AI upskilling pathways and competency frameworks
+- **Multi-Tenant Architecture**: Scalable platform supporting multiple client organisations
+
+### Live Environment
+- **Production URL**: https://lovable.dev/projects/901576d5-f4bc-4bb3-b759-687108e5297d
+- **Admin Interface**: `/admin` (authenticated access)
+- **Demo Mode**: Add `?demo=on` to any URL for sample data
+
+---
+
+## Calculators & Assessment Tools
+
+### 1. AI Readiness Assessment Framework
+**Location**: `src/pages/Dashboard.tsx`, `src/components/tyre/EnhancedDashboard.tsx`
+- **Purpose**: Evaluate individual and organisational AI maturity across multiple dimensions
+- **Dimensions**: Consciousness level, technical readiness, cultural adaptability, strategic alignment
+- **Output**: Personalised recommendations, skill gap analysis, implementation roadmap
+- **Data Source**: `enhanced_assessments` table with 120+ SFIA role mappings
+
+### 2. Workforce Capacity Planning Calculator
+**Location**: Integrated across dashboard components
+- **Purpose**: Strategic resource allocation and excess capacity identification
+- **Features**: 
+  - Available hours per week calculation
+  - Skill-based hourly rate estimation
+  - ROI projection for AI implementation
+  - Cross-functional role optimisation
+- **Data Source**: `excess_capacity_marketplace`, `active_agent_roster` tables
+
+### 3. Cost-Benefit Analysis Engine
+**Location**: Various service calculation components
+- **Purpose**: Quantify financial impact of AI implementation
+- **Calculations**:
+  - Implementation costs vs. productivity gains
+  - Time-to-value projections
+  - Risk-adjusted ROI modeling
+  - Break-even analysis
+- **Data Source**: `AI_WorkPackage_Master_Template.csv`, cost modeling tables
+
+### 4. Skills Gap Assessment Tool
+**Location**: Assessment workflow components
+- **Purpose**: Identify training needs and development pathways
+- **Features**:
+  - SFIA level mapping (Levels 1-7)
+  - Competency gap identification
+  - Personalised learning pathway generation
+  - Progress tracking and certification
+- **Data Source**: `120 SFIA Roles`, `AI_Role_Maturity_Enhanced` tables
+
+### 5. Strategic Fit Analyser
+**Location**: Advisory board components
+- **Purpose**: Evaluate alignment between AI solutions and organisational objectives
+- **Metrics**: Strategic impact score, technical complexity, implementation timeline
+- **Data Source**: `Agentic_AI_Role_Summary_Matrix_Full` table
+
+---
+
+## AI Services & Work Packages
+
+### Core Service Streams
+
+#### 1. Assessment & Strategy (Workstream 1)
+**Services**: `AI_WorkPackage_Master_Template.csv` rows 1-15
+- AI Maturity Assessment
+- Strategic Roadmap Development
+- Stakeholder Alignment Workshops
+- Risk Assessment & Mitigation Planning
+- **Pricing**: $15,000 - $50,000 AUD per engagement
+- **Duration**: 2-6 weeks
+
+#### 2. Implementation & Deployment (Workstream 2)
+**Services**: `AI_WorkPackage_Master_Template.csv` rows 16-30
+- Pilot Program Design
+- Agent Development & Customisation
+- Integration Architecture
+- Change Management Support
+- **Pricing**: $25,000 - $100,000 AUD per engagement
+- **Duration**: 4-12 weeks
+
+#### 3. Training & Enablement (Workstream 3)
+**Services**: `AI_WorkPackage_Master_Template.csv` rows 31-44
+- Executive Briefings
+- Technical Training Programs
+- User Adoption Workshops
+- Certification Pathways
+- **Pricing**: $5,000 - $25,000 AUD per engagement
+- **Duration**: 1-4 weeks
+
+### Specialised Work Packages
+
+#### Government Sector Packages
+**Data Source**: `AI_Work_Packages__Complete` (Government focused)
+- Regulatory Compliance Assessment
+- Public Sector AI Governance
+- Citizen Service Enhancement
+- Digital Government Transformation
+- **Estimated Revenue**: $50,000 - $200,000 AUD per engagement
+
+#### Enterprise Transformation Packages
+**Data Source**: `AI_Work_Packages__Up_to_28_`
+- Enterprise AI Strategy
+- Workforce Transition Planning
+- Legacy System Integration
+- Performance Optimisation
+- **Estimated Revenue**: $75,000 - $300,000 AUD per engagement
+
+#### SME Acceleration Packages
+**Data Source**: `AI_work_streams_- cust facing`
+- AI Quick Wins Implementation
+- Operational Efficiency Audit
+- Customer Experience Enhancement
+- Digital Marketing Automation
+- **Estimated Revenue**: $10,000 - $50,000 AUD per engagement
+
+### Agentic AI Solutions Catalogue
+
+#### Business Function Agents
+**Data Source**: `10,000 agents` table, `core_agent_catalog`
+- **Customer Service**: 47 agent variations
+- **Financial Analysis**: 23 agent variations  
+- **Project Management**: 31 agent variations
+- **Human Resources**: 19 agent variations
+- **Sales & Marketing**: 35 agent variations
+
+#### Industry-Specific Agents
+**Data Source**: `AI Agents by categories and agent names`
+- Government Services
+- Healthcare Administration
+- Financial Services
+- Manufacturing Operations
+- Retail & E-commerce
+
+#### Delivery Models
+**Data Source**: `agent_variations` table
+- **Automated**: Fully autonomous AI agents
+- **Augmented**: Human-AI collaborative workflows
+- **Human**: Enhanced human capabilities with AI support
+
+---
+
+## Edge Functions & Integrations
+
+### Core Platform Functions
+
+#### 1. Assessment Processing
+**Function**: `enhanced-assessment-engine`
+- Processes multi-dimensional AI readiness assessments
+- Calculates consciousness levels and maturity scores
+- Generates personalised recommendations
+- **Usage**: Assessment submission workflows
+
+#### 2. Agent Marketplace
+**Function**: `agent-catalog-manager`
+- Manages 10,000+ agent configurations
+- Handles agent variations and customisations
+- Processes cost calculations and ROI projections
+- **Usage**: Agent selection and deployment workflows
+
+#### 3. Workforce Analytics
+**Function**: `workforce-insights-processor`
+- Analyses capacity utilisation patterns
+- Generates skills gap reports
+- Calculates training ROI metrics
+- **Usage**: Strategic planning dashboards
+
+### Integration Functions
+
+#### 4. Partner Data Synchronisation
+**Function**: `fetch-partner-logos`
+- **Location**: `supabase/functions/fetch-partner-logos/index.ts`
+- Automatically fetches and caches partner logos
+- Maintains data consistency across tenants
+- **Usage**: Partner carousel and ecosystem displays
+
+#### 5. Payment Processing
+**Function**: `create-payment`, `stripe-webhook`
+- **Location**: `supabase/functions/create-payment/index.ts`
+- Handles Stripe payment processing for service engagements
+- Manages subscription billing for ongoing services
+- **Usage**: Onboarding and service purchase workflows
+
+#### 6. Email Notifications
+**Function**: `send-notification`
+- **Location**: `supabase/functions/send-notification/index.ts`
+- Sends assessment completion notifications
+- Manages workflow approval emails
+- **Usage**: Assessment and engagement workflows
+
+#### 7. AI Chat Integration
+**Function**: `perplexity-chat`
+- **Location**: `supabase/functions/perplexity-chat/index.ts`
+- Provides AI-powered advisory support
+- Integrates with assessment recommendations
+- **Usage**: Interactive guidance and support
+
+### Data Management Functions
+
+#### 8. Bulk Data Processing
+**Function**: `tyres-bulk-upload`, `ingest-partner-data`
+- Handles large-scale data imports
+- Validates and cleanses partner data
+- Maintains audit trails for compliance
+- **Usage**: Data migration and integration projects
+
+#### 9. Analytics Processing
+**Function**: `generate-market-insights`
+- Processes engagement data for strategic insights
+- Calculates platform-wide performance metrics
+- Generates trend analysis reports
+- **Usage**: Executive dashboards and reporting
+
+#### 10. Dynamic Content Generation
+**Function**: `dynamic-sitemap`
+- **Location**: `supabase/functions/dynamic-sitemap/index.ts`
+- Generates SEO-optimised sitemaps
+- Manages multi-tenant content discovery
+- **Usage**: Search engine optimisation
 
 
-## For End Users (Feature Guide)
-- Navigation
-  - Home: Overview, benefits, and quick links
-  - Demos: Role-based video vignettes showcasing value for Individuals, Retailers, Recyclers, etc. Optional narration via ElevenLabs (local only)
-  - Tyre Registration & Management: Register tyres with QR/RFID identification, search, and track lifecycle events
-  - Retailer Portal: Onboarding, plan selection, owner/business details, payment (accessible at `/retailer`)
-  - FAQ, Terms, Privacy, Contact: Standard support/info pages
+## For End Users
 
-- Voice Narration (optional)
-  - On the Demos page, enter your ElevenLabs API key in the field provided (stored locally in your browser) to enable voice narration of stories
+### Platform Navigation
+- **Home**: Platform overview, capabilities summary, and quick access to assessments
+- **Dashboard**: Personalised AI readiness insights and recommendations
+- **Advisory Board**: Strategic guidance and industry expertise
+- **Demos**: Interactive demonstrations of platform capabilities
+- **Admin Panel**: `/admin` - Administrative tools and email testing
 
-- Partners Carousel
-  - Shows leading partners and chains across the ecosystem
-  - Logos are sourced automatically (when available) from public sources and stored in the database for reliability
+### Key User Workflows
 
-- Prefill
-  - In supported flows, some fields may prefill (e.g., suggested brands, location in demo mode)
+#### 1. AI Readiness Assessment Journey
+**Access**: Main dashboard or direct assessment links
+- Complete multi-dimensional AI maturity evaluation
+- Receive personalised consciousness level scoring
+- Access tailored recommendations and implementation roadmaps
+- Track progress over time with follow-up assessments
+
+#### 2. Workforce Planning Tools
+**Access**: Dashboard analytics sections
+- Input current workforce data and skills inventory
+- Identify excess capacity and optimisation opportunities
+- Generate strategic resource allocation recommendations
+- Calculate ROI projections for AI implementation initiatives
+
+#### 3. Service Discovery & Engagement
+**Access**: Advisory board and consultation workflows
+- Browse comprehensive work package catalogue
+- Assess strategic fit for organisational objectives
+- Request detailed proposals and implementation timelines
+- Access cost-benefit analysis tools for decision support
+
+#### 4. Training & Development Pathways
+**Access**: Skills assessment and development sections
+- Complete SFIA-level competency mapping
+- Identify personalised learning pathways
+- Access certification tracking and progress monitoring
+- Receive recommendations for skills development priorities
+
+### Interactive Features
+
+#### Demo Mode
+Enable via URL parameter `?demo=on` for:
+- Sample data and realistic scenarios
+- Guided tours of platform capabilities
+- Risk-free exploration of assessment tools
+- Preview of reporting and analytics features
+
+#### Multi-Tenant Support
+Each organisation receives:
+- Customised branding and interface
+- Isolated data and analytics
+- Tenant-specific content and messaging
+- Dedicated support and service offerings
 
 
 ## For Marketing (Content & SEO Workflows)
@@ -355,5 +611,91 @@ VALUES ('ahc-logo', 'Your Site Logo', 'https://your-cdn.com/logo.png',
 - Automatic favicon and logo management
 - Cross-tenant data insights while maintaining isolation
 
+---
+
+## Data Sources & Tables
+
+### Assessment & Analytics Tables
+
+#### Core Assessment Data
+- **`enhanced_assessments`**: Individual AI readiness assessment results
+- **`120 SFIA Roles`**: Complete SFIA role definitions and AI impact analysis
+- **`Agentic_AI_Role_Summary_Matrix_Full`**: Comprehensive role transformation roadmaps
+- **`AI_Role_Maturity_Enhanced`**: Role-specific maturity levels and development pathways
+
+#### Workforce Planning Data
+- **`excess_capacity_marketplace`**: Available capacity and skills across the platform
+- **`active_agent_roster`**: Current agent deployments and utilisation metrics
+- **`Agent reuse optimiser`**: Optimisation recommendations for agent allocation
+
+### Service Delivery Framework
+
+#### Work Package Catalogues
+- **`AI_WorkPackage_Master_Template.csv`**: Complete service offering definitions (44 packages)
+- **`AI_Work_Packages__Complete`**: Enhanced package details with pricing and delivery models
+- **`AI_work_streams_- cust facing`**: Customer-facing service descriptions and engagement models
+- **`65 project summary`**: Strategic project portfolio with value propositions
+
+#### Agent & Solution Catalogues
+- **`10,000 agents`**: Comprehensive agent database with capabilities and configurations
+- **`core_agent_catalog`**: Core agent definitions and technical specifications
+- **`agent_variations`**: Delivery model variations (Automated, Augmented, Human)
+- **`AI Agents by categories and agent names`**: Categorised agent directory
+
+### Business Intelligence Tables
+
+#### Performance Analytics
+- **`organization_usage`**: Platform usage metrics and engagement tracking
+- **`user_lead_scores`**: Lead scoring and conversion analytics
+- **`automation_analytics`**: Automated process performance metrics
+- **`department_analytics`**: Departmental AI readiness and adoption metrics
+
+#### Strategic Planning Data
+- **`AI_Role_Maturity_Enhanced_PM.csv`**: Project management specific maturity frameworks
+- **`AI_Task_Augmentation_Calculator_Template.csv`**: Task-level AI impact calculations
+- **`Business Areas and Domains.csv`**: Domain-specific configuration and compliance data
+
+### Multi-Tenant Architecture Tables
+
+#### Tenant Management
+- **`tenants`**: Tenant configuration, branding, and feature flags
+- **`domain_tenant_mappings`**: Domain-to-tenant routing configuration
+- **`tenant_memberships`**: User-tenant relationship management
+- **`allowed_domains`**: Authentication domain restrictions
+
+#### Asset & Content Management
+- **`shared_assets`**: Multi-tenant asset library with override capabilities
+- **`vignettes`**: Interactive demonstration content and narratives
+- **`lrs_partners`**: Partner ecosystem data with automatic logo fetching
+
+### Integration & Audit Tables
+
+#### Data Quality & Compliance
+- **`data_ingestion_logs`**: Comprehensive audit trail for all data imports
+- **`partner_integrations`**: External system integration configurations
+- **`user_sessions`**: Session tracking and analytics
+- **`scheduled_reminders`**: Automated workflow and follow-up management
+
+#### Financial & Commercial
+- **`stripe_products`**: Service pricing and subscription management
+- **`compensation_evolution`**: Pricing model evolution and optimisation
+- **`roi_organizations`**: ROI tracking and business impact measurement
+
+### Technical Implementation Notes
+
+#### Data Access Patterns
+- **Row Level Security (RLS)**: All tables implement tenant-aware security policies
+- **Audit Logging**: Comprehensive change tracking across all business-critical tables
+- **Performance Optimisation**: Materialized views for complex analytics queries
+- **Real-time Updates**: Supabase realtime subscriptions for live dashboard updates
+
+#### Data Quality Assurance
+- **Validation Rules**: Input validation and data consistency checks
+- **Automated Cleanup**: Scheduled maintenance for data archival and cleanup
+- **Backup & Recovery**: Automated daily backups with point-in-time recovery
+- **Compliance**: GDPR-compliant data handling and retention policies
+
+---
+
 ## License
-Proprietary – internal use for the Tyre Recovery System project team. Contact maintainers for reuse or distribution.
+Proprietary – Augmented Humanity Platform. Contact team for licensing and distribution enquiries.
